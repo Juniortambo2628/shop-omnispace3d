@@ -1,0 +1,16 @@
+<?php
+
+define('LARAVEL_START', microtime(true));
+
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', __DIR__);
+}
+
+if (file_exists($maintenance = __DIR__ . '/storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+require __DIR__ . '/vendor/autoload.php';
+
+(require_once __DIR__ . '/bootstrap/app.php')
+    ->handleRequest(Illuminate\Http\Request::capture());

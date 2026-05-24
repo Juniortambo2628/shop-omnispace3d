@@ -1,0 +1,60 @@
+# Environment & secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# PHP / Composer
+/vendor/
+composer.phar
+
+# Laravel / app runtime
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+/logs/*
+!/logs/.gitkeep
+
+# User-uploaded product images (preserve on server; do not version)
+/static/images/products/*
+!/static/images/products/.gitkeep
+!/static/images/products/.htaccess
+
+# Dev-only public junction/copy of static (production deploys static separately)
+/public/static/
+
+# IDE & OS
+/.idea/
+/.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python legacy (not used)
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases & local dumps
+*.sqlite3
+omnishop.db
+*.sql.gz
+
+# Test / temp
+test_image_opt.php
+.phpunit.result.cache

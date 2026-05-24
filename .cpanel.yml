@@ -1,0 +1,19 @@
+---
+# cPanel Git deployment — OmniShop (shop.omnispace3d.com)
+# Backend (private): /home2/omnispac/solar-and-storage-core
+# Public web root:    /home2/omnispac/public_html/shop
+deployment:
+  tasks:
+    - export APP_DIR=/home2/omnispac/solar-and-storage-core
+    - export PUBLIC_DIR=/home2/omnispac/public_html/shop
+    - /bin/mkdir -p $APP_DIR $PUBLIC_DIR/static/images/products
+    - /bin/mkdir -p $APP_DIR/storage/logs $APP_DIR/storage/framework/cache/data $APP_DIR/storage/framework/sessions $APP_DIR/storage/framework/views $APP_DIR/bootstrap/cache
+    - /usr/bin/rsync -av --delete --exclude='.git/' --exclude='.env' --exclude='.env.*' --exclude='vendor/' --exclude='public/' --exclude='storage/logs/' --exclude='storage/framework/cache/' --exclude='storage/framework/sessions/' --exclude='storage/framework/views/' --exclude='logs/' --exclude='static/images/products/' ./ $APP_DIR/
+    - cd $APP_DIR && /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction 2>&1 || /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction 2>&1
+    - /usr/bin/rsync -av --exclude='images/products/' $APP_DIR/static/ $PUBLIC_DIR/static/
+    - /bin/mkdir -p $PUBLIC_DIR/static/images/products
+    - /bin/cp -f $APP_DIR/public/index.php $PUBLIC_DIR/index.php
+    - /bin/cp -f $APP_DIR/public/.htaccess $PUBLIC_DIR/.htaccess
+    - /bin/chmod -R 775 $APP_DIR/storage $APP_DIR/bootstrap/cache
+    - /bin/touch $APP_DIR/storage/logs/laravel.log
+    - test -f $APP_DIR/.env || /bin/cp $APP_DIR/.env.production.example $APP_DIR/.env

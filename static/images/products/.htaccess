@@ -1,0 +1,23 @@
+# Disable PHP execution in this directory
+<Files *.php>
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+Options -Indexes
+php_flag engine off
+
+# Long-lived browser cache (URLs include ?v=filemtime for re-upload busting)
+<IfModule mod_headers.c>
+    <FilesMatch "\.(webp|jpe?g|png|gif)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+</IfModule>
