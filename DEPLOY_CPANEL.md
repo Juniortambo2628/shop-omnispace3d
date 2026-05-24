@@ -88,6 +88,10 @@ cp -f $REPO/public/.htaccess $PUBLIC/.htaccess
 
 **Note:** Product images live in `static/images/products/` (plural), not `static/image/`.
 
+**`/api/orders` returns 500 on checkout**
+
+Laravel rate limiting on `/api/orders` uses the cache driver. Without a `cache` database table, the default `database` driver fails. Set `CACHE_STORE=file` in `.env`, or deploy the latest code (includes `config/cache.php` defaulting to `file`). Check `storage/logs/laravel.log` for the exact error.
+
 ## Local `.env.production`
 
 A full production `.env` with your credentials is in `.env.production` (gitignored). Copy to the server:

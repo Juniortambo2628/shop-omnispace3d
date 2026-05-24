@@ -66,7 +66,15 @@ class OrderService
         });
 
         $order = Order::with('items')->findOrFail($orderId);
-        $this->sendOrderNotifications($order, $config);
+
+        try {
+            $this->sendOrderNotifications($order, $config);
+        } catch (Throwable $e) {
+            \Log::error('Order saved but notification failed: ' . $e->getMessage(), [
+                'order_id' => $orderId,
+                'exception' => get_class($e),
+            ]);
+        }
 
         return $orderId;
     }
