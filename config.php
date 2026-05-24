@@ -5,21 +5,44 @@ if (class_exists('Dotenv\Dotenv')) {
     $dotenv->safeLoad();
 }
 
-// Environment Detection
-$is_prod = (strpos($_SERVER['HTTP_HOST'] ?? '', 'omnispace3d.com') !== false);
+if (!function_exists('env_value')) {
+    /**
+     * Read env vars loaded by Dotenv (phpdotenv v5 does not always populate getenv() in CLI).
+     */
+    function env_value(string $key, $default = null)
+    {
+        if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+            return $_ENV[$key];
+        }
+        if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
+            return $_SERVER[$key];
+        }
+        $fromGetenv = getenv($key);
+        if ($fromGetenv !== false && $fromGetenv !== '') {
+            return $fromGetenv;
+        }
+
+        return $default;
+    }
+}
+
+// Environment Detection (HTTP host, APP_ENV, or production server layout)
+$is_prod = (strpos($_SERVER['HTTP_HOST'] ?? '', 'omnispace3d.com') !== false)
+    || env_value('APP_ENV') === 'production'
+    || is_dir(__DIR__ . '/../public_html/shop');
 define('IS_PROD', $is_prod);
 
 if (IS_PROD) {
-    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-    define('DB_NAME', getenv('DB_NAME') ?: 'omnispac_shop_laravel');
-    define('DB_USER', getenv('DB_USER') ?: 'omnispac_omnispac_omnishop-dev');
-    define('DB_PASS', getenv('DB_PASS') ?: '');
+    define('DB_HOST', env_value('DB_HOST', 'localhost'));
+    define('DB_NAME', env_value('DB_NAME', 'omnispac_shop_laravel'));
+    define('DB_USER', env_value('DB_USER', 'omnispac_omnispac_omnishop-dev'));
+    define('DB_PASS', env_value('DB_PASS', ''));
     define('STATIC_PATH', __DIR__ . '/../public_html/shop/static');
 } else {
-    define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-    define('DB_NAME', getenv('DB_NAME') ?: 'omnishop_db');
-    define('DB_USER', getenv('DB_USER') ?: 'root');
-    define('DB_PASS', getenv('DB_PASS') ?: '');
+    define('DB_HOST', env_value('DB_HOST', 'localhost'));
+    define('DB_NAME', env_value('DB_NAME', 'omnishop_db'));
+    define('DB_USER', env_value('DB_USER', 'root'));
+    define('DB_PASS', env_value('DB_PASS', ''));
     define('STATIC_PATH', __DIR__ . '/static');
 }
 

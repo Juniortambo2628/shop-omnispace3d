@@ -66,6 +66,28 @@ php artisan migrate --force
 - https://shop.omnispace3d.com/admin/login → admin
 - https://shop.omnispace3d.com/up → health check
 
+## Troubleshooting
+
+**`Access denied for user 'root'@'localhost'` when running `php artisan`**
+
+Ensure `.env` exists in `solar-and-storage-core` with `DB_USER` and `DB_PASS`. After pulling the latest code, `config.php` reads Dotenv from `$_ENV` (required for CLI).
+
+**Public files missing under `public_html/shop/`**
+
+`git pull` over SSH does **not** run `.cpanel.yml`. Use cPanel → **Git Version Control** → **Deploy HEAD** (or enable automatic deployment). That copies `public/index.php`, `.htaccess`, and `static/` to `public_html/shop/`.
+
+Manual one-off sync from the cPanel git clone (adjust clone path if needed):
+
+```bash
+REPO=/home2/omnispac/repositories/shop-omnispace3d
+PUBLIC=/home2/omnispac/public_html/shop
+rsync -av --exclude='images/products/' $REPO/static/ $PUBLIC/static/
+cp -f $REPO/public/index.php $PUBLIC/index.php
+cp -f $REPO/public/.htaccess $PUBLIC/.htaccess
+```
+
+**Note:** Product images live in `static/images/products/` (plural), not `static/image/`.
+
 ## Local `.env.production`
 
 A full production `.env` with your credentials is in `.env.production` (gitignored). Copy to the server:
