@@ -32,12 +32,17 @@ return new class extends Migration
 
         if (! Schema::hasColumn('admin_users', 'display_name')) {
             DB::statement('ALTER TABLE admin_users ADD display_name VARCHAR(255) NULL AFTER password_hash');
-            DB::statement('UPDATE admin_users SET display_name = COALESCE(NULLIF(email, ""), username) WHERE display_name IS NULL OR display_name = ""');
+            if (Schema::hasColumn('admin_users', 'email')) {
+                DB::statement('UPDATE admin_users SET display_name = COALESCE(NULLIF(email, ""), username) WHERE display_name IS NULL OR display_name = ""');
+            } else {
+                DB::statement('UPDATE admin_users SET display_name = username WHERE display_name IS NULL OR display_name = ""');
+            }
             DB::statement('ALTER TABLE admin_users MODIFY display_name VARCHAR(255) NOT NULL');
         }
 
-        // Normalize rows where email holds the login address but username does not.
-        DB::statement('UPDATE admin_users SET username = email WHERE email IS NOT NULL AND email != "" AND username != email');
+        if (Schema::hasColumn('admin_users', 'email')) {
+            DB::statement('UPDATE admin_users SET username = email WHERE email IS NOT NULL AND email != "" AND username != email');
+        }
     }
 
     private function alignStockLevels(): void
