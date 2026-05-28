@@ -27,14 +27,26 @@
             padding: 40px 40px 32px;
             text-align: center;
         }
-        .event-logo {
-            max-height: 110px;
-            max-width: 300px;
-            width: auto;
+        /* Logo row — matches catalog header (OmniSpace + event, side by side) */
+        .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
             margin-bottom: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+        }
+        .logo-row .logo-omnispace {
+            height: 64px;
+            width: auto;
+            max-width: 260px;
+            object-fit: contain;
+        }
+        .logo-row .logo-event {
+            height: 72px;
+            width: auto;
+            max-width: 280px;
+            object-fit: contain;
         }
         .event-name {
             font-size: 13px;
@@ -187,7 +199,10 @@
 <div class="card">
     <!-- Event branding -->
     <div class="card-top">
-        <img class="event-logo" src="<?php echo htmlspecialchars($event['logo']); ?>" alt="<?php echo htmlspecialchars($event['short_name']); ?>">
+        <div class="logo-row">
+            <img class="logo-omnispace" src="/static/images/omnispace-logo.jpg" alt="OmniSpace 3D Events">
+            <img class="logo-event" src="<?php echo htmlspecialchars($event['logo']); ?>" alt="<?php echo htmlspecialchars($event['short_name']); ?>">
+        </div>
         <div class="event-name"><?php echo htmlspecialchars($event["name"]); ?></div>
         <div class="event-dates"><?php echo htmlspecialchars($event["dates"]); ?> &nbsp;·&nbsp; <?php echo htmlspecialchars(explode(',', $event["venue"])[0]); ?></div>
     </div>
