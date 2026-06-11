@@ -197,7 +197,7 @@
         .footer p { font-size: 12px; opacity: 0.7; margin: 4px 0; }
         .footer .tagline { font-style: italic; margin-top: 12px; opacity: 0.5; font-size: 11px; }
 
-        .vat-note { font-size: 11px; color: #F59E0B; background: #FEF3C7; padding: 8px 14px; border-radius: 6px; margin-bottom: 16px; text-align: center; font-weight: 500; }
+        .vat-note { font-size: 11px; color: #0A9696; background: #D6F0EF; padding: 8px 14px; border-radius: 6px; margin-bottom: 16px; text-align: center; font-weight: 500; }
 
         @media (max-width: 1024px) {
             .grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
