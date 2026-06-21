@@ -18,6 +18,13 @@
   <div class="alert alert-error">⚠ <?php echo htmlspecialchars($error); ?></div>
   <?php endif; ?>
 
+  <div style="margin-bottom:16px">
+    <span class="order-id">Internal ID: <?php echo htmlspecialchars($o['id'] ?? ''); ?></span>
+    <?php if (!empty($o['custom_order_id'])): ?>
+    <span class="order-id" style="margin-left:10px;background:#D6F0EF;color:#0A9696">Display ID: <?php echo htmlspecialchars($o['custom_order_id']); ?></span>
+    <?php endif; ?>
+  </div>
+
   <div class="form-card form-card--medium">
     <form method="POST" action="/admin/orders/<?php echo htmlspecialchars($o['id'] ?? ''); ?>/edit?event=<?php echo htmlspecialchars($event_slug ?? 'solarandstorage'); ?>">
       <div class="form-row">
@@ -82,8 +89,8 @@
           <div class="hint">Payment method cannot be changed after checkout.</div>
         </div>
         <div class="form-group">
-          <label>Order Total</label>
-          <input type="text" class="readonly-field" value="£<?php echo number_format((float) ($o['total'] ?? 0), 2); ?>" readonly>
+          <label>Order Total (USD)</label>
+          <input type="text" class="readonly-field" value="$<?php echo number_format((float) ($o['total'] ?? 0), 2); ?>" readonly>
         </div>
       </div>
 
@@ -113,8 +120,8 @@
               <td><?php echo htmlspecialchars($item['product_name'] ?? ''); ?></td>
               <td><?php echo htmlspecialchars($item['color_name'] ?? ''); ?></td>
               <td><?php echo (int) ($item['quantity'] ?? 0); ?></td>
-              <td>£<?php echo number_format((float) ($item['unit_price'] ?? 0), 2); ?></td>
-              <td>£<?php echo number_format((float) ($item['total_price'] ?? 0), 2); ?></td>
+              <td>$<?php echo number_format((float) ($item['unit_price'] ?? 0), 2); ?></td>
+              <td>$<?php echo number_format((float) ($item['total_price'] ?? 0), 2); ?></td>
             </tr>
             <?php endforeach; ?>
           </tbody>

@@ -645,6 +645,87 @@ class AdminController extends Controller
         ], $this->auth->viewContext()));
     }
 
+    public function globalConfig(Request $request): never
+    {
+        $this->redirect('/admin/settings');
+    }
+
+    public function invoicePreview()
+    {
+        $this->auth->requireSuperAdmin();
+
+        require_once BASE_PATH . '/core/Invoice.php';
+
+        global $CONFIG;
+        $config = $CONFIG;
+
+        $sampleOrder = [
+            'id' => '12345',
+            'custom_order_id' => 'OMN-SSL26-001',
+            'created_at' => date('Y-m-d H:i:s'),
+            'company_name' => $config['company_name'] ?? 'Sample Company Ltd',
+            'contact_name' => 'John Doe',
+            'email' => 'john@example.com',
+            'phone' => '+254 700 000 000',
+            'address' => 'P.O. Box 12345, Nairobi, Kenya',
+            'booth_number' => 'A-12',
+            'status' => 'Approved',
+            'subtotal' => 1500.00,
+            'vat' => 240.00,
+            'total' => 1740.00,
+            'payment_method' => 'Bank Transfer',
+            'payment_reference' => 'TXN-2026-001',
+        ];
+
+        $sampleItems = [
+            [
+                'product_name' => 'Solar Panel 400W (Sample)',
+                'product_code' => 'SP-400-BLK',
+                'color_name' => 'Black',
+                'quantity' => 5,
+                'unit_price' => 300.00,
+                'total_price' => 1500.00,
+            ],
+        ];
+
+        $event = [
+            'name' => 'Solar + Storage Live 2026',
+            'venue' => 'Kenyatta International Convention Centre',
+        ];
+
+        $pdf = \Invoice::generate($sampleOrder, $sampleItems, $event);
+
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="invoice-preview.pdf"');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Pragma: no-cache');
+        echo $pdf;
+        exit;
+    }
+
+    public function verifyPayment(Request $request, string $id): JsonResponse
+    {
+        $this->auth->requireAdmin();
+
+        $status = $request->json('status');
+        $clientPaymentReference = $request->json('client_payment_reference');
+
+        try {
+            $this->adminOrders->verifyPayment(
+                $id,
+                $status,
+                $this->auth->user()['username'] ?? 'unknown',
+                $clientPaymentReference
+            );
+
+            return response()->json(['success' => true]);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['error' => 'Invalid verification status'], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function profile(Request $request): never
     {
         $this->auth->requireAdmin();

@@ -22,6 +22,8 @@ Route::middleware('legacy.super')->group(function () {
     Route::any('/admin/users/{id}/edit', [AdminController::class, 'editUser']);
     Route::post('/admin/users/{id}/toggle-active', [AdminController::class, 'toggleUserActive']);
     Route::any('/admin/settings', [AdminController::class, 'settings']);
+    Route::any('/admin/global-config', [AdminController::class, 'globalConfig']);
+    Route::any('/admin/invoice-preview', [AdminController::class, 'invoicePreview']);
 });
 
 // Admin (authenticated)
@@ -35,6 +37,7 @@ Route::middleware('legacy.orders')->group(function () {
     Route::post('/admin/orders/{id}/payment-reference', [AdminController::class, 'updateOrderPaymentReference']);
     Route::any('/admin/orders/{id}/invoice', [AdminController::class, 'invoice']);
     Route::any('/admin/orders/{id}/send-invoice', [AdminController::class, 'sendInvoice']);
+    Route::post('/admin/orders/{id}/verify-payment', [AdminController::class, 'verifyPayment']);
     Route::any('/admin/stock', [AdminController::class, 'stock']);
     Route::any('/admin/packing/category', [AdminController::class, 'packingList']);
     Route::any('/admin/packing/stand', [AdminController::class, 'packingByBooth']);
@@ -59,6 +62,10 @@ Route::middleware('throttle:api')->group(function () {
 
 Route::any('/order/{id}/confirmation', [OrderController::class, 'confirmation']);
 Route::any('/order/{id}/invoice', [OrderController::class, 'downloadInvoice']);
+Route::any('/order/history', [OrderController::class, 'orderHistory']);
+Route::any('/order/payments', [OrderController::class, 'paymentsOverview']);
+Route::any('/order/track', [OrderController::class, 'trackingForm']);
+Route::any('/order/track/lookup', [OrderController::class, 'trackingPortal']);
 Route::any('/{slug}/login', [CatalogController::class, 'login']);
 Route::any('/{slug}/checkout', [OrderController::class, 'checkout']);
 Route::any('/{slug}', [CatalogController::class, 'catalog']);

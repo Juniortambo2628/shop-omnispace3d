@@ -34,6 +34,11 @@
 .badge-Invoiced{background:#DBEAFE;color:#1E40AF}
 .badge-Fulfilled{background:#D6F0EF;color:#0A9696}
 .badge-Cancelled{background:#FEE2E2;color:#991B1B}
+.badge-unverified{background:#F3F4F6;color:#6B7280}
+.badge-pending{background:#FEF3C7;color:#92400E}
+.badge-verified{background:#D1FAE5;color:#065F46}
+.badge-rejected{background:#FEE2E2;color:#991B1B}
+.custom-order-id{font-size:11px;color:#888;font-family:monospace}
 .action-set{display:flex;gap:4px;flex-wrap:wrap}
 .sbtn{padding:4px 9px;border-radius:4px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid;background:#fff;white-space:nowrap}
 .sbtn:hover{opacity:.85}
@@ -140,11 +145,13 @@
         <tr>
           <th style="width:32px"></th>
           <th>Order ID</th>
+          <th>Invoice ID</th>
           <th>Company / Contact</th>
           <th>Stand</th>
           <th>Date</th>
           <th>Total (USD)</th>
           <th>Payment</th>
+          <th>Verification</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -155,6 +162,7 @@
       <tr onclick="toggleDetail('<?php echo $o['id']; ?>')" style="cursor:pointer">
         <td style="text-align:center;color:#bbb;font-size:11px" id="arrow_<?php echo $o['id']; ?>">▶</td>
         <td><span class="order-id"><?php echo htmlspecialchars($o['id']); ?></span></td>
+        <td><span class="custom-order-id"><?php echo htmlspecialchars($o['custom_order_id'] ?? '—'); ?></span></td>
         <td>
           <div style="font-weight:600"><?php echo htmlspecialchars($o['company_name'] ?? ''); ?></div>
           <div style="font-size:11px;color:#888"><?php echo htmlspecialchars($o['contact_name'] ?? ''); ?></div>
@@ -163,12 +171,15 @@
         <td style="font-size:12px;color:#888;white-space:nowrap">
           <?php echo substr($o['created_at'] ?? '', 0, 10); ?>
         </td>
-        <td style="font-weight:700"><?php echo number_format($o['total'] ?? 0, 2); ?></td>
+        <td style="font-weight:700">$<?php echo number_format($o['total'] ?? 0, 2); ?></td>
         <td style="font-size:12px">
           <?php echo htmlspecialchars($o['payment_method'] ?? '—'); ?>
           <?php if (!empty($o['payment_reference'])): ?>
           <div style="font-size:10px;color:#888">Ref: <?php echo htmlspecialchars($o['payment_reference']); ?></div>
           <?php endif; ?>
+        </td>
+        <td onclick="event.stopPropagation()">
+          <span class="badge badge-<?php echo htmlspecialchars($o['payment_verification_status'] ?? 'unverified'); ?>"><?php echo htmlspecialchars(ucfirst($o['payment_verification_status'] ?? 'unverified')); ?></span>
         </td>
         <td onclick="event.stopPropagation()">
           <span class="badge badge-<?php echo htmlspecialchars($o['status'] ?? 'Pending'); ?>"><?php echo htmlspecialchars($o['status'] ?? 'Pending'); ?></span>
@@ -191,7 +202,7 @@
         </td>
       </tr>
       <tr class="detail-row" id="detail_<?php echo $o['id']; ?>">
-        <td colspan="9" style="padding:0">
+        <td colspan="11" style="padding:0">
           <div class="detail-inner">
             <div class="detail-grid">
               <div>
@@ -219,6 +230,32 @@
                           onclick="event.stopPropagation();savePayRef('<?php echo $o['id']; ?>')">
                     Save Ref
                   </button>
+                </div>
+                <div class="detail-line" style="margin-bottom:10px">
+                  Client Payment Ref:<br>
+                  <div style="font-size:12px;color:#333;font-weight:500;padding:5px 9px;background:#f9fafb;border-radius:4px;border:1px solid #eee;min-height:28px">
+                    <?php echo htmlspecialchars($o['client_payment_reference'] ?? '— Not submitted —'); ?>
+                  </div>
+                </div>
+                <div class="detail-line" style="margin-bottom:10px">
+                  Payment Verification:<br>
+                  <div style="display:flex;gap:6px;margin-top:4px;align-items:center">
+                    <span class="badge badge-<?php echo htmlspecialchars($o['payment_verification_status'] ?? 'unverified'); ?>">
+                      <?php echo htmlspecialchars(ucfirst($o['payment_verification_status'] ?? 'unverified')); ?>
+                    </span>
+                    <?php if (($o['payment_verification_status'] ?? 'unverified') === 'unverified'): ?>
+                    <button class="sbtn sbtn-approve" onclick="event.stopPropagation();verifyPayment('<?php echo $o['id']; ?>','verified','<?php echo htmlspecialchars($o['client_payment_reference'] ?? ''); ?>')">✓ Verify</button>
+                    <button class="sbtn sbtn-cancel" onclick="event.stopPropagation();verifyPayment('<?php echo $o['id']; ?>','rejected')">✗ Reject</button>
+                    <?php elseif (($o['payment_verification_status'] ?? '') === 'pending'): ?>
+                    <button class="sbtn sbtn-approve" onclick="event.stopPropagation();verifyPayment('<?php echo $o['id']; ?>','verified')">✓ Verify</button>
+                    <button class="sbtn sbtn-cancel" onclick="event.stopPropagation();verifyPayment('<?php echo $o['id']; ?>','rejected')">✗ Reject</button>
+                    <?php endif; ?>
+                  </div>
+                  <?php if (!empty($o['payment_verified_at'])): ?>
+                  <div style="font-size:10px;color:#888;margin-top:4px">
+                    Verified by <?php echo htmlspecialchars($o['payment_verified_by'] ?? '—'); ?> on <?php echo htmlspecialchars($o['payment_verified_at'] ?? ''); ?>
+                  </div>
+                  <?php endif; ?>
                 </div>
                 <div class="detail-line">Status: <span class="badge badge-<?php echo htmlspecialchars($o['status'] ?? 'Pending'); ?>"><?php echo htmlspecialchars($o['status'] ?? ''); ?></span></div>
                 <div class="detail-line">Created: <span><?php echo substr($o['created_at'] ?? '', 0, 10); ?></span></div>
@@ -331,6 +368,31 @@ function sendInvoice(orderId) {
     if (!result.isConfirmed) return;
     fetch('/admin/orders/' + orderId + '/send-invoice', { method: 'POST' })
       .then(() => OmniToast('Invoice email sent', 'success'));
+  });
+}
+function verifyPayment(orderId, status, clientRef) {
+  var titles = {
+    'verified': { title: 'Verify Payment?', text: 'This will mark the payment as verified.', icon: 'success', confirm: 'Yes, Verify' },
+    'rejected': { title: 'Reject Payment?', text: 'This will mark the payment as rejected.', icon: 'warning', confirm: 'Yes, Reject', danger: true }
+  };
+  var cfg = titles[status] || { title: 'Update verification?', text: '', icon: 'question', confirm: 'Confirm' };
+
+  OmniConfirm(cfg).then((result) => {
+    if (!result.isConfirmed) return;
+    var body = { status: status };
+    if (clientRef !== undefined && clientRef !== '') body.client_payment_reference = clientRef;
+    fetch('/admin/orders/' + orderId + '/verify-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    }).then(res => res.json()).then(data => {
+      if (data.success) {
+        OmniToast('Payment ' + status, 'success');
+        setTimeout(() => htmx.ajax('GET', location.href, {target:'#admin-content'}), 1000);
+      } else {
+        OmniToast(data.error || 'Error updating verification', 'error');
+      }
+    });
   });
 }
 </script>

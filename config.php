@@ -70,6 +70,7 @@ define('EVENTS', [
     "solarandstorage" => [
         "name" => "Solar and Storage Live Kenya 2026",
         "short_name" => "SSL Kenya 2026",
+        "short_code" => "SSL26",
         "dates" => "August 26-27, 2026",
         "venue" => "Kenyatta International Convention Center, Nairobi, Kenya",
         "logo" => "/static/images/ssl-kenya-logo.png",

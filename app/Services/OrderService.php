@@ -25,10 +25,11 @@ class OrderService
     public function create(array $data, array $config): string
     {
         $orderId = $this->generateOrderId();
+        $customOrderId = $this->generateCustomOrderId($data['event_slug']);
         $totals = $this->calculateTotals($data, $config);
         $now = now()->format('Y-m-d H:i:s');
 
-        DB::transaction(function () use ($data, $config, $orderId, $totals, $now) {
+        DB::transaction(function () use ($data, $config, $orderId, $customOrderId, $totals, $now) {
             Order::create([
                 'id' => $orderId,
                 'event_slug' => $data['event_slug'],
@@ -45,6 +46,8 @@ class OrderService
                 'vat' => $totals['vat'],
                 'total' => $totals['total'],
                 'status' => 'Pending',
+                'custom_order_id' => $customOrderId,
+                'payment_verification_status' => 'unverified',
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
@@ -110,6 +113,42 @@ class OrderService
         return strtoupper(bin2hex(random_bytes(4)));
     }
 
+    public function generateCustomOrderId(string $eventSlug): string
+    {
+        $eventShortCode = $this->getEventShortCode($eventSlug);
+        $prefix = "OMN-{$eventShortCode}-";
+
+        $lastOrder = \App\Models\Order::where('event_slug', $eventSlug)
+            ->where('custom_order_id', 'like', $prefix . '%')
+            ->orderByDesc('custom_order_id')
+            ->first();
+
+        $nextNumber = 1;
+        if ($lastOrder && $lastOrder->custom_order_id) {
+            $lastNumber = (int) substr($lastOrder->custom_order_id, strlen($prefix));
+            $nextNumber = $lastNumber + 1;
+        }
+
+        return $prefix . str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
+    }
+
+    private function getEventShortCode(string $eventSlug): string
+    {
+        $events = defined('EVENTS') ? EVENTS : [];
+        $event = $events[$eventSlug] ?? null;
+
+        if ($event) {
+            if (isset($event['short_code'])) {
+                return strtoupper($event['short_code']);
+            }
+            if (isset($event['short_name'])) {
+                return strtoupper(preg_replace('/[^A-Z0-9]/', '', $event['short_name']));
+            }
+        }
+
+        return strtoupper(substr($eventSlug, 0, 6));
+    }
+
     /**
      * @param  array<string, mixed>  $config
      */
@@ -122,32 +161,18 @@ class OrderService
         $items = $order->items->map(fn (OrderItem $item) => $item->toArray())->all();
         $event = EVENTS[$order->event_slug] ?? ['name' => 'Solar & Storage Live 2026'];
 
-        $invoicePdf = \Invoice::generate($orderRow, $items, $event);
-
-        $customerSubject = 'Order Confirmation — ' . $order->id;
-        $customerBody = \Mailer::buildBaseHtml(
-            'Order Received',
-            'Dear ' . $order->contact_name . ',<br><br>Thank you for your order. We have received it and our team will review it shortly.',
-            $event['name']
-        );
-        $customerBody .= \Mailer::buildItemsTable($items);
-        $customerBody .= \Mailer::buildTotalsBlock($orderRow);
-
-        \Mailer::send($order->email, $customerSubject, $customerBody, [
-            'Invoice-' . $order->id . '.pdf' => $invoicePdf,
-        ]);
+        \Mailer::sendNewOrderEmail($orderRow, $items, $config, $event);
 
         $adminEmail = $config['admin_notification_email']
             ?? ($config['contact_email'] ?? 'admin@omnispace3d.com');
 
-        $adminSubject = 'New Order Received — ' . $order->id;
+        $customId = $order->custom_order_id ?? $order->id;
+        $adminSubject = 'New Order Received — ' . $customId;
         $adminBody = \Mailer::buildBaseHtml(
             'New Order Notification',
-            'A new order has been placed on OmniShop.',
+            'A new order has been placed on OmniShop.<br><br><strong>Order ID:</strong> ' . htmlspecialchars($customId) . '<br><strong>Company:</strong> ' . htmlspecialchars($order->company_name) . '<br><strong>Contact:</strong> ' . htmlspecialchars($order->contact_name) . '<br><strong>Total:</strong> $' . number_format($order->total, 2),
             $event['name']
         );
-        $adminBody .= \Mailer::buildItemsTable($items);
-        $adminBody .= \Mailer::buildTotalsBlock($orderRow);
 
         \Mailer::send($adminEmail, $adminSubject, $adminBody);
     }

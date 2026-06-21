@@ -15,7 +15,6 @@ class Mailer {
         global $CONFIG;
 
         try {
-            // Server settings
             $mail->isSMTP();
             $mail->Host       = $CONFIG['smtp_host'] ?? 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
@@ -24,23 +23,18 @@ class Mailer {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port       = $CONFIG['smtp_port'] ?? 465;
 
-            // Recipients
             $mail->setFrom($CONFIG['gmail_address'] ?? 'noreply@omnispace3d.com', 'OmniShop Orders');
             $mail->addAddress($to);
             if ($cc) $mail->addCC($cc);
 
-            // Attachments
             foreach ($attachments as $filename => $data) {
                 if (is_numeric($filename)) {
-                    // Simple path attachment
                     $mail->addAttachment($data);
                 } else {
-                    // String attachment (e.g. PDF data)
                     $mail->addStringAttachment($data, $filename);
                 }
             }
 
-            // Content
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $body;
@@ -51,6 +45,33 @@ class Mailer {
             error_log("Mailer Error: " . $mail->ErrorInfo);
             return false;
         }
+    }
+
+    public static function logoDataUri(): string
+    {
+        $candidates = [
+            STATIC_PATH . '/images/omnispace-logo-white.png',
+            STATIC_PATH . '/images/omnispace-logo.jpg',
+            STATIC_PATH . '/images/omnispace-logo.png',
+        ];
+
+        foreach ($candidates as $path) {
+            if (! is_readable($path)) {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+            $mime = match ($ext) {
+                'png' => 'image/png',
+                'webp' => 'image/webp',
+                'gif' => 'image/gif',
+                default => 'image/jpeg',
+            };
+
+            return 'data:' . $mime . ';base64,' . base64_encode((string) file_get_contents($path));
+        }
+
+        return '';
     }
 
     public static function buildBaseHtml($title, $body_html, $event_name = "Solar and Storage Live Kenya 2026") {
@@ -66,6 +87,9 @@ class Mailer {
         $c_wa   = $CONFIG['company_whatsapp'] ?? "+254 731 001 723";
         $c_ph   = $CONFIG['company_phone'] ?? "+254 204 489 504";
 
+        $logo = self::logoDataUri();
+        $logoHtml = $logo ? "<img src='{$logo}' style='height:40px;margin-bottom:8px;' alt='{$c_name}'>" : "<div style='font-size:22px;font-weight:bold;color:#ffffff;letter-spacing:1px;'>{$c_name}</div>";
+
         return "
 <!DOCTYPE html>
 <html>
@@ -78,12 +102,10 @@ class Mailer {
     <tr><td align='center'>
       <table width='620' cellpadding='0' cellspacing='0'
              style='background:#ffffff;border-radius:8px;overflow:hidden;max-width:620px;width:100%;'>
-        <!-- HEADER -->
+        <!-- HEADER with Logo -->
         <tr>
-          <td style='background:{$teal};padding:28px 32px;text-align:center;'>
-            <div style='font-size:22px;font-weight:bold;color:#ffffff;letter-spacing:1px;'>
-              {$c_name}
-            </div>
+          <td style='background:{$teal};padding:20px 32px;text-align:center;'>
+            {$logoHtml}
             <div style='font-size:13px;color:{$pale};margin-top:4px;'>{$event_name}</div>
           </td>
         </tr>
@@ -167,5 +189,85 @@ class Mailer {
             <td style='padding:8px 10px;text-align:right;font-weight:bold;color:{$teal};font-size:16px;'>$" . number_format($order['total'], 2) . "</td>
           </tr>
         </table>";
+    }
+
+    public static function replaceTemplateVars($template, $order, $items, $config, $event) {
+        $customId = $order['custom_order_id'] ?? $order['id'];
+        $paypalLink = $config['paypal_payment_link'] ?? '#';
+        $portalUrl = $config['payment_portal_url'] ?? '#';
+        $companyEmail = $config['company_email'] ?? 'solarandstorage@omnispace3d.com';
+        $companyPhone = $config['company_phone'] ?? '+254 731 001 723';
+
+        $itemsTable = self::buildItemsTable($items);
+        $totalsBlock = self::buildTotalsBlock($order);
+
+        $replacements = [
+            '{contact_name}' => htmlspecialchars($order['contact_name'] ?? ''),
+            '{order_id}' => htmlspecialchars($customId),
+            '{booth_number}' => htmlspecialchars($order['booth_number'] ?? ''),
+            '{company_email}' => htmlspecialchars($companyEmail),
+            '{company_phone}' => htmlspecialchars($companyPhone),
+            '{paypal_link}' => htmlspecialchars($paypalLink),
+            '{payment_portal_url}' => htmlspecialchars($portalUrl),
+            '{items_table}' => $itemsTable,
+            '{totals_block}' => $totalsBlock,
+        ];
+
+        return str_replace(array_keys($replacements), array_values($replacements), $template);
+    }
+
+    public static function sendNewOrderEmail($order, $items, $config, $event) {
+        $template = $config['email_template_new_order'] ?? '';
+        if (empty($template)) {
+            $template = '<p>Dear {contact_name},</p><p>Thank you for your order <strong>{order_id}</strong>. We have received it and our team will review it shortly.</p><p>Your order is currently <span style="color:#F59E0B;font-weight:bold;">Pending Review</span>.</p><p>Our team will check availability and confirm your order within 24 hours.</p><p>{items_table}<br>{totals_block}</p>';
+        }
+
+        $body = self::replaceTemplateVars($template, $order, $items, $config, $event);
+        $bodyHtml = self::buildBaseHtml('Order Received', $body, $event['name'] ?? '');
+
+        $customId = $order['custom_order_id'] ?? $order['id'];
+        $subject = "Order Confirmation — {$customId}";
+
+        return self::send($order['email'], $subject, $bodyHtml);
+    }
+
+    public static function sendAvailabilityConfirmedEmail($order, $items, $config, $event, $invoicePdf = null) {
+        $template = $config['email_template_availability_confirmed'] ?? '';
+        if (empty($template)) {
+            $template = '<p>Hi {contact_name},</p><p>Great news! Availability has been confirmed for your order <strong>{order_id}</strong>.</p><p>Please proceed to payment using one of the following methods:</p><ul><li><strong>PayPal:</strong> <a href="{paypal_link}">{paypal_link}</a></li><li><strong>Bank Transfer:</strong> See invoice attached for full bank details</li><li><strong>Payment Portal:</strong> <a href="{payment_portal_url}">{payment_portal_url}</a></li></ul><p><strong>Important:</strong> Payment must be made within 10 days to guarantee availability.</p><p>{items_table}<br>{totals_block}</p><p>Your tax invoice is attached. Please reference <strong>{order_id}</strong> on all payments.</p>';
+        }
+
+        $body = self::replaceTemplateVars($template, $order, $items, $config, $event);
+        $bodyHtml = self::buildBaseHtml('Availability Confirmed — Proceed to Payment', $body, $event['name'] ?? '');
+
+        $customId = $order['custom_order_id'] ?? $order['id'];
+        $subject = "Availability Confirmed — {$customId} — Proceed to Payment";
+
+        $attachments = [];
+        if ($invoicePdf) {
+            $attachments["Invoice-{$customId}.pdf"] = $invoicePdf;
+        }
+
+        return self::send($order['email'], $subject, $bodyHtml, $attachments);
+    }
+
+    public static function sendPaymentProcessedEmail($order, $items, $config, $event, $invoicePdf = null) {
+        $template = $config['email_template_payment_processed'] ?? '';
+        if (empty($template)) {
+            $template = '<p>Dear {contact_name},</p><p>Thank you! Your payment for order <strong>{order_id}</strong> has been received and processed.</p><p><strong>Order Complete</strong> — Your booth <strong>{booth_number}</strong> is now confirmed.</p><p><strong>Billing Summary:</strong><br>{items_table}<br>{totals_block}</p><p>Your tax invoice is attached for your records.</p><p>We look forward to serving you at the event.</p>';
+        }
+
+        $body = self::replaceTemplateVars($template, $order, $items, $config, $event);
+        $bodyHtml = self::buildBaseHtml('Payment Processed — Order Complete', $body, $event['name'] ?? '');
+
+        $customId = $order['custom_order_id'] ?? $order['id'];
+        $subject = "Payment Processed — {$customId} — Order Complete";
+
+        $attachments = [];
+        if ($invoicePdf) {
+            $attachments["Invoice-{$customId}.pdf"] = $invoicePdf;
+        }
+
+        return self::send($order['email'], $subject, $bodyHtml, $attachments);
     }
 }

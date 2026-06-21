@@ -50,6 +50,11 @@ class Order extends Model
         'total',
         'status',
         'payment_reference',
+        'custom_order_id',
+        'client_payment_reference',
+        'payment_verification_status',
+        'payment_verified_at',
+        'payment_verified_by',
         'created_at',
         'updated_at',
     ];

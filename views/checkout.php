@@ -29,6 +29,10 @@
         input, textarea { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 16px; transition: border 0.2s; }
         input:focus, textarea:focus { outline: none; border-color: #0A9696; box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
         textarea { resize: vertical; min-height: 80px; }
+        .autofill-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #D6F0EF; color: #0A9696; border: 1px solid #0A9696; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit; margin-bottom: 16px; transition: all 0.2s; }
+        .autofill-btn:hover { background: #0A9696; color: #fff; }
+        .autofill-btn.hidden { display: none; }
+        .autofill-success { background: #D1FAE5; color: #065F46; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 12px; display: none; }
         @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .summary-card { position: static; } .row { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -43,6 +47,10 @@ include __DIR__ . '/storefront/_header.php';
     <div>
         <a href="/<?php echo htmlspecialchars($event_slug); ?>" class="back-link">&#8592; Continue Shopping</a>
         <div class="error-msg" id="errorMsg"></div>
+        <button type="button" class="autofill-btn" id="autofillBtn" onclick="autofillDetails()" style="display:none">
+            &#9889; Autofill with Existing Details
+        </button>
+        <div class="autofill-success" id="autofillSuccess">&#10003; Details filled from previous order!</div>
         <form id="orderForm" onsubmit="return false;">
             <div class="section">
                 <h2>&#128100; Your Details</h2>
@@ -99,7 +107,53 @@ document.addEventListener('DOMContentLoaded', function() {
     try { cart = JSON.parse(localStorage.getItem('omnishop_cart_' + EVENT_SLUG) || '[]'); } catch(e) { cart = []; }
     if (cart.length === 0) { document.getElementById('mainContainer').style.display = 'none'; document.getElementById('emptyMsg').style.display = 'block'; return; }
     renderSummary();
+    checkSavedDetails();
 });
+
+function checkSavedDetails() {
+    var saved = localStorage.getItem('omnishop_details');
+    if (saved) {
+        try {
+            var details = JSON.parse(saved);
+            if (details.company_name || details.email) {
+                document.getElementById('autofillBtn').style.display = 'inline-flex';
+            }
+        } catch(e) {}
+    }
+}
+
+function saveDetails() {
+    var details = {
+        company_name: document.getElementById('companyName').value.trim(),
+        contact_name: document.getElementById('contactName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        tax_id: document.getElementById('taxId').value.trim(),
+        booth_number: document.getElementById('boothNumber').value.trim()
+    };
+    localStorage.setItem('omnishop_details', JSON.stringify(details));
+}
+
+function autofillDetails() {
+    var saved = localStorage.getItem('omnishop_details');
+    if (!saved) return;
+    
+    try {
+        var details = JSON.parse(saved);
+        if (details.company_name) document.getElementById('companyName').value = details.company_name;
+        if (details.contact_name) document.getElementById('contactName').value = details.contact_name;
+        if (details.email) document.getElementById('email').value = details.email;
+        if (details.phone) document.getElementById('phone').value = details.phone;
+        if (details.address) document.getElementById('address').value = details.address;
+        if (details.tax_id) document.getElementById('taxId').value = details.tax_id;
+        if (details.booth_number) document.getElementById('boothNumber').value = details.booth_number;
+        
+        var successEl = document.getElementById('autofillSuccess');
+        successEl.style.display = 'block';
+        setTimeout(function() { successEl.style.display = 'none'; }, 3000);
+    } catch(e) {}
+}
 
 function renderSummary() {
     var el = document.getElementById('summaryItems'), html = '', subtotal = 0;
@@ -140,6 +194,7 @@ function submitOrder() {
     xhr.onload = function() {
         if (xhr.status === 200) {
             var resp = JSON.parse(xhr.responseText);
+            saveDetails();
             localStorage.removeItem('omnishop_cart_' + EVENT_SLUG);
             window.location.href = '/order/' + resp.order_id + '/confirmation';
         } else {

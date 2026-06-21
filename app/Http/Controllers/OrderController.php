@@ -35,6 +35,114 @@ class OrderController extends Controller
         ]);
     }
 
+    public function trackingForm(): never
+    {
+        $eventSlug = request()->query('event', 'solarandstorage');
+
+        $this->render('storefront/tracking', [
+            'event_slug' => $eventSlug,
+            'email' => null,
+            'history' => [],
+            'selected_order' => null,
+            'selected_items' => [],
+        ]);
+    }
+
+    public function trackingPortal(): never
+    {
+        $eventSlug = request()->query('event', 'solarandstorage');
+        $email = request()->query('email', '');
+        $orderId = request()->query('order');
+
+        $history = $this->adminOrders->getClientOrderHistory($email);
+        $selectedOrder = null;
+        $selectedItems = [];
+
+        if ($orderId) {
+            foreach ($history as $entry) {
+                if ($entry['order']['id'] === $orderId) {
+                    $selectedOrder = $entry['order'];
+                    $selectedItems = $entry['items'];
+                    break;
+                }
+            }
+        } elseif (!empty($history)) {
+            $selectedOrder = $history[0]['order'];
+            $selectedItems = $history[0]['items'];
+        }
+
+        $this->render('storefront/tracking', [
+            'event_slug' => $eventSlug,
+            'email' => $email,
+            'history' => $history,
+            'selected_order' => $selectedOrder,
+            'selected_items' => $selectedItems,
+        ]);
+    }
+
+    public function orderHistory(): never
+    {
+        $email = request()->query('email', '');
+        $orderId = request()->query('order');
+
+        $history = $email ? $this->adminOrders->getClientOrderHistory($email) : [];
+        $selectedOrder = null;
+        $selectedItems = [];
+
+        if ($orderId && !empty($history)) {
+            foreach ($history as $entry) {
+                if ($entry['order']['id'] === $orderId) {
+                    $selectedOrder = $entry['order'];
+                    $selectedItems = $entry['items'];
+                    break;
+                }
+            }
+        }
+
+        $this->render('storefront/history', [
+            'email' => $email,
+            'history' => $history,
+            'selected_order' => $selectedOrder,
+            'selected_items' => $selectedItems,
+        ]);
+    }
+
+    public function paymentsOverview(): never
+    {
+        $email = request()->query('email', '');
+        $filter = request()->query('filter', '');
+
+        $payments = $email ? $this->adminOrders->getClientOrderHistory($email) : [];
+
+        if ($filter && !empty($payments)) {
+            $payments = array_filter($payments, function ($entry) use ($filter) {
+                $verification = $entry['order']['payment_verification_status'] ?? 'unverified';
+                return $verification === $filter;
+            });
+            $payments = array_values($payments);
+        }
+
+        $stats = [
+            'total' => count($payments),
+            'total_amount' => 0,
+            'verified' => 0,
+        ];
+
+        foreach ($payments as $entry) {
+            $stats['total_amount'] += (float) ($entry['order']['total'] ?? 0);
+            if (($entry['order']['payment_verification_status'] ?? '') === 'verified') {
+                $stats['verified']++;
+            }
+        }
+
+        $this->render('storefront/payments', [
+            'email' => $email,
+            'payments' => $payments,
+            'filter' => $filter,
+            'stats' => $stats,
+        ]);
+    }
+
     public function createOrder(Request $request): JsonResponse
     {
         ini_set('html_errors', '0');

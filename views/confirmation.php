@@ -34,7 +34,7 @@ include __DIR__ . '/storefront/_header.php';
         <h2 style="color:#10B981;">Order Submitted Successfully!</h2>
         <div class="order-ref">
             Your order reference number is:
-            <strong><?php echo htmlspecialchars($order["id"]); ?></strong>
+            <strong><?php echo htmlspecialchars($order["custom_order_id"] ?? $order["id"]); ?></strong>
         </div>
     </div>
 
@@ -86,6 +86,7 @@ include __DIR__ . '/storefront/_header.php';
     <div class="btn-row">
         <a href="/<?php echo htmlspecialchars($order['event_slug']); ?>" class="btn btn-primary">&#8592; Back to Catalog</a>
         <a href="/order/<?php echo htmlspecialchars($order['id']); ?>/invoice" class="btn btn-outline">&#128424; Download PDF Invoice</a>
+        <a href="/order/history?email=<?php echo urlencode($order['email']); ?>" class="btn btn-outline">&#128203; View My Orders</a>
     </div>
 </div>
 <?php include __DIR__ . '/storefront/_footer.php'; ?>
