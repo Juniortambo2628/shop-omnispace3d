@@ -10,7 +10,7 @@ class Mailer {
     private static $CHARCOAL = "#333333";
     private static $GREY = "#6E6E6E";
 
-    public static function send($to, $subject, $body, $attachments = [], $cc = null) {
+    public static function send($to, $subject, $body, $attachments = [], $cc = null, $embeddedImages = []) {
         $mail = new PHPMailer(true);
         global $CONFIG;
 
@@ -35,7 +35,12 @@ class Mailer {
                 }
             }
 
+            foreach ($embeddedImages as $cid => $path) {
+                $mail->addEmbeddedImage($path, $cid);
+            }
+
             $mail->isHTML(true);
+            $mail->CharSet = 'UTF-8';
             $mail->Subject = $subject;
             $mail->Body    = $body;
 
@@ -47,7 +52,7 @@ class Mailer {
         }
     }
 
-    public static function logoDataUri(): string
+    public static function logoPath(): ?string
     {
         $candidates = [
             STATIC_PATH . '/images/omnispace-logo-white.png',
@@ -56,22 +61,12 @@ class Mailer {
         ];
 
         foreach ($candidates as $path) {
-            if (! is_readable($path)) {
-                continue;
+            if (is_readable($path)) {
+                return $path;
             }
-
-            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-            $mime = match ($ext) {
-                'png' => 'image/png',
-                'webp' => 'image/webp',
-                'gif' => 'image/gif',
-                default => 'image/jpeg',
-            };
-
-            return 'data:' . $mime . ';base64,' . base64_encode((string) file_get_contents($path));
         }
 
-        return '';
+        return null;
     }
 
     public static function buildBaseHtml($title, $body_html, $event_name = "Solar and Storage Live Kenya 2026") {
@@ -87,8 +82,8 @@ class Mailer {
         $c_wa   = $CONFIG['company_whatsapp'] ?? "+254 731 001 723";
         $c_ph   = $CONFIG['company_phone'] ?? "+254 204 489 504";
 
-        $logo = self::logoDataUri();
-        $logoHtml = $logo ? "<img src='{$logo}' style='height:40px;margin-bottom:8px;' alt='{$c_name}'>" : "<div style='font-size:22px;font-weight:bold;color:#ffffff;letter-spacing:1px;'>{$c_name}</div>";
+        $logoPath = self::logoPath();
+        $logoHtml = $logoPath ? "<img src='cid:omnispace-logo' style='height:40px;margin-bottom:8px;' alt='{$c_name}'>" : "<div style='font-size:22px;font-weight:bold;color:#ffffff;letter-spacing:1px;'>{$c_name}</div>";
 
         return "
 <!DOCTYPE html>
@@ -191,6 +186,12 @@ class Mailer {
         </table>";
     }
 
+    public static function getEmbeddedImages(): array
+    {
+        $path = self::logoPath();
+        return $path ? ['omnispace-logo' => $path] : [];
+    }
+
     public static function replaceTemplateVars($template, $order, $items, $config, $event) {
         $customId = $order['custom_order_id'] ?? $order['id'];
         $paypalLink = $config['paypal_payment_link'] ?? '#';
@@ -226,9 +227,9 @@ class Mailer {
         $bodyHtml = self::buildBaseHtml('Order Received', $body, $event['name'] ?? '');
 
         $customId = $order['custom_order_id'] ?? $order['id'];
-        $subject = "Order Confirmation — {$customId}";
+        $subject = "Order Confirmation -- {$customId}";
 
-        return self::send($order['email'], $subject, $bodyHtml);
+        return self::send($order['email'], $subject, $bodyHtml, [], null, self::getEmbeddedImages());
     }
 
     public static function sendAvailabilityConfirmedEmail($order, $items, $config, $event, $invoicePdf = null) {
@@ -238,17 +239,17 @@ class Mailer {
         }
 
         $body = self::replaceTemplateVars($template, $order, $items, $config, $event);
-        $bodyHtml = self::buildBaseHtml('Availability Confirmed — Proceed to Payment', $body, $event['name'] ?? '');
+        $bodyHtml = self::buildBaseHtml('Availability Confirmed -- Proceed to Payment', $body, $event['name'] ?? '');
 
         $customId = $order['custom_order_id'] ?? $order['id'];
-        $subject = "Availability Confirmed — {$customId} — Proceed to Payment";
+        $subject = "Availability Confirmed -- {$customId} -- Proceed to Payment";
 
         $attachments = [];
         if ($invoicePdf) {
             $attachments["Invoice-{$customId}.pdf"] = $invoicePdf;
         }
 
-        return self::send($order['email'], $subject, $bodyHtml, $attachments);
+        return self::send($order['email'], $subject, $bodyHtml, $attachments, null, self::getEmbeddedImages());
     }
 
     public static function sendPaymentProcessedEmail($order, $items, $config, $event, $invoicePdf = null) {
@@ -258,16 +259,16 @@ class Mailer {
         }
 
         $body = self::replaceTemplateVars($template, $order, $items, $config, $event);
-        $bodyHtml = self::buildBaseHtml('Payment Processed — Order Complete', $body, $event['name'] ?? '');
+        $bodyHtml = self::buildBaseHtml('Payment Processed -- Order Complete', $body, $event['name'] ?? '');
 
         $customId = $order['custom_order_id'] ?? $order['id'];
-        $subject = "Payment Processed — {$customId} — Order Complete";
+        $subject = "Payment Processed -- {$customId} -- Order Complete";
 
         $attachments = [];
         if ($invoicePdf) {
             $attachments["Invoice-{$customId}.pdf"] = $invoicePdf;
         }
 
-        return self::send($order['email'], $subject, $bodyHtml, $attachments);
+        return self::send($order['email'], $subject, $bodyHtml, $attachments, null, self::getEmbeddedImages());
     }
 }
