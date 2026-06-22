@@ -64,6 +64,8 @@ Route::any('/order/{id}/confirmation', [OrderController::class, 'confirmation'])
 Route::any('/order/{id}/invoice', [OrderController::class, 'downloadInvoice']);
 Route::any('/order/history', [OrderController::class, 'orderHistory']);
 Route::any('/order/payments', [OrderController::class, 'paymentsOverview']);
+Route::any('/order/payment-reference', [OrderController::class, 'paymentReferenceForm']);
+Route::post('/order/payment-reference/submit', [OrderController::class, 'submitPaymentReference']);
 Route::any('/order/track', [OrderController::class, 'trackingForm']);
 Route::any('/order/track/lookup', [OrderController::class, 'trackingPortal']);
 Route::any('/{slug}/login', [CatalogController::class, 'login']);

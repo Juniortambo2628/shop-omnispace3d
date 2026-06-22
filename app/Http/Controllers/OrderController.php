@@ -82,26 +82,31 @@ class OrderController extends Controller
 
     public function orderHistory(): never
     {
-        $email = request()->query('email', '');
+        $search = request()->query('search', '');
+        $statusFilter = request()->query('status', '');
+        $page = max(1, (int) request()->query('page', 1));
         $orderId = request()->query('order');
 
-        $history = $email ? $this->adminOrders->getClientOrderHistory($email) : [];
+        $result = $this->adminOrders->listAllOrdersPaginated($search, $statusFilter, $page, 20);
+
         $selectedOrder = null;
         $selectedItems = [];
 
-        if ($orderId && !empty($history)) {
-            foreach ($history as $entry) {
-                if ($entry['order']['id'] === $orderId) {
-                    $selectedOrder = $entry['order'];
-                    $selectedItems = $entry['items'];
-                    break;
-                }
+        if ($orderId) {
+            $data = $this->adminOrders->findOrderWithItems($orderId);
+            if ($data) {
+                $selectedOrder = $data['order'];
+                $selectedItems = $data['items'];
             }
         }
 
         $this->render('storefront/history', [
-            'email' => $email,
-            'history' => $history,
+            'orders' => $result['orders'],
+            'total' => $result['total'],
+            'page' => $result['page'],
+            'total_pages' => $result['total_pages'],
+            'search' => $search,
+            'status_filter' => $statusFilter,
             'selected_order' => $selectedOrder,
             'selected_items' => $selectedItems,
         ]);
@@ -140,6 +145,47 @@ class OrderController extends Controller
             'payments' => $payments,
             'filter' => $filter,
             'stats' => $stats,
+        ]);
+    }
+
+    public function paymentReferenceForm(): never
+    {
+        $email = request()->query('email', '');
+        $orders = $email ? $this->adminOrders->getClientOrderHistory($email) : [];
+
+        $this->render('storefront/payment_reference', [
+            'email' => $email,
+            'orders' => $orders,
+            'success' => false,
+            'submitted_ref' => '',
+            'submitted_order_id' => '',
+        ]);
+    }
+
+    public function submitPaymentReference(Request $request): never
+    {
+        $email = $request->input('email', '');
+        $orderId = $request->input('order_id', '');
+        $paymentRef = trim($request->input('payment_reference', ''));
+
+        if (!$email || !$orderId || !$paymentRef) {
+            $this->redirect('/order/payment-reference?email=' . urlencode($email));
+        }
+
+        $data = $this->adminOrders->findOrderWithItems($orderId);
+
+        if (!$data || $data['order']['email'] !== $email) {
+            $this->redirect('/order/payment-reference?email=' . urlencode($email));
+        }
+
+        $this->adminOrders->updateClientPaymentReference($orderId, $paymentRef);
+
+        $this->render('storefront/payment_reference', [
+            'email' => $email,
+            'orders' => [],
+            'success' => true,
+            'submitted_ref' => $paymentRef,
+            'submitted_order_id' => $data['order']['custom_order_id'] ?? $orderId,
         ]);
     }
 

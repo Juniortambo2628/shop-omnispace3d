@@ -1,17 +1,19 @@
-<?php $page_title = 'My Orders - OmniShop'; ?>
+<?php $page_title = 'Order History - OmniShop'; ?>
 <?php include __DIR__ . '/_head.php'; ?>
     <style>
         .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
         .section { background: #fff; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 20px; }
         .section h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
-        .lookup-form { max-width: 500px; margin: 0 auto; padding: 40px 20px; }
-        .lookup-form h1 { font-size: 24px; font-weight: 700; color: #1a1a1a; text-align: center; margin-bottom: 8px; }
-        .lookup-form .subtitle { font-size: 14px; color: #666; text-align: center; margin-bottom: 24px; }
-        label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
-        input { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 16px; transition: border 0.2s; }
-        input:focus { outline: none; border-color: #0A9696; box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
-        .submit-btn { width: 100%; padding: 14px; background: #0A9696; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; font-family: inherit; transition: background 0.2s; }
-        .submit-btn:hover { background: #088080; }
+
+        .filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+        .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; }
+        .search-input:focus { outline: none; border-color: #0A9696; box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
+        .filter-select { padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; cursor: pointer; }
+        .filter-select:focus { outline: none; border-color: #0A9696; }
+        .filter-btn { padding: 10px 18px; background: #0A9696; color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.2s; }
+        .filter-btn:hover { background: #088080; }
+        .clear-btn { padding: 10px 14px; background: #fff; color: #888; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; text-decoration: none; }
+        .clear-btn:hover { background: #f5f5f5; }
 
         .orders-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .orders-table th { background: #0A9696; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
@@ -39,58 +41,62 @@
         .sum-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
         .sum-line.total { font-weight: 700; font-size: 18px; border-top: 2px solid #0A9696; padding-top: 12px; margin-top: 8px; }
 
-        .action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #0A9696; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit; text-decoration: none; transition: background 0.2s; }
+        .action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #0A9696; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; font-family: inherit; text-decoration: none; transition: background 0.2s; }
         .action-btn:hover { background: #088080; }
         .action-btn-outline { background: #fff; color: #0A9696; border: 1.5px solid #0A9696; }
         .action-btn-outline:hover { background: #D6F0EF; }
 
         .empty-state { text-align: center; padding: 60px 20px; color: #999; }
-        .back-link { display: inline-block; margin-bottom: 16px; color: #0A9696; font-size: 14px; font-weight: 500; text-decoration: none; }
-        .back-link:hover { text-decoration: underline; }
-        .order-summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 8px; align-items: center; }
 
-        @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 20px; }
+        .pagination a, .pagination span { padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .pagination a { background: #fff; color: #0A9696; border: 1px solid #ddd; }
+        .pagination a:hover { background: #D6F0EF; border-color: #0A9696; }
+        .pagination .active { background: #0A9696; color: #fff; border: 1px solid #0A9696; }
+        .pagination .disabled { color: #ccc; pointer-events: none; }
+        .results-count { font-size: 12px; color: #888; text-align: center; margin-top: 12px; }
+
+        @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
     </style>
 </head>
 <body>
 <?php
-$header_title = 'My Orders';
+$header_title = 'Order History';
 include __DIR__ . '/_header.php';
 ?>
 
-<?php if (empty($email)): ?>
 <div class="container">
-    <div class="lookup-form section">
-        <h1>&#128203; My Orders</h1>
-        <p class="subtitle">Enter your email address to view your order history, track status, and download invoices.</p>
-        <form method="GET" action="/order/history">
-            <label>Email Address <span style="color:#ef4444;">*</span></label>
-            <input type="email" name="email" required placeholder="Enter the email used for your order">
-            <button type="submit" class="submit-btn">View My Orders</button>
-        </form>
-    </div>
-</div>
-
-<?php else: ?>
-<div class="container">
-    <a href="/order/history" class="back-link">&#8592; Search Again</a>
-
-    <?php if (empty($history)): ?>
     <div class="section">
+        <h2>&#128203; Order History</h2>
+
+        <form method="GET" action="/order/history" class="filter-bar">
+            <input type="text" name="search" class="search-input" placeholder="Search company, contact, order ID, booth, email..." value="<?php echo htmlspecialchars($search); ?>">
+            <select name="status" class="filter-select">
+                <option value="">All Statuses</option>
+                <?php foreach (['Pending', 'Approved', 'Invoiced', 'Fulfilled', 'Cancelled'] as $s): ?>
+                <option value="<?php echo $s; ?>" <?php echo $status_filter === $s ? 'selected' : ''; ?>><?php echo $s; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <button type="submit" class="filter-btn">Search</button>
+            <?php if ($search || $status_filter): ?>
+            <a href="/order/history" class="clear-btn">Clear</a>
+            <?php endif; ?>
+        </form>
+
+        <?php if (empty($orders)): ?>
         <div class="empty-state">
             <p style="font-size:48px;margin-bottom:12px;">&#128269;</p>
-            <p>No orders found for <strong><?php echo htmlspecialchars($email); ?></strong></p>
+            <p>No orders found<?php echo ($search || $status_filter) ? ' matching your criteria' : ''; ?></p>
         </div>
-    </div>
-    <?php else: ?>
-    <div class="section">
-        <h2>&#128203; Order History (<?php echo count($history); ?> order<?php echo count($history) !== 1 ? 's' : ''; ?>)</h2>
+        <?php else: ?>
+        <div style="overflow-x:auto;">
         <table class="orders-table">
             <thead>
                 <tr>
                     <th>Invoice ID</th>
                     <th>Date</th>
                     <th>Company</th>
+                    <th>Contact</th>
                     <th>Booth</th>
                     <th>Total (USD)</th>
                     <th>Status</th>
@@ -99,23 +105,54 @@ include __DIR__ . '/_header.php';
                 </tr>
             </thead>
             <tbody>
-            <?php foreach ($history as $entry): ?>
+            <?php foreach ($orders as $entry): ?>
             <?php $ho = $entry['order']; ?>
             <tr class="<?php echo ($selected_order && $selected_order['id'] === $ho['id']) ? 'active' : ''; ?>">
-                <td><a href="/order/history?email=<?php echo urlencode($email); ?>&order=<?php echo urlencode($ho['id']); ?>"><?php echo htmlspecialchars($ho['custom_order_id'] ?? $ho['id']); ?></a></td>
+                <td><a href="/order/history?order=<?php echo urlencode($ho['id']); ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?><?php echo $status_filter ? '&status=' . urlencode($status_filter) : ''; ?><?php echo $page > 1 ? '&page=' . $page : ''; ?>"><?php echo htmlspecialchars($ho['custom_order_id'] ?? $ho['id']); ?></a></td>
                 <td><?php echo substr($ho['created_at'] ?? '', 0, 10); ?></td>
                 <td><?php echo htmlspecialchars($ho['company_name'] ?? ''); ?></td>
+                <td><?php echo htmlspecialchars($ho['contact_name'] ?? ''); ?></td>
                 <td><?php echo htmlspecialchars($ho['booth_number'] ?? '—'); ?></td>
                 <td style="font-weight:700;">$<?php echo number_format($ho['total'] ?? 0, 2); ?></td>
                 <td><span class="badge badge-<?php echo htmlspecialchars($ho['status'] ?? 'Pending'); ?>"><?php echo htmlspecialchars($ho['status'] ?? 'Pending'); ?></span></td>
                 <td><?php echo htmlspecialchars($ho['payment_method'] ?? '—'); ?></td>
-                <td>
-                    <a href="/order/<?php echo urlencode($ho['id']); ?>/invoice" class="action-btn action-btn-outline" target="_blank">&#128424; Invoice</a>
+                <td style="white-space:nowrap;">
+                    <a href="/order/<?php echo urlencode($ho['id']); ?>/invoice" class="action-btn action-btn-outline" target="_blank">Invoice</a>
                 </td>
             </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
+
+        <div class="results-count"><?php echo number_format($total); ?> order<?php echo $total !== 1 ? 's' : ''; ?> found</div>
+
+        <?php if ($total_pages > 1): ?>
+        <div class="pagination">
+            <?php
+            $baseUrl = '/order/history?';
+            if ($search) $baseUrl .= 'search=' . urlencode($search) . '&';
+            if ($status_filter) $baseUrl .= 'status=' . urlencode($status_filter) . '&';
+            ?>
+            <a href="<?php echo $baseUrl . 'page=' . max(1, $page - 1); ?>" class="<?php echo $page <= 1 ? 'disabled' : ''; ?>">&#8592; Prev</a>
+            <?php
+            $start = max(1, $page - 2);
+            $end = min($total_pages, $page + 2);
+            if ($start > 1): ?>
+                <a href="<?php echo $baseUrl . 'page=1'; ?>">1</a>
+                <?php if ($start > 2): ?><span class="disabled">...</span><?php endif; ?>
+            <?php endif; ?>
+            <?php for ($i = $start; $i <= $end; $i++): ?>
+                <a href="<?php echo $baseUrl . 'page=' . $i; ?>" class="<?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+            <?php endfor; ?>
+            <?php if ($end < $total_pages): ?>
+                <?php if ($end < $total_pages - 1): ?><span class="disabled">...</span><?php endif; ?>
+                <a href="<?php echo $baseUrl . 'page=' . $total_pages; ?>"><?php echo $total_pages; ?></a>
+            <?php endif; ?>
+            <a href="<?php echo $baseUrl . 'page=' . min($total_pages, $page + 1); ?>" class="<?php echo $page >= $total_pages ? 'disabled' : ''; ?>">Next &#8594;</a>
+        </div>
+        <?php endif; ?>
+        <?php endif; ?>
     </div>
 
     <?php if ($selected_order): ?>
@@ -139,6 +176,9 @@ include __DIR__ . '/_header.php';
                 <div class="detail-row"><span class="label">Payment Method:</span><span><?php echo htmlspecialchars($so['payment_method'] ?? '—'); ?></span></div>
                 <?php if (!empty($so['payment_reference'])): ?>
                 <div class="detail-row"><span class="label">Payment Ref:</span><span><?php echo htmlspecialchars($so['payment_reference']); ?></span></div>
+                <?php endif; ?>
+                <?php if (!empty($so['client_payment_reference'])): ?>
+                <div class="detail-row"><span class="label">Client Payment Ref:</span><span><?php echo htmlspecialchars($so['client_payment_reference']); ?></span></div>
                 <?php endif; ?>
                 <div class="detail-row"><span class="label">Payment Verification:</span><span><span class="badge badge-<?php echo htmlspecialchars($so['payment_verification_status'] ?? 'unverified'); ?>"><?php echo htmlspecialchars(ucfirst($so['payment_verification_status'] ?? 'unverified')); ?></span></span></div>
             </div>
@@ -164,14 +204,13 @@ include __DIR__ . '/_header.php';
             <div class="sum-line total"><span>Total:</span><span>$<?php echo number_format($so['total'] ?? 0, 2); ?></span></div>
         </div>
 
-        <div style="margin-top:20px;display:flex;gap:10px;">
+        <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
             <a href="/order/<?php echo urlencode($so['id']); ?>/invoice" class="action-btn action-btn-outline" target="_blank">&#128424; Download Invoice PDF</a>
+            <a href="/order/payment-reference?email=<?php echo urlencode($so['email'] ?? ''); ?>" class="action-btn action-btn-outline">&#128179; Submit Payment Ref</a>
         </div>
     </div>
     <?php endif; ?>
-    <?php endif; ?>
 </div>
-<?php endif; ?>
 
 <?php include __DIR__ . '/_footer.php'; ?>
 <?php include __DIR__ . '/_toast.php'; ?>

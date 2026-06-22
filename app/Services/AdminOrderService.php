@@ -185,6 +185,15 @@ class AdminOrderService
         ]);
     }
 
+    public function updateClientPaymentReference(string $orderId, string $clientPaymentReference): void
+    {
+        Order::where('id', $orderId)->update([
+            'client_payment_reference' => $clientPaymentReference,
+            'payment_verification_status' => 'pending',
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+    }
+
     public function verifyPayment(string $orderId, string $status, string $verifiedBy, ?string $clientPaymentReference = null): void
     {
         $allowed = ['verified', 'rejected', 'pending'];
@@ -226,6 +235,56 @@ class AdminOrderService
                 ];
             })
             ->all();
+    }
+
+    public function listAllOrdersPaginated(?string $search, ?string $statusFilter, int $page = 1, int $perPage = 20): array
+    {
+        $query = Order::query();
+
+        if ($statusFilter) {
+            $query->where('status', $statusFilter);
+        }
+
+        $query->orderByDesc('created_at');
+
+        $orderModels = $query->get();
+
+        if ($search) {
+            $orderModels = $orderModels->filter(function (Order $order) use ($search) {
+                return FuzzySearch::matchesRecord($order->toArray(), $search, [
+                    'company_name',
+                    'contact_name',
+                    'id',
+                    'custom_order_id',
+                    'booth_number',
+                    'email',
+                    'payment_reference',
+                    'client_payment_reference',
+                ]);
+            })->values();
+        }
+
+        $total = $orderModels->count();
+        $totalPages = max(1, (int) ceil($total / $perPage));
+        $page = max(1, min($page, $totalPages));
+        $offset = ($page - 1) * $perPage;
+        $paginated = $orderModels->slice($offset, $perPage);
+
+        $orders = [];
+        foreach ($paginated as $order) {
+            $orders[] = [
+                'order' => $order->toArray(),
+                'items' => $order->items()->get()->map->toArray()->all(),
+            ];
+        }
+
+        return [
+            'orders' => $orders,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage,
+            'total_pages' => $totalPages,
+        ];
     }
 
     public function buildTrackingPortalData(string $email, ?string $orderId = null): ?array
