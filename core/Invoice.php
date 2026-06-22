@@ -90,9 +90,9 @@ class Invoice {
             $firstLine = array_shift($lines);
             $restLines = implode("\n", $lines);
 
-            $bank_warning_html = "<div style='margin-top:12px; border:2px solid #F59E0B; border-radius:3px; padding:8px 10px; background:#FFFBEB; page-break-inside: avoid;'>
-                <div style='font-size:9px; font-weight:700; color:#92400E; margin-bottom:4px;'>IMPORTANT: " . htmlspecialchars($firstLine) . "</div>
-                <div style='font-size:7.5px; color:#78350F; line-height:1.35;'>" . htmlspecialchars($restLines) . "</div>
+            $bank_warning_html = "<div style='margin-top:12px; border:2px solid #0A9696; border-radius:3px; padding:8px 10px; background:#D6F0EF; page-break-inside: avoid;'>
+                <div style='font-size:9px; font-weight:700; color:#0A9696; margin-bottom:4px;'>IMPORTANT: " . htmlspecialchars($firstLine) . "</div>
+                <div style='font-size:7.5px; color:#333333; line-height:1.35;'>" . htmlspecialchars($restLines) . "</div>
             </div>";
         }
 
