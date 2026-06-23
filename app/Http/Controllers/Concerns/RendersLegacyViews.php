@@ -19,7 +19,9 @@ trait RendersLegacyViews
             die("View {$view} not found at {$viewPath}");
         }
 
-        $isHtmx = ! empty($_SERVER['HTTP_HX_REQUEST']);
+        $isHtmx = ! empty($_SERVER['HTTP_HX_REQUEST'])
+            || ! empty($_SERVER['HTTP_HX_TARGET'])
+            || ! empty($_SERVER['HTTP_HX_CURRENT_URL']);
 
         if ($isHtmx || str_contains($view, 'admin/layout')) {
             include $viewPath;
