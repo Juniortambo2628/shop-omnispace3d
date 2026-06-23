@@ -324,7 +324,7 @@ class AdminOrderService
 
         $this->loadLegacyDependencies();
 
-        return \Invoice::generate($order, $items, $event);
+        return \Invoice::generate($order, $items, $event, $GLOBALS['CONFIG']);
     }
 
     /**
@@ -499,7 +499,7 @@ class AdminOrderService
 
         $this->loadLegacyDependencies();
 
-        $invoicePdf = \Invoice::generate($order, $items, $event);
+        $invoicePdf = \Invoice::generate($order, $items, $event, $GLOBALS['CONFIG']);
 
         return \Mailer::$mailerMethod($order, $items, $GLOBALS['CONFIG'], $event, $invoicePdf);
     }

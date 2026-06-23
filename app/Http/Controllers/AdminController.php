@@ -670,9 +670,9 @@ class AdminController extends Controller
             'venue' => 'Kenyatta International Convention Centre',
         ];
 
-        $pdf = \Invoice::generate($sampleOrder, $sampleItems, $event);
+        $pdf = \Invoice::generate($sampleOrder, $sampleItems, $event, $config);
 
-        $this->sendPdfResponse($pdf, 'invoice-preview.pdf');
+        $this->sendPdfResponse($pdf, 'invoice-preview.pdf', true);
     }
 
     public function verifyPayment(Request $request, string $id): JsonResponse

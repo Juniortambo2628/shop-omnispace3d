@@ -48,10 +48,10 @@ trait RendersLegacyViews
         exit;
     }
 
-    protected function sendPdfResponse(string $pdf, string $filename): never
+    protected function sendPdfResponse(string $pdf, string $filename, bool $inline = false): never
     {
         header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Disposition: ' . ($inline ? 'inline' : 'attachment') . '; filename="' . $filename . '"');
         echo $pdf;
         exit;
     }

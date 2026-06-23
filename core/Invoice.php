@@ -4,8 +4,12 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 
 class Invoice {
-    public static function generate($order, $items, $event) {
+    public static function generate($order, $items, $event, $config = null) {
         global $CONFIG;
+
+        if ($config === null) {
+            $config = $CONFIG;
+        }
 
         $options = new Options();
         $options->set('isRemoteEnabled', true);
@@ -14,7 +18,7 @@ class Invoice {
 
         $dompdf = new Dompdf($options);
 
-        $html = self::buildHtml($order, $items, $event, $CONFIG);
+        $html = self::buildHtml($order, $items, $event, $config);
 
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
