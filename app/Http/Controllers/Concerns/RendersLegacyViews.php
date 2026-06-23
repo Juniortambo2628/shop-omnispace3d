@@ -21,7 +21,11 @@ trait RendersLegacyViews
 
         $isHtmx = ! empty($_SERVER['HTTP_HX_REQUEST'])
             || ! empty($_SERVER['HTTP_HX_TARGET'])
-            || ! empty($_SERVER['HTTP_HX_CURRENT_URL']);
+            || ! empty($_SERVER['HTTP_HX_CURRENT_URL'])
+            || (
+                isset($_SERVER['HTTP_ACCEPT'])
+                && trim($_SERVER['HTTP_ACCEPT']) === '*/*'
+            );
 
         if ($isHtmx || str_contains($view, 'admin/layout')) {
             include $viewPath;
