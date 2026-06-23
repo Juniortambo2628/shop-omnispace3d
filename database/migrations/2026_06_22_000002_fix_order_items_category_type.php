@@ -8,9 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->string('category', 100)->nullable()->default(null)->change();
-        });
+        $current = Schema::getColumnType('order_items', 'category');
+        if ($current !== 'string') {
+            Schema::table('order_items', function (Blueprint $table) {
+                $table->string('category', 100)->nullable()->default(null)->change();
+            });
+        }
     }
 
     public function down(): void
