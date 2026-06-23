@@ -10,11 +10,12 @@ class LegacyOrderAccess
 {
     public function handle(Request $request, Closure $next): Response
     {
-        require_once base_path('core/Auth.php');
+        if (! session()->has('admin_user')) {
+            header('Location: /admin/login');
+            exit;
+        }
 
-        \Auth::requireAdmin();
-
-        if ((\Auth::user()['role'] ?? '') === 'product_editor') {
+        if ((session()->get('admin_user.role', '')) === 'product_editor') {
             return redirect('/admin/products?error=Unauthorized');
         }
 

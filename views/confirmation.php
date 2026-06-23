@@ -1,21 +1,13 @@
 <?php $page_title = 'Order Confirmed - OmniShop'; ?>
 <?php include __DIR__ . '/storefront/_head.php'; ?>
+    <link rel="stylesheet" href="/static/css/components.css">
     <style>
-        .container { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 700px; padding: 40px 20px; }
         .success-icon { text-align: center; margin-bottom: 24px; }
         .success-icon .circle { display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: #D1FAE5; border-radius: 50%; font-size: 40px; animation: pop 0.5s ease; }
         @keyframes pop { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         .order-ref { text-align: center; font-size: 14px; color: #666; margin-bottom: 8px; }
         .order-ref strong { font-size: 22px; color: #0A9696; display: block; margin-top: 4px; }
-        .detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
-        .detail-row .label { color: #888; }
-        .item-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
-        .item-name { flex: 1; font-weight: 500; }
-        .item-color { font-size: 11px; color: #888; }
-        .item-qty { color: #888; min-width: 50px; text-align: center; }
-        .item-price { font-weight: 600; color: #0A9696; min-width: 80px; text-align: right; }
-        .sum-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
-        .sum-line.total { font-weight: 700; font-size: 18px; border-top: 2px solid #0A9696; padding-top: 12px; margin-top: 8px; }
         .email-note { background: #D6F0EF; border-radius: 8px; padding: 16px; text-align: center; font-size: 13px; color: #0A9696; margin: 24px 0; }
         .contact-box { background: #f9f9f9; border-radius: 8px; padding: 16px; text-align: center; font-size: 13px; color: #666; }
         .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }

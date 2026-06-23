@@ -8,6 +8,7 @@ use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class OrderController extends Controller
@@ -37,7 +38,7 @@ class OrderController extends Controller
 
     public function trackingForm(): never
     {
-        $eventSlug = request()->query('event', 'solarandstorage');
+        $eventSlug = request()->query('event', DEFAULT_EVENT);
 
         $this->render('storefront/tracking', [
             'event_slug' => $eventSlug,
@@ -50,7 +51,7 @@ class OrderController extends Controller
 
     public function trackingPortal(): never
     {
-        $eventSlug = request()->query('event', 'solarandstorage');
+        $eventSlug = request()->query('event', DEFAULT_EVENT);
         $email = request()->query('email', '');
         $orderId = request()->query('order');
 
@@ -82,31 +83,35 @@ class OrderController extends Controller
 
     public function orderHistory(): never
     {
+        $email = request()->query('email', '');
         $search = request()->query('search', '');
-        $statusFilter = request()->query('status', '');
-        $page = max(1, (int) request()->query('page', 1));
         $orderId = request()->query('order');
 
-        $result = $this->adminOrders->listAllOrdersPaginated($search, $statusFilter, $page, 20);
+        $orders = [];
+        $total = 0;
+
+        if ($email) {
+            $result = $this->adminOrders->listAllOrdersPaginated($search, '', 1, 200, $email);
+            $orders = $result['orders'];
+            $total = $result['total'];
+        }
 
         $selectedOrder = null;
         $selectedItems = [];
 
         if ($orderId) {
             $data = $this->adminOrders->findOrderWithItems($orderId);
-            if ($data) {
+            if ($data && $data['order']['email'] === $email) {
                 $selectedOrder = $data['order'];
                 $selectedItems = $data['items'];
             }
         }
 
         $this->render('storefront/history', [
-            'orders' => $result['orders'],
-            'total' => $result['total'],
-            'page' => $result['page'],
-            'total_pages' => $result['total_pages'],
+            'email' => $email,
+            'orders' => $orders,
+            'total' => $total,
             'search' => $search,
-            'status_filter' => $statusFilter,
             'selected_order' => $selectedOrder,
             'selected_items' => $selectedItems,
         ]);
@@ -196,14 +201,14 @@ class OrderController extends Controller
         $data = json_decode($request->getContent(), true);
 
         if (! $data) {
-            \Log::error('Order creation failed: Invalid JSON input', [
+            Log::error('Order creation failed: Invalid JSON input', [
                 'input' => $request->getContent(),
             ]);
 
             return response()->json(['error' => 'Invalid data'], 400);
         }
 
-        \Log::info('Attempting to create order', [
+        Log::info('Attempting to create order', [
             'event' => $data['event_slug'] ?? 'unknown',
             'email' => $data['email'] ?? 'unknown',
         ]);
@@ -213,11 +218,11 @@ class OrderController extends Controller
         try {
             $orderId = $this->orders->create($data, $CONFIG);
 
-            \Log::info('Order created successfully', ['order_id' => $orderId]);
+            Log::info('Order created successfully', ['order_id' => $orderId]);
 
             return response()->json(['success' => true, 'order_id' => $orderId]);
         } catch (Throwable $e) {
-            \Log::error('Order creation failed: ' . $e->getMessage(), [
+            Log::error('Order creation failed: ' . $e->getMessage(), [
                 'exception' => get_class($e),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -253,9 +258,6 @@ class OrderController extends Controller
             die('Order not found');
         }
 
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename="Invoice-' . $id . '.pdf"');
-        echo $pdf;
-        exit;
+        $this->sendPdfResponse($pdf, 'Invoice-' . $id . '.pdf');
     }
 }

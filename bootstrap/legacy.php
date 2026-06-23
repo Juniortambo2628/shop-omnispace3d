@@ -5,8 +5,6 @@ if (!defined('BASE_PATH')) {
 }
 
 require_once BASE_PATH . '/config.php';
-require_once BASE_PATH . '/core/DB.php';
-require_once BASE_PATH . '/core/Log.php';
 
 global $CONFIG;
 

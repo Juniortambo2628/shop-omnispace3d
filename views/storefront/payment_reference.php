@@ -1,35 +1,19 @@
 <?php $page_title = 'Submit Payment Reference - OmniShop'; ?>
 <?php include __DIR__ . '/_head.php'; ?>
+    <link rel="stylesheet" href="/static/css/components.css">
     <style>
-        .container { max-width: 600px; margin: 0 auto; padding: 30px 20px; }
-        .section { background: #fff; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 28px; margin-bottom: 20px; }
-        .section h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+        .container { max-width: 600px; }
+        .section h2 { margin-bottom: 6px; }
         .section .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.6; }
-        label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
-        input, select { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 18px; transition: border 0.2s; }
-        input:focus, select:focus { outline: none; border-color: #0A9696; box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
-        .submit-btn { width: 100%; padding: 14px; background: #0A9696; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; font-family: inherit; transition: background 0.2s; }
-        .submit-btn:hover { background: #088080; }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
-
         .order-card { background: #f9fffe; border: 1px solid #D6F0EF; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
         .order-card .order-id { font-family: monospace; font-weight: 700; color: #0A9696; font-size: 15px; }
         .order-card .order-meta { font-size: 12px; color: #888; margin-top: 4px; }
         .order-card .order-total { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
-
-        .badge { padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
-        .badge-Pending { background: #FEF3C7; color: #92400E; }
-        .badge-Approved { background: #D1FAE5; color: #065F46; }
-        .badge-Invoiced { background: #DBEAFE; color: #1E40AF; }
-        .badge-Fulfilled { background: #D6F0EF; color: #0A9696; }
-        .badge-Cancelled { background: #FEE2E2; color: #991B1B; }
-
         .help-text { font-size: 12px; color: #888; margin-top: -12px; margin-bottom: 18px; }
         .divider { border: none; border-top: 1px solid #eee; margin: 20px 0; }
         .success-box { background: #D1FAE5; border: 1px solid #10B981; border-radius: 8px; padding: 20px; text-align: center; }
         .success-box h3 { color: #065F46; font-size: 16px; margin-bottom: 8px; }
         .success-box p { color: #065F46; font-size: 13px; }
-        .empty-state { text-align: center; padding: 40px 20px; color: #999; }
     </style>
 </head>
 <body>

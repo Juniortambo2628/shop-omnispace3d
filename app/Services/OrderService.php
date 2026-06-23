@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Support\CategoryResolver;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class OrderService
@@ -53,12 +55,24 @@ class OrderService
             ]);
 
             foreach ($data['items'] as $item) {
+                $categoryNames = [];
+                foreach ($this->products->getCatalog()['CATEGORIES'] as $cat) {
+                    $categoryNames[$cat['id']] = $cat['name'];
+                }
+                $productCategoryByCode = [];
+                foreach ($this->products->getMergedProducts() as $product) {
+                    $code = strtoupper(trim((string) ($product['code'] ?? '')));
+                    if ($code !== '') {
+                        $productCategoryByCode[$code] = $product['category_id'] ?? '';
+                    }
+                }
+
                 OrderItem::create([
                     'order_id' => $orderId,
                     'product_id' => $item['product_id'],
                     'product_name' => $item['product_name'],
                     'product_code' => $item['product_code'],
-                    'category' => $this->resolveStoredCategory($item),
+                    'category' => CategoryResolver::resolve($item, $categoryNames, $productCategoryByCode),
                     'color_id' => $item['color_id'] ?? '',
                     'color_name' => $item['color_name'] ?? '',
                     'quantity' => $item['quantity'],
@@ -73,7 +87,7 @@ class OrderService
         try {
             $this->sendOrderNotifications($order, $config);
         } catch (Throwable $e) {
-            \Log::error('Order saved but notification failed: ' . $e->getMessage(), [
+            Log::error('Order saved but notification failed: ' . $e->getMessage(), [
                 'order_id' => $orderId,
                 'exception' => get_class($e),
             ]);
@@ -154,7 +168,6 @@ class OrderService
      */
     protected function sendOrderNotifications(Order $order, array $config): void
     {
-        require_once base_path('core/Invoice.php');
         require_once base_path('core/Mailer.php');
 
         $orderRow = $order->toArray();
@@ -175,47 +188,5 @@ class OrderService
         );
 
         \Mailer::send($adminEmail, $adminSubject, $adminBody);
-    }
-
-    /**
-     * @param  array<string, mixed>  $item
-     */
-    private function resolveStoredCategory(array $item): string
-    {
-        $categoryNames = [];
-
-        foreach ($this->products->getCatalog()['CATEGORIES'] as $cat) {
-            $categoryNames[$cat['id']] = $cat['name'];
-        }
-
-        $raw = trim((string) ($item['category'] ?? ''));
-
-        if ($raw !== '' && isset($categoryNames[$raw])) {
-            return $categoryNames[$raw];
-        }
-
-        if ($raw !== '') {
-            foreach ($categoryNames as $name) {
-                if (strcasecmp($raw, $name) === 0) {
-                    return $name;
-                }
-            }
-        }
-
-        $code = strtoupper(trim((string) ($item['product_code'] ?? '')));
-
-        if ($code !== '') {
-            foreach ($this->products->getMergedProducts() as $product) {
-                if (strtoupper((string) ($product['code'] ?? '')) === $code) {
-                    $catId = $product['category_id'] ?? '';
-
-                    if ($catId !== '' && isset($categoryNames[$catId])) {
-                        return $categoryNames[$catId];
-                    }
-                }
-            }
-        }
-
-        return $raw;
     }
 }

@@ -1,10 +1,9 @@
 <?php $page_title = 'Order History - OmniShop'; ?>
 <?php include __DIR__ . '/_head.php'; ?>
+    <link rel="stylesheet" href="/static/css/components.css">
     <style>
-        .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
-        .section { background: #fff; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 20px; }
-        .section h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
-
+        .action-btn { padding: 6px 12px; font-size: 11px; }
+        .order-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
         .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; }
         .search-input:focus { outline: none; border-color: #0A9696; box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
@@ -14,7 +13,6 @@
         .filter-btn:hover { background: #088080; }
         .clear-btn { padding: 10px 14px; background: #fff; color: #888; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; text-decoration: none; }
         .clear-btn:hover { background: #f5f5f5; }
-
         .orders-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .orders-table th { background: #0A9696; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         .orders-table td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; }
@@ -22,32 +20,6 @@
         .orders-table tr.active td { background: #D6F0EF; }
         .orders-table a { color: #0A9696; text-decoration: none; font-weight: 600; }
         .orders-table a:hover { text-decoration: underline; }
-
-        .badge { padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
-        .badge-Pending { background: #FEF3C7; color: #92400E; }
-        .badge-Approved { background: #D1FAE5; color: #065F46; }
-        .badge-Invoiced { background: #DBEAFE; color: #1E40AF; }
-        .badge-Fulfilled { background: #D6F0EF; color: #0A9696; }
-        .badge-Cancelled { background: #FEE2E2; color: #991B1B; }
-
-        .order-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
-        .detail-row .label { color: #888; }
-        .item-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
-        .item-name { flex: 1; font-weight: 500; }
-        .item-color { font-size: 11px; color: #888; }
-        .item-qty { color: #888; min-width: 50px; text-align: center; }
-        .item-price { font-weight: 600; color: #0A9696; min-width: 80px; text-align: right; }
-        .sum-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
-        .sum-line.total { font-weight: 700; font-size: 18px; border-top: 2px solid #0A9696; padding-top: 12px; margin-top: 8px; }
-
-        .action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #0A9696; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; font-family: inherit; text-decoration: none; transition: background 0.2s; }
-        .action-btn:hover { background: #088080; }
-        .action-btn-outline { background: #fff; color: #0A9696; border: 1.5px solid #0A9696; }
-        .action-btn-outline:hover { background: #D6F0EF; }
-
-        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
-
         .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 20px; }
         .pagination a, .pagination span { padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
         .pagination a { background: #fff; color: #0A9696; border: 1px solid #ddd; }
@@ -55,7 +27,6 @@
         .pagination .active { background: #0A9696; color: #fff; border: 1px solid #0A9696; }
         .pagination .disabled { color: #ccc; pointer-events: none; }
         .results-count { font-size: 12px; color: #888; text-align: center; margin-top: 12px; }
-
         @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
     </style>
 </head>
@@ -69,24 +40,28 @@ include __DIR__ . '/_header.php';
     <div class="section">
         <h2>&#128203; Order History</h2>
 
+        <?php if (!$email): ?>
+        <form method="GET" action="/order/history" class="lookup-form">
+            <p class="subtitle">Enter your email address to view your order history.</p>
+            <label for="email">Email Address</label>
+            <input type="email" name="email" id="email" placeholder="your@email.com" required>
+            <button type="submit" class="submit-btn">Look Up Orders</button>
+        </form>
+        <?php else: ?>
+
         <form method="GET" action="/order/history" class="filter-bar">
-            <input type="text" name="search" class="search-input" placeholder="Search company, contact, order ID, booth, email..." value="<?php echo htmlspecialchars($search); ?>">
-            <select name="status" class="filter-select">
-                <option value="">All Statuses</option>
-                <?php foreach (['Pending', 'Approved', 'Invoiced', 'Fulfilled', 'Cancelled'] as $s): ?>
-                <option value="<?php echo $s; ?>" <?php echo $status_filter === $s ? 'selected' : ''; ?>><?php echo $s; ?></option>
-                <?php endforeach; ?>
-            </select>
+            <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
+            <input type="text" name="search" class="search-input" placeholder="Search order ID, company, contact..." value="<?php echo htmlspecialchars($search); ?>">
             <button type="submit" class="filter-btn">Search</button>
-            <?php if ($search || $status_filter): ?>
-            <a href="/order/history" class="clear-btn">Clear</a>
+            <?php if ($search): ?>
+            <a href="/order/history?email=<?php echo urlencode($email); ?>" class="clear-btn">Clear</a>
             <?php endif; ?>
         </form>
 
         <?php if (empty($orders)): ?>
         <div class="empty-state">
             <p style="font-size:48px;margin-bottom:12px;">&#128269;</p>
-            <p>No orders found<?php echo ($search || $status_filter) ? ' matching your criteria' : ''; ?></p>
+            <p>No orders found for <?php echo htmlspecialchars($email); ?><?php echo $search ? ' matching your search' : ''; ?></p>
         </div>
         <?php else: ?>
         <div style="overflow-x:auto;">
@@ -108,7 +83,7 @@ include __DIR__ . '/_header.php';
             <?php foreach ($orders as $entry): ?>
             <?php $ho = $entry['order']; ?>
             <tr class="<?php echo ($selected_order && $selected_order['id'] === $ho['id']) ? 'active' : ''; ?>">
-                <td><a href="/order/history?order=<?php echo urlencode($ho['id']); ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?><?php echo $status_filter ? '&status=' . urlencode($status_filter) : ''; ?><?php echo $page > 1 ? '&page=' . $page : ''; ?>"><?php echo htmlspecialchars($ho['custom_order_id'] ?? $ho['id']); ?></a></td>
+                <td><a href="/order/history?email=<?php echo urlencode($email); ?>&order=<?php echo urlencode($ho['id']); ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?>"><?php echo htmlspecialchars($ho['custom_order_id'] ?? $ho['id']); ?></a></td>
                 <td><?php echo substr($ho['created_at'] ?? '', 0, 10); ?></td>
                 <td><?php echo htmlspecialchars($ho['company_name'] ?? ''); ?></td>
                 <td><?php echo htmlspecialchars($ho['contact_name'] ?? ''); ?></td>
@@ -126,31 +101,6 @@ include __DIR__ . '/_header.php';
         </div>
 
         <div class="results-count"><?php echo number_format($total); ?> order<?php echo $total !== 1 ? 's' : ''; ?> found</div>
-
-        <?php if ($total_pages > 1): ?>
-        <div class="pagination">
-            <?php
-            $baseUrl = '/order/history?';
-            if ($search) $baseUrl .= 'search=' . urlencode($search) . '&';
-            if ($status_filter) $baseUrl .= 'status=' . urlencode($status_filter) . '&';
-            ?>
-            <a href="<?php echo $baseUrl . 'page=' . max(1, $page - 1); ?>" class="<?php echo $page <= 1 ? 'disabled' : ''; ?>">&#8592; Prev</a>
-            <?php
-            $start = max(1, $page - 2);
-            $end = min($total_pages, $page + 2);
-            if ($start > 1): ?>
-                <a href="<?php echo $baseUrl . 'page=1'; ?>">1</a>
-                <?php if ($start > 2): ?><span class="disabled">...</span><?php endif; ?>
-            <?php endif; ?>
-            <?php for ($i = $start; $i <= $end; $i++): ?>
-                <a href="<?php echo $baseUrl . 'page=' . $i; ?>" class="<?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
-            <?php endfor; ?>
-            <?php if ($end < $total_pages): ?>
-                <?php if ($end < $total_pages - 1): ?><span class="disabled">...</span><?php endif; ?>
-                <a href="<?php echo $baseUrl . 'page=' . $total_pages; ?>"><?php echo $total_pages; ?></a>
-            <?php endif; ?>
-            <a href="<?php echo $baseUrl . 'page=' . min($total_pages, $page + 1); ?>" class="<?php echo $page >= $total_pages ? 'disabled' : ''; ?>">Next &#8594;</a>
-        </div>
         <?php endif; ?>
         <?php endif; ?>
     </div>

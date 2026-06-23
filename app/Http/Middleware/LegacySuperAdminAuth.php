@@ -10,9 +10,15 @@ class LegacySuperAdminAuth
 {
     public function handle(Request $request, Closure $next): Response
     {
-        require_once base_path('core/Auth.php');
+        if (! session()->has('admin_user')) {
+            header('Location: /admin/login');
+            exit;
+        }
 
-        \Auth::requireSuperAdmin();
+        if ((session()->get('admin_user.role', '')) !== 'super_admin') {
+            header('Location: /admin/orders?error=Unauthorized');
+            exit;
+        }
 
         return $next($request);
     }

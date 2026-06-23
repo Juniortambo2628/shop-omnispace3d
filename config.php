@@ -51,7 +51,6 @@ define('SITE_NAME', 'OmniShop');
 
 $CONFIG = [
     "paypal_email" => "susan@susanmboya.com",
-    "admin_password" => "Silversky#10",
     "contact_email" => "solarandstoragelive@omnispace3d.com",
     "contact_phone" => "+254 731 001 723",
     "website" => "www.omnispace3d.com",
@@ -66,6 +65,8 @@ define('ROLE_LABELS', [
 ]);
 
 // Events
+define('DEFAULT_EVENT', 'solarandstorage');
+
 define('EVENTS', [
     "solarandstorage" => [
         "name" => "Solar and Storage Live Kenya 2026",
@@ -86,8 +87,3 @@ define('EVENTS', [
         ]
     ]
 ]);
-
-// Start session
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}

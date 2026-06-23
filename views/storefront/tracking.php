@@ -1,61 +1,19 @@
 <?php $page_title = 'Track Order - OmniShop'; ?>
 <?php include __DIR__ . '/_head.php'; ?>
+    <link rel="stylesheet" href="/static/css/components.css">
     <style>
-        .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
-        .section { background: #fff; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 20px; }
-        .section h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .lookup-form { max-width: 500px; margin: 0 auto; padding: 40px 20px; }
-        .lookup-form h1 { font-size: 24px; font-weight: 700; color: #1a1a1a; text-align: center; margin-bottom: 8px; }
-        .lookup-form .subtitle { font-size: 14px; color: #666; text-align: center; margin-bottom: 24px; }
-        label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
-        input { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 16px; transition: border 0.2s; }
-        input:focus { outline: none; border-color: #0A9696; box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
-        .submit-btn { width: 100%; padding: 14px; background: #0A9696; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; font-family: inherit; transition: background 0.2s; }
-        .submit-btn:hover { background: #088080; }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
-
+        .container { display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
+        .section h2 { display: flex; align-items: center; gap: 8px; }
+        .action-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
         .order-history-item { padding: 14px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
         .order-history-item:hover { border-color: #0A9696; background: #f9fffe; }
         .order-history-item.active { border-color: #0A9696; background: #D6F0EF; }
         .order-history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .order-id { font-family: monospace; font-weight: 700; color: #0A9696; font-size: 13px; }
         .custom-order-id { font-family: monospace; font-size: 11px; color: #888; }
-        .badge { padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
-        .badge-Pending { background: #FEF3C7; color: #92400E; }
-        .badge-Approved { background: #D1FAE5; color: #065F46; }
-        .badge-Invoiced { background: #DBEAFE; color: #1E40AF; }
-        .badge-Fulfilled { background: #D6F0EF; color: #0A9696; }
-        .badge-Cancelled { background: #FEE2E2; color: #991B1B; }
         .order-history-meta { font-size: 12px; color: #888; }
         .order-history-total { font-size: 14px; font-weight: 700; color: #1a1a1a; }
-
-        .detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
-        .detail-row .label { color: #888; }
-        .item-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
-        .item-name { flex: 1; font-weight: 500; }
-        .item-color { font-size: 11px; color: #888; }
-        .item-qty { color: #888; min-width: 50px; text-align: center; }
-        .item-price { font-weight: 600; color: #0A9696; min-width: 80px; text-align: right; }
-        .sum-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
-        .sum-line.total { font-weight: 700; font-size: 18px; border-top: 2px solid #0A9696; padding-top: 12px; margin-top: 8px; }
-
-        .empty-state { text-align: center; padding: 40px 20px; color: #999; }
-        .empty-state a { color: #0A9696; font-weight: 600; text-decoration: none; }
-
-        .summary-card { position: sticky; top: 20px; }
-        .action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; background: #0A9696; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; text-decoration: none; transition: background 0.2s; }
-        .action-btn:hover { background: #088080; }
-        .action-btn-outline { background: #fff; color: #0A9696; border: 1.5px solid #0A9696; }
-        .action-btn-outline:hover { background: #D6F0EF; }
-        .action-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
-
-        .back-link { display: inline-block; margin-bottom: 20px; color: #0A9696; font-size: 14px; font-weight: 500; text-decoration: none; }
-        .back-link:hover { text-decoration: underline; }
-
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
-            .summary-card { position: static; }
-        }
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .summary-card { position: static; } }
     </style>
 </head>
 <body>

@@ -27,6 +27,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Order extends Model
 {
+    public const STATUSES = ['Pending', 'Approved', 'Invoiced', 'Fulfilled', 'Cancelled'];
+
+    public const VERIFICATION_STATUSES = ['unverified', 'pending', 'verified', 'rejected'];
+
     public $incrementing = false;
 
     protected $keyType = 'string';

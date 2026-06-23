@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\DB;
 
 class SettingsService
 {
@@ -14,11 +15,11 @@ class SettingsService
     public function loadFromDatabase(): array
     {
         try {
-            $settings = \DB::fetchAll('SELECT * FROM settings');
+            $settings = DB::select('SELECT * FROM settings');
             $config = [];
 
             foreach ($settings as $setting) {
-                $config[$setting['key']] = $setting['value'];
+                $config[$setting->key] = $setting->value;
             }
 
             return $config;

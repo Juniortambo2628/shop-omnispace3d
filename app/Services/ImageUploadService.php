@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 use Intervention\Image\ImageManager;
@@ -139,7 +140,7 @@ class ImageUploadService
             @unlink($mainTemp);
             @unlink($thumbTemp);
 
-            \Log::error('Image processing failed, saving original file: ' . $e->getMessage(), [
+            Log::error('Image processing failed, saving original file: ' . $e->getMessage(), [
                 'stem' => $stem,
             ]);
 
@@ -153,7 +154,7 @@ class ImageUploadService
             }
         }
 
-        \Log::info("Image processed: {$stem}.webp + thumb_{$stem}.webp");
+        Log::info("Image processed: {$stem}.webp + thumb_{$stem}.webp");
 
         return true;
     }
@@ -360,7 +361,7 @@ class ImageUploadService
         }
 
         copy($tmpPath, $targetDir . $stem . '.' . $ext);
-        \Log::info("Image saved without processing: {$stem}.{$ext}");
+        Log::info("Image saved without processing: {$stem}.{$ext}");
 
         return true;
     }

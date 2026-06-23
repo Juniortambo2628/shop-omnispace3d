@@ -10,9 +10,10 @@ class LegacyAdminAuth
 {
     public function handle(Request $request, Closure $next): Response
     {
-        require_once base_path('core/Auth.php');
-
-        \Auth::requireAdmin();
+        if (! session()->has('admin_user')) {
+            header('Location: /admin/login');
+            exit;
+        }
 
         return $next($request);
     }

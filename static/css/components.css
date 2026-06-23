@@ -1,0 +1,82 @@
+/* ── Container ── */
+.container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+
+/* ── Section Card ── */
+.section { background: #fff; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 20px; }
+.section h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 16px; }
+
+/* ── Form Primitives ── */
+label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
+input, select { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 16px; transition: border 0.2s; }
+input:focus, select:focus { outline: none; border-color: #0A9696; box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
+.submit-btn { width: 100%; padding: 14px; background: #0A9696; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; font-family: inherit; transition: background 0.2s; }
+.submit-btn:hover { background: #088080; }
+.submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* ── Badges ── */
+.badge { padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
+.badge-Pending { background: #FEF3C7; color: #92400E; }
+.badge-Approved { background: #D1FAE5; color: #065F46; }
+.badge-Invoiced { background: #DBEAFE; color: #1E40AF; }
+.badge-Fulfilled { background: #D6F0EF; color: #0A9696; }
+.badge-Cancelled { background: #FEE2E2; color: #991B1B; }
+.badge-unverified { background: #F3F4F6; color: #6B7280; }
+.badge-pending { background: #FEF3C7; color: #92400E; }
+.badge-verified { background: #D1FAE5; color: #065F46; }
+.badge-rejected { background: #FEE2E2; color: #991B1B; }
+.badge-super { background: #EDE9FE; color: #5B21B6; }
+.badge-editor { background: #FEF3C7; color: #92400E; }
+.badge-order { background: #DBEAFE; color: #1E40AF; }
+.badge-db { background: #D1FAE5; color: #065F46; }
+.badge-catalog { background: #F3F4F6; color: #6B7280; }
+
+/* ── Stock Bar ── */
+.stock-bar-wrap { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+.stock-bar { height: 100%; border-radius: 4px; }
+.bar-ok { background: #0A9696; }
+.bar-warn { background: #F59E0B; }
+.bar-crit { background: #dc2626; }
+.stock-pct { flex: 0 0 45px; text-align: right; font-weight: 700; }
+.stock-nums { flex: 0 0 70px; text-align: right; color: #999; }
+
+/* ── Order ID ── */
+.order-id { font-family: monospace; font-weight: 700; color: #0A9696; font-size: 13px; }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 24px; right: 24px; background: #333; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.toast.show { opacity: 1; }
+.toast.success { background: #0A9696; }
+.toast.error { background: #dc2626; }
+
+/* ── Detail / Item / Sum rows ── */
+.detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+.detail-row .label { color: #888; }
+.item-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
+.item-name { flex: 1; font-weight: 500; }
+.item-color { font-size: 11px; color: #888; }
+.item-qty { color: #888; min-width: 50px; text-align: center; }
+.item-price { font-weight: 600; color: #0A9696; min-width: 80px; text-align: right; }
+.sum-line { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+.sum-line.total { font-weight: 700; font-size: 18px; border-top: 2px solid #0A9696; padding-top: 12px; margin-top: 8px; }
+
+/* ── Buttons ── */
+.action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; background: #0A9696; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; text-decoration: none; transition: background 0.2s; }
+.action-btn:hover { background: #088080; }
+.action-btn-outline { background: #fff; color: #0A9696; border: 1.5px solid #0A9696; }
+.action-btn-outline:hover { background: #D6F0EF; }
+
+/* ── Empty State ── */
+.empty-state { text-align: center; padding: 60px 20px; color: #999; }
+.empty-state a { color: #0A9696; font-weight: 600; text-decoration: none; }
+
+/* ── Back Link ── */
+.back-link { display: inline-block; margin-bottom: 20px; color: #0A9696; font-size: 14px; font-weight: 500; text-decoration: none; }
+.back-link:hover { text-decoration: underline; }
+
+/* ── Lookup Form ── */
+.lookup-form { max-width: 500px; margin: 0 auto; padding: 40px 20px; }
+.lookup-form h1 { font-size: 24px; font-weight: 700; color: #1a1a1a; text-align: center; margin-bottom: 8px; }
+.lookup-form .subtitle { font-size: 14px; color: #666; text-align: center; margin-bottom: 24px; }
+
+/* ── Summary Card (sticky sidebar) ── */
+.summary-card { position: sticky; top: 20px; }

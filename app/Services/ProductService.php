@@ -6,6 +6,7 @@ use App\Models\AdminProduct;
 use App\Support\AdminProductList;
 
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator as v;
@@ -603,7 +604,7 @@ class ProductService
 
             return ['success' => null, 'error' => 'Failed to process image.'];
         } catch (\Throwable $e) {
-            \Log::error('Image upload error: ' . $e->getMessage(), [
+            Log::error('Image upload error: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
@@ -722,7 +723,7 @@ class ProductService
 
     public function isCatalogAuthenticated(string $slug): bool
     {
-        return isset($_SESSION['catalog_auth_' . $slug]);
+        return session()->has('catalog_auth_' . $slug);
     }
 
     public function authenticateCatalog(string $slug, string $password): bool
@@ -734,7 +735,7 @@ class ProductService
         }
 
         if ($password === ($event['catalog_password'] ?? null)) {
-            $_SESSION['catalog_auth_' . $slug] = true;
+            session()->put('catalog_auth_' . $slug, true);
 
             return true;
         }
@@ -743,7 +744,7 @@ class ProductService
 
         $settingsKey = 'catalog_password_' . $slug;
         if (! empty($CONFIG[$settingsKey]) && $password === $CONFIG[$settingsKey]) {
-            $_SESSION['catalog_auth_' . $slug] = true;
+            session()->put('catalog_auth_' . $slug, true);
 
             return true;
         }

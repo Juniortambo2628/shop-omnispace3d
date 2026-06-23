@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Order;
+use App\Support\CategoryResolver;
+use Illuminate\Support\Facades\DB;
+
 class AdminPackingService
 {
     public function __construct(
@@ -16,30 +20,29 @@ class AdminPackingService
         $categoryNames = $this->categoryNameMap();
         $productCategoryByCode = $this->productCategoryByCode();
 
-        $orders = \DB::fetchAll(
-            "SELECT * FROM orders WHERE event_slug = ? AND status != 'Cancelled'",
-            [$eventSlug]
-        );
+        $orders = Order::with('items')
+            ->where('event_slug', $eventSlug)
+            ->where('status', '!=', 'Cancelled')
+            ->get();
 
         $itemsByCat = [];
 
         foreach ($orders as $order) {
-            $items = \DB::fetchAll('SELECT * FROM order_items WHERE order_id = ?', [$order['id']]);
-
-            foreach ($items as $item) {
-                $cat = $this->resolveItemCategoryName($item, $categoryNames, $productCategoryByCode);
+            foreach ($order->items as $item) {
+                $itemArr = $item->toArray();
+                $cat = CategoryResolver::resolve($itemArr, $categoryNames, $productCategoryByCode);
 
                 if (! isset($itemsByCat[$cat])) {
                     $itemsByCat[$cat] = [];
                 }
 
                 $itemsByCat[$cat][] = [
-                    'order_id' => $order['id'],
-                    'company' => $order['company_name'],
-                    'booth' => $order['booth_number'],
-                    'product' => $item['product_name'],
-                    'color' => $item['color_name'],
-                    'qty' => $item['quantity'],
+                    'order_id' => $order->id,
+                    'company' => $order->company_name,
+                    'booth' => $order->booth_number,
+                    'product' => $item->product_name,
+                    'color' => $item->color_name,
+                    'qty' => $item->quantity,
                 ];
             }
         }
@@ -52,56 +55,22 @@ class AdminPackingService
      */
     public function boothsByEvent(string $eventSlug): array
     {
-        $orders = \DB::fetchAll(
-            "SELECT * FROM orders WHERE event_slug = ? AND status != 'Cancelled' ORDER BY booth_number ASC",
-            [$eventSlug]
-        );
+        $orders = Order::with('items')
+            ->where('event_slug', $eventSlug)
+            ->where('status', '!=', 'Cancelled')
+            ->orderBy('booth_number')
+            ->get();
 
         $booths = [];
 
         foreach ($orders as $order) {
             $booths[] = [
-                'order' => $order,
-                'items' => \DB::fetchAll('SELECT * FROM order_items WHERE order_id = ?', [$order['id']]),
+                'order' => $order->toArray(),
+                'items' => $order->items->map->toArray()->all(),
             ];
         }
 
         return $booths;
-    }
-
-    /**
-     * @param  array<string, mixed>  $item
-     * @param  array<string, string>  $categoryNames
-     * @param  array<string, string>  $productCategoryByCode
-     */
-    public function resolveItemCategoryName(array $item, array $categoryNames, array $productCategoryByCode): string
-    {
-        $raw = trim((string) ($item['category'] ?? $item['category_name'] ?? ''));
-
-        if ($raw !== '' && isset($categoryNames[$raw])) {
-            return $categoryNames[$raw];
-        }
-
-        if ($raw !== '') {
-            foreach ($categoryNames as $id => $name) {
-                if (strcasecmp($raw, $name) === 0) {
-                    return $name;
-                }
-            }
-        }
-
-        $code = strtoupper(trim((string) ($item['product_code'] ?? '')));
-        $catId = $code !== '' ? ($productCategoryByCode[$code] ?? '') : '';
-
-        if ($catId !== '' && isset($categoryNames[$catId])) {
-            return $categoryNames[$catId];
-        }
-
-        if ($raw !== '') {
-            return $raw;
-        }
-
-        return 'Uncategorized';
     }
 
     /**

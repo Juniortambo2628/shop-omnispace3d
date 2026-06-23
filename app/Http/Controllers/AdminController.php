@@ -31,29 +31,23 @@ class AdminController extends Controller
 
     public function index(): never
     {
-        require_once BASE_PATH . '/core/Auth.php';
-        $this->redirect(\Auth::defaultLandingPath());
+        $this->redirect($this->auth->defaultLandingPath());
     }
 
     public function login(Request $request): never
     {
         if ($this->auth->check()) {
-            require_once BASE_PATH . '/core/Auth.php';
-            $this->redirect(\Auth::defaultLandingPath());
+            $this->redirect($this->auth->defaultLandingPath());
         }
 
         $error = null;
 
         if ($request->isMethod('POST')) {
-            global $CONFIG;
-
             if ($this->auth->attemptLogin(
                 $request->input('username', ''),
                 $request->input('password', ''),
-                $CONFIG
             )) {
-                require_once BASE_PATH . '/core/Auth.php';
-                $this->redirect(\Auth::defaultLandingPath());
+                $this->redirect($this->auth->defaultLandingPath());
             }
 
             $error = 'Incorrect email or password. Please try again.';
@@ -72,7 +66,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $statusFilter = $request->query('status');
         $search = $request->query('search');
 
@@ -164,18 +158,13 @@ class AdminController extends Controller
 
     public function exportOrders(Request $request): never
     {
-        $this->auth->requireAdmin();
-
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $statusFilter = $request->query('status');
         $search = $request->query('search');
         $csv = $this->adminOrders->exportCsv($eventSlug, $statusFilter, $search);
         $filename = 'orders-' . $eventSlug . '-' . date('Y-m-d') . '.csv';
 
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        echo $csv;
-        exit;
+        $this->sendCsvResponse($csv, $filename);
     }
 
     public function sendInvoice(string $id): JsonResponse
@@ -197,25 +186,20 @@ class AdminController extends Controller
 
     public function invoice(string $id): never
     {
-        $this->auth->requireAdmin();
-
         $pdf = $this->adminOrders->generateInvoicePdf($id);
 
         if (! $pdf) {
             die('Order not found');
         }
 
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename="Invoice-' . $id . '.pdf"');
-        echo $pdf;
-        exit;
+        $this->sendPdfResponse($pdf, 'Invoice-' . $id . '.pdf');
     }
 
     public function products(Request $request): never
     {
         $this->auth->requireAdmin();
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $page = (int) $request->query('page', 1);
 
         $this->render('admin/products', array_merge(
@@ -234,7 +218,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $error = null;
         $catalog = $this->products->getCatalog();
 
@@ -269,7 +253,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $error = null;
         $found = $this->products->findProductForEdit($id);
 
@@ -371,7 +355,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $page = (int) $request->query('page', 1);
 
         if ($request->isMethod('POST')) {
@@ -395,7 +379,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $slug = $request->query('event', 'solarandstorage');
+        $slug = $request->query('event', DEFAULT_EVENT);
 
         $this->render('admin/packing_list', array_merge([
             'items_by_cat' => $this->packing->itemsByCategory($slug),
@@ -416,7 +400,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $slug = $request->query('event', 'solarandstorage');
+        $slug = $request->query('event', DEFAULT_EVENT);
 
         $this->render('admin/packing_by_booth', array_merge([
             'booths' => $this->packing->boothsByEvent($slug),
@@ -437,7 +421,7 @@ class AdminController extends Controller
     {
         $this->auth->requireAdmin();
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $error = $request->query('error');
         $success = $request->query('deleted') ? 'Image removed successfully.' : null;
 
@@ -495,7 +479,7 @@ class AdminController extends Controller
         $this->auth->requireSuperAdmin();
 
         $error = null;
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
 
         if ($request->isMethod('POST')) {
             $displayName = trim($request->input('display_name', ''));
@@ -540,7 +524,7 @@ class AdminController extends Controller
             $this->redirect('/admin/users?error=User not found');
         }
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
         $error = null;
         $currentUserId = $this->resolveCurrentUserId();
 
@@ -632,7 +616,7 @@ class AdminController extends Controller
             $this->redirect('/admin/settings?saved=1');
         }
 
-        $eventSlug = $request->query('event', 'solarandstorage');
+        $eventSlug = $request->query('event', DEFAULT_EVENT);
 
         $this->render('admin/settings', array_merge([
             'settings' => $this->settings->getAll(),
@@ -645,15 +629,8 @@ class AdminController extends Controller
         ], $this->auth->viewContext()));
     }
 
-    public function globalConfig(Request $request): never
+    public function invoicePreview(): never
     {
-        $this->redirect('/admin/settings');
-    }
-
-    public function invoicePreview()
-    {
-        $this->auth->requireSuperAdmin();
-
         require_once BASE_PATH . '/core/Invoice.php';
 
         global $CONFIG;
@@ -695,12 +672,7 @@ class AdminController extends Controller
 
         $pdf = \Invoice::generate($sampleOrder, $sampleItems, $event);
 
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: inline; filename="invoice-preview.pdf"');
-        header('Cache-Control: no-store, no-cache, must-revalidate');
-        header('Pragma: no-cache');
-        echo $pdf;
-        exit;
+        $this->sendPdfResponse($pdf, 'invoice-preview.pdf');
     }
 
     public function verifyPayment(Request $request, string $id): JsonResponse

@@ -3,18 +3,14 @@
 namespace App\Services;
 
 use App\Models\AdminUser;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class AuthService
 {
-    public function __construct()
-    {
-        require_once BASE_PATH . '/core/Auth.php';
-    }
-
     public function check(): bool
     {
-        return \Auth::check();
+        return session()->has('admin_user');
     }
 
     /**
@@ -22,28 +18,36 @@ class AuthService
      */
     public function user(): ?array
     {
-        return \Auth::user();
+        return session()->get('admin_user');
     }
 
     public function isSuperAdmin(): bool
     {
-        return \Auth::isSuperAdmin();
+        return (session()->get('admin_user.role', '')) === 'super_admin';
     }
 
     public function requireAdmin(): void
     {
-        \Auth::requireAdmin();
+        if (! $this->check()) {
+            header('Location: /admin/login');
+            exit;
+        }
     }
 
     public function requireSuperAdmin(): void
     {
-        \Auth::requireSuperAdmin();
+        $this->requireAdmin();
+
+        if (! $this->isSuperAdmin()) {
+            header('Location: /admin/orders?error=Unauthorized');
+            exit;
+        }
     }
 
     /**
      * @param  array<string, mixed>  $config
      */
-    public function attemptLogin(string $username, string $password, array $config): bool
+    public function attemptLogin(string $username, string $password): bool
     {
         $username = trim($username);
 
@@ -63,8 +67,12 @@ class AuthService
 
         if ($user && $hash && password_verify($password, $hash)) {
             $identity = ! empty($user['email']) ? $user['email'] : $user['username'];
-            \Auth::login($identity, $user['role'], (int) $user['id']);
-            \Log::info('Admin login successful', [
+            session()->put('admin_user', [
+                'id' => (int) $user['id'],
+                'username' => $identity,
+                'role' => $user['role'],
+            ]);
+            Log::info('Admin login successful', [
                 'user' => $identity,
                 'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
             ]);
@@ -72,16 +80,7 @@ class AuthService
             return true;
         }
 
-        if (
-            (empty($username) || strtolower($username) === 'admin')
-            && $password === ($config['admin_password'] ?? '')
-        ) {
-            \Auth::login('admin', 'super_admin', 0);
-
-            return true;
-        }
-
-        \Log::error('Failed admin login attempt', [
+        Log::error('Failed admin login attempt', [
             'username' => $username,
             'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
         ]);
@@ -91,8 +90,8 @@ class AuthService
 
     public function logout(): void
     {
-        \Log::info('Admin logout', ['user' => \Auth::user()['username'] ?? 'unknown']);
-        \Auth::logout();
+        Log::info('Admin logout', ['user' => session()->get('admin_user.username', 'unknown')]);
+        session()->forget('admin_user');
     }
 
     /**
@@ -101,22 +100,26 @@ class AuthService
     public function viewContext(): array
     {
         return [
-            'current_username' => \Auth::user()['username'] ?? '',
-            'current_role' => \Auth::user()['role'] ?? '',
+            'current_username' => session()->get('admin_user.username', ''),
+            'current_role' => session()->get('admin_user.role', ''),
         ];
     }
 
     public function updateSessionIdentity(string $identity): void
     {
-        if (! \Auth::check()) {
+        if (! $this->check()) {
             return;
         }
 
-        $_SESSION['admin_user']['username'] = $identity;
+        session()->put('admin_user.username', $identity);
     }
 
     public function defaultLandingPath(): string
     {
-        return \Auth::defaultLandingPath();
+        if ($this->isSuperAdmin() || (session()->get('admin_user.role', '') === 'order_manager')) {
+            return '/admin/orders';
+        }
+
+        return '/admin/products';
     }
 }

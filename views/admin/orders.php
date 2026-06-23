@@ -1,4 +1,5 @@
 <?php $active_page = 'orders'; ?>
+<link rel="stylesheet" href="/static/css/components.css">
 <style>
 /* ── DASHBOARD SPECIFIC STYLES ── */
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
@@ -14,30 +15,12 @@
 .stock-section h3{font-size:13px;font-weight:700;color:#555;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .stock-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px}
 .stock-name{flex:0 0 180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#555}
-.stock-bar-wrap{flex:1;height:8px;background:#eee;border-radius:4px;overflow:hidden}
-.stock-bar{height:100%;border-radius:4px}
-.bar-ok{background:#0A9696}
-.bar-warn{background:#F59E0B}
-.bar-crit{background:#dc2626}
-.stock-pct{flex:0 0 45px;text-align:right;font-weight:700}
-.stock-nums{flex:0 0 70px;text-align:right;color:#999}
 .filters{background:#fff;border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .filters form{display:flex;gap:10px;flex:1;flex-wrap:wrap;align-items:center}
 .filters input,.filters select{min-width:0}
 .filters input{flex:1;min-width:180px}
 .filters input:focus,.filters select:focus{outline:none;border-color:#0A9696}
 .table-wrap{overflow-x:auto}
-.order-id{font-family:monospace;font-weight:700;color:#0A9696;font-size:13px}
-.badge{padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase;white-space:nowrap}
-.badge-Pending{background:#FEF3C7;color:#92400E}
-.badge-Approved{background:#D1FAE5;color:#065F46}
-.badge-Invoiced{background:#DBEAFE;color:#1E40AF}
-.badge-Fulfilled{background:#D6F0EF;color:#0A9696}
-.badge-Cancelled{background:#FEE2E2;color:#991B1B}
-.badge-unverified{background:#F3F4F6;color:#6B7280}
-.badge-pending{background:#FEF3C7;color:#92400E}
-.badge-verified{background:#D1FAE5;color:#065F46}
-.badge-rejected{background:#FEE2E2;color:#991B1B}
 .custom-order-id{font-size:11px;color:#888;font-family:monospace}
 .action-set{display:flex;gap:4px;flex-wrap:wrap}
 .sbtn{padding:4px 9px;border-radius:4px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid;background:#fff;white-space:nowrap}
@@ -59,10 +42,6 @@
 .detail-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .pay-ref-input{padding:5px 9px;border:1px solid #ddd;border-radius:5px;font-size:12px;font-family:inherit;width:180px}
 .pay-ref-input:focus{outline:none;border-color:#0A9696}
-.toast{position:fixed;bottom:24px;right:24px;background:#333;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
-.toast.show{opacity:1}
-.toast.success{background:#0A9696}
-.toast.error{background:#dc2626}
 .empty{text-align:center;padding:60px 20px;color:#bbb}
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.stats{grid-template-columns:1fr}}

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Support\FuzzySearch;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AdminOrderService
 {
@@ -101,7 +102,7 @@ class AdminOrderService
      */
     public function buildOrdersPageData(string $eventSlug, ?string $statusFilter, ?string $search): array
     {
-        $statuses = ['Pending', 'Approved', 'Invoiced', 'Fulfilled', 'Cancelled'];
+        $statuses = Order::STATUSES;
 
         return [
             'orders' => $this->listOrdersWithItems($eventSlug, $statusFilter, $search),
@@ -153,7 +154,7 @@ class AdminOrderService
 
     public function updateStatus(string $orderId, string $status, string $updatedBy): void
     {
-        $allowed = ['Pending', 'Approved', 'Invoiced', 'Fulfilled', 'Cancelled'];
+        $allowed = Order::STATUSES;
 
         if (! in_array($status, $allowed, true)) {
             throw new \InvalidArgumentException('Invalid status');
@@ -164,7 +165,7 @@ class AdminOrderService
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        \Log::info('Order status updated', [
+        Log::info('Order status updated', [
             'order_id' => $orderId,
             'status' => $status,
             'by' => $updatedBy,
@@ -215,7 +216,7 @@ class AdminOrderService
 
         Order::where('id', $orderId)->update($updateData);
 
-        \Log::info('Payment verification updated', [
+        Log::info('Payment verification updated', [
             'order_id' => $orderId,
             'verification_status' => $status,
             'verified_by' => $verifiedBy,
@@ -237,9 +238,13 @@ class AdminOrderService
             ->all();
     }
 
-    public function listAllOrdersPaginated(?string $search, ?string $statusFilter, int $page = 1, int $perPage = 20): array
+    public function listAllOrdersPaginated(?string $search, ?string $statusFilter, int $page = 1, int $perPage = 20, ?string $email = null): array
     {
         $query = Order::query();
+
+        if ($email) {
+            $query->where('email', $email);
+        }
 
         if ($statusFilter) {
             $query->where('status', $statusFilter);
@@ -287,106 +292,22 @@ class AdminOrderService
         ];
     }
 
-    public function buildTrackingPortalData(string $email, ?string $orderId = null): ?array
-    {
-        $query = Order::where('email', $email);
-
-        if ($orderId) {
-            $query->where('id', $orderId);
-        }
-
-        $order = $query->with('items')->first();
-
-        if (! $order) {
-            return null;
-        }
-
-        return [
-            'order' => $order->toArray(),
-            'items' => $order->items->map->toArray()->all(),
-            'history' => $this->getClientOrderHistory($email),
-        ];
-    }
-
     public function sendInvoiceEmail(
         string $orderId,
         string $subjectPrefix = 'Tax Invoice',
         string $message = 'As requested, here is the tax invoice for your order.'
     ): bool {
-        $data = $this->findOrderWithItems($orderId);
-
-        if (! $data) {
-            return false;
-        }
-
-        $order = $data['order'];
-        $items = $data['items'];
-        $eventSlug = $order['event_slug'] ?? 'solarandstorage';
-        $event = EVENTS[$eventSlug] ?? [
-            'name' => 'Solar & Storage Live Kenya 2026',
-            'venue' => 'Nairobi, Kenya',
-        ];
-
-        global $CONFIG;
-
-        require_once BASE_PATH . '/core/Invoice.php';
-        require_once BASE_PATH . '/core/Mailer.php';
-
-        $invoicePdf = \Invoice::generate($order, $items, $event);
-
-        return \Mailer::sendAvailabilityConfirmedEmail($order, $items, $CONFIG, $event, $invoicePdf);
+        return $this->sendOrderNotification($orderId, 'sendAvailabilityConfirmedEmail');
     }
 
     public function sendAvailabilityConfirmedEmail(string $orderId): bool
     {
-        $data = $this->findOrderWithItems($orderId);
-
-        if (! $data) {
-            return false;
-        }
-
-        $order = $data['order'];
-        $items = $data['items'];
-        $eventSlug = $order['event_slug'] ?? 'solarandstorage';
-        $event = EVENTS[$eventSlug] ?? [
-            'name' => 'Solar & Storage Live Kenya 2026',
-            'venue' => 'Nairobi, Kenya',
-        ];
-
-        global $CONFIG;
-
-        require_once BASE_PATH . '/core/Invoice.php';
-        require_once BASE_PATH . '/core/Mailer.php';
-
-        $invoicePdf = \Invoice::generate($order, $items, $event);
-
-        return \Mailer::sendAvailabilityConfirmedEmail($order, $items, $CONFIG, $event, $invoicePdf);
+        return $this->sendOrderNotification($orderId, 'sendAvailabilityConfirmedEmail');
     }
 
     public function sendPaymentConfirmedEmail(string $orderId): bool
     {
-        $data = $this->findOrderWithItems($orderId);
-
-        if (! $data) {
-            return false;
-        }
-
-        $order = $data['order'];
-        $items = $data['items'];
-        $eventSlug = $order['event_slug'] ?? 'solarandstorage';
-        $event = EVENTS[$eventSlug] ?? [
-            'name' => 'Solar & Storage Live Kenya 2026',
-            'venue' => 'Nairobi, Kenya',
-        ];
-
-        global $CONFIG;
-
-        require_once BASE_PATH . '/core/Invoice.php';
-        require_once BASE_PATH . '/core/Mailer.php';
-
-        $invoicePdf = \Invoice::generate($order, $items, $event);
-
-        return \Mailer::sendPaymentProcessedEmail($order, $items, $CONFIG, $event, $invoicePdf);
+        return $this->sendOrderNotification($orderId, 'sendPaymentProcessedEmail');
     }
 
     public function generateInvoicePdf(string $orderId): ?string
@@ -399,10 +320,9 @@ class AdminOrderService
 
         $order = $data['order'];
         $items = $data['items'];
-        $eventSlug = $order['event_slug'] ?? 'solarandstorage';
-        $event = EVENTS[$eventSlug] ?? ['name' => 'Solar & Storage Live 2026'];
+        $event = $this->resolveEvent($order['event_slug'] ?? DEFAULT_EVENT);
 
-        require_once BASE_PATH . '/core/Invoice.php';
+        $this->loadLegacyDependencies();
 
         return \Invoice::generate($order, $items, $event);
     }
@@ -419,13 +339,13 @@ class AdminOrderService
         }
 
         $order = $data['order'];
-        $eventSlug = $order['event_slug'] ?? 'solarandstorage';
+        $eventSlug = $order['event_slug'] ?? DEFAULT_EVENT;
 
         return [
             'order' => $order,
             'items' => $data['items'],
             'event_slug' => $eventSlug,
-            'statuses' => ['Pending', 'Approved', 'Invoiced', 'Fulfilled', 'Cancelled'],
+            'statuses' => Order::STATUSES,
             'active_page' => 'orders',
             'header' => [
                 'title' => '✏️ Edit Order',
@@ -453,7 +373,7 @@ class AdminOrderService
             throw new \InvalidArgumentException('Order not found.');
         }
 
-        $allowedStatuses = ['Pending', 'Approved', 'Invoiced', 'Fulfilled', 'Cancelled'];
+        $allowedStatuses = Order::STATUSES;
         $status = $post['status'] ?? $order->status;
 
         if (! in_array($status, $allowedStatuses, true)) {
@@ -552,5 +472,43 @@ class AdminOrderService
         fclose($handle);
 
         return $csv ?: '';
+    }
+
+    /**
+     * @return array{name: string, venue?: string, [string]: mixed}
+     */
+    private function resolveEvent(string $eventSlug): array
+    {
+        return EVENTS[$eventSlug] ?? [
+            'name' => 'Solar & Storage Live Kenya 2026',
+            'venue' => 'Nairobi, Kenya',
+        ];
+    }
+
+    private function sendOrderNotification(string $orderId, string $mailerMethod): bool
+    {
+        $data = $this->findOrderWithItems($orderId);
+
+        if (! $data) {
+            return false;
+        }
+
+        $order = $data['order'];
+        $items = $data['items'];
+        $event = $this->resolveEvent($order['event_slug'] ?? DEFAULT_EVENT);
+
+        $this->loadLegacyDependencies();
+
+        $invoicePdf = \Invoice::generate($order, $items, $event);
+
+        return \Mailer::$mailerMethod($order, $items, $GLOBALS['CONFIG'], $event, $invoicePdf);
+    }
+
+    private function loadLegacyDependencies(): void
+    {
+        global $CONFIG;
+
+        require_once BASE_PATH . '/core/Invoice.php';
+        require_once BASE_PATH . '/core/Mailer.php';
     }
 }

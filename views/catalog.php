@@ -160,9 +160,6 @@
         .checkout-btn:hover { background: #088080; }
         .checkout-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #0A9696; color: #fff; padding: 14px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 300; }
-        .toast.show { transform: translateY(0); opacity: 1; }
-
         .back-to-top {
             position: fixed;
             bottom: 28px;
@@ -191,11 +188,6 @@
             transform: translateY(0) scale(1);
         }
         .back-to-top.is-visible:hover { transform: translateY(-2px) scale(1.04); }
-
-        .footer { background: #1a1a2e; color: #fff; text-align: center; padding: 32px 20px; margin-top: 40px; }
-        .footer img { height: 32px; margin-bottom: 12px; opacity: 0.9; }
-        .footer p { font-size: 12px; opacity: 0.7; margin: 4px 0; }
-        .footer .tagline { font-style: italic; margin-top: 12px; opacity: 0.5; font-size: 11px; }
 
         .vat-note { font-size: 11px; color: #0A9696; background: #D6F0EF; padding: 8px 14px; border-radius: 6px; margin-bottom: 16px; text-align: center; font-weight: 500; }
 
