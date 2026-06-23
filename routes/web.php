@@ -61,6 +61,8 @@ Route::middleware('throttle:api')->group(function () {
 
 Route::get('/order/{id}/confirmation', [OrderController::class, 'confirmation']);
 Route::get('/order/{id}/invoice', [OrderController::class, 'downloadInvoice']);
+Route::get('/order/{id}/pay', [OrderController::class, 'payForOrder']);
+Route::post('/order/{id}/pay/submit-ref', [OrderController::class, 'submitPaymentReferenceFromPay']);
 Route::get('/order/history', [OrderController::class, 'orderHistory']);
 Route::get('/order/payments', [OrderController::class, 'paymentsOverview']);
 Route::get('/order/payment-reference', [OrderController::class, 'paymentReferenceForm']);

@@ -156,7 +156,18 @@ class OrderController extends Controller
     public function paymentReferenceForm(): never
     {
         $email = request()->query('email', '');
-        $orders = $email ? $this->adminOrders->getClientOrderHistory($email) : [];
+        $orders = [];
+
+        if ($email) {
+            try {
+                $orders = $this->adminOrders->getClientOrderHistory($email);
+            } catch (\Throwable $e) {
+                Log::error('paymentReferenceForm failed', [
+                    'email' => $email,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         $this->render('storefront/payment_reference', [
             'email' => $email,
@@ -165,6 +176,62 @@ class OrderController extends Controller
             'submitted_ref' => '',
             'submitted_order_id' => '',
         ]);
+    }
+
+    public function payForOrder(string $id): never
+    {
+        global $CONFIG;
+
+        $data = $this->adminOrders->findOrderWithItems($id);
+
+        if (! $data) {
+            $this->redirect('/order/history');
+        }
+
+        $order = $data['order'];
+        $items = $data['items'];
+        $event = EVENTS[$order['event_slug']] ?? null;
+
+        $bankDetails = $CONFIG['bank_transfer_details'] ?? '';
+        $paypalLink = $CONFIG['paypal_payment_link'] ?? '#';
+        $portalUrl = $CONFIG['payment_portal_url'] ?? '#';
+        $paymentNote = $CONFIG['invoice_payment_note'] ?? 'Please make payment within 14 days quoting your Invoice Number.';
+        $bankWarning = $CONFIG['bank_charge_warning_text'] ?? 'ALL BANK CHARGES TO BE BORNE BY SENDER';
+        $contactEmail = $CONFIG['contact_email'] ?? 'solarandstoragelive@omnispace3d.com';
+        $contactPhone = $CONFIG['contact_phone'] ?? '+254 731 001 723';
+
+        $this->render('storefront/pay', [
+            'order' => $order,
+            'items' => $items,
+            'event' => $event,
+            'bank_details' => $bankDetails,
+            'paypal_link' => $paypalLink,
+            'portal_url' => $portalUrl,
+            'payment_note' => $paymentNote,
+            'bank_warning' => $bankWarning,
+            'contact_email' => $contactEmail,
+            'contact_phone' => $contactPhone,
+        ]);
+    }
+
+    public function submitPaymentReferenceFromPay(string $id, Request $request): never
+    {
+        $email = $request->input('email', '');
+        $paymentRef = trim($request->input('payment_reference', ''));
+
+        if (! $email || ! $paymentRef) {
+            $this->redirect("/order/{$id}/pay?error=missing");
+        }
+
+        $data = $this->adminOrders->findOrderWithItems($id);
+
+        if (! $data || $data['order']['email'] !== $email) {
+            $this->redirect("/order/{$id}/pay?error=unauthorized");
+        }
+
+        $this->adminOrders->updateClientPaymentReference($id, $paymentRef);
+
+        $this->redirect("/order/{$id}/pay?submitted=1");
     }
 
     public function submitPaymentReference(Request $request): never
