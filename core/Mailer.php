@@ -205,6 +205,8 @@ class Mailer {
         $replacements = [
             '{contact_name}' => htmlspecialchars($order['contact_name'] ?? ''),
             '{order_id}' => htmlspecialchars($customId),
+            '{order_status}' => htmlspecialchars($order['status'] ?? 'Pending'),
+            '{payment_verification_status}' => htmlspecialchars(ucfirst($order['payment_verification_status'] ?? 'unverified')),
             '{booth_number}' => htmlspecialchars($order['booth_number'] ?? ''),
             '{company_email}' => htmlspecialchars($companyEmail),
             '{company_phone}' => htmlspecialchars($companyPhone),

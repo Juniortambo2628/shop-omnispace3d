@@ -126,7 +126,7 @@ include __DIR__ . '/_header.php';
                 <td><?php echo htmlspecialchars($ho['payment_method'] ?? '—'); ?></td>
                 <td style="white-space:nowrap;">
                     <a href="/order/<?php echo urlencode($ho['id']); ?>/invoice" class="action-btn action-btn-outline" target="_blank">Invoice</a>
-                    <?php if (in_array($ho['status'] ?? '', ['Approved', 'Invoiced'], true)): ?>
+                    <?php if (in_array($ho['status'] ?? '', ['Approved', 'Invoiced'], true) && ($ho['payment_verification_status'] ?? 'unverified') !== 'verified'): ?>
                     <a href="/order/<?php echo urlencode($ho['id']); ?>/pay" class="action-btn action-btn-outline" style="margin-left:6px;">Pay Now</a>
                     <?php endif; ?>
                 </td>
@@ -192,7 +192,7 @@ include __DIR__ . '/_header.php';
 
         <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
             <a href="/order/<?php echo urlencode($so['id']); ?>/invoice" class="action-btn action-btn-outline" target="_blank">&#128424; Download Invoice PDF</a>
-            <?php if (in_array($so['status'] ?? '', ['Approved', 'Invoiced'], true)): ?>
+            <?php if (in_array($so['status'] ?? '', ['Approved', 'Invoiced'], true) && ($so['payment_verification_status'] ?? 'unverified') !== 'verified'): ?>
             <a href="/order/<?php echo urlencode($so['id']); ?>/pay" class="action-btn action-btn-outline">&#128179; Make Payment</a>
             <?php endif; ?>
             <a href="/order/payment-reference?email=<?php echo urlencode($so['email'] ?? ''); ?>" class="action-btn action-btn-outline">&#128179; Submit Payment Ref</a>

@@ -218,6 +218,10 @@ class AdminOrderService
             $updateData['client_payment_reference'] = $clientPaymentReference;
         }
 
+        if ($status === 'verified') {
+            $updateData['status'] = 'Fulfilled';
+        }
+
         Order::where('id', $orderId)->update($updateData);
 
         Log::info('Payment verification updated', [
@@ -225,6 +229,10 @@ class AdminOrderService
             'verification_status' => $status,
             'verified_by' => $verifiedBy,
         ]);
+
+        if ($status === 'verified') {
+            $this->sendPaymentConfirmedEmail($orderId);
+        }
     }
 
     public function getClientOrderHistory(string $email): array

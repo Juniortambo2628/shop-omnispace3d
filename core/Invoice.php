@@ -215,6 +215,7 @@ class Invoice {
                             <strong style='font-size:9px;'>{$event_name}</strong><br>
                             Date: {$date}<br>
                             Status: <span style='color: #f59e0b; font-weight: 700;'>" . strtoupper($order['status']) . "</span><br>
+                            " . (!empty($order['payment_verification_status']) && $order['payment_verification_status'] !== 'unverified' ? "Payment: <span style='font-weight:700;'>" . strtoupper($order['payment_verification_status']) . "</span><br>" : "") . "
                             Venue: {$event_venue}<br>
                             &nbsp;<br>
                             &nbsp;

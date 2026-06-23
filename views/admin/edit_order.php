@@ -94,6 +94,17 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label>Client Payment Reference</label>
+          <input type="text" class="readonly-field" value="<?php echo htmlspecialchars($o['client_payment_reference'] ?? '— Not submitted —'); ?>" readonly>
+        </div>
+        <div class="form-group">
+          <label>Payment Verification Status</label>
+          <input type="text" class="readonly-field" value="<?php echo htmlspecialchars(ucfirst($o['payment_verification_status'] ?? 'unverified')); ?>" readonly>
+        </div>
+      </div>
+
       <div class="form-group">
         <label>Special Instructions</label>
         <textarea name="special_instructions"><?php echo htmlspecialchars($o['special_instructions'] ?? ''); ?></textarea>
