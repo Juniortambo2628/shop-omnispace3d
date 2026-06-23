@@ -143,6 +143,10 @@ class AdminOrderService
         $order = Order::with('items')->find($orderId);
 
         if (! $order) {
+            $order = Order::with('items')->where('custom_order_id', $orderId)->first();
+        }
+
+        if (! $order) {
             return null;
         }
 

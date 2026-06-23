@@ -30,8 +30,8 @@ include __DIR__ . '/_header.php';
             <p>Your payment reference <strong><?php echo htmlspecialchars($submitted_ref); ?></strong> has been submitted for order <strong><?php echo htmlspecialchars($submitted_order_id); ?></strong>. Our team will verify it shortly.</p>
         </div>
         <div style="text-align:center;margin-top:16px;">
-            <a href="/order/payment-reference" class="btn btn-outline" style="margin-right:8px;">Submit Another</a>
-            <a href="/order/history" class="btn btn-outline">View My Orders</a>
+            <a href="/order/payment-reference?email=<?php echo urlencode($email); ?>" class="btn btn-outline" style="margin-right:8px;">Submit Another</a>
+            <a href="/order/history?email=<?php echo urlencode($email); ?>" class="btn btn-outline">View My Orders</a>
         </div>
     </div>
 

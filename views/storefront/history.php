@@ -20,13 +20,11 @@
         .orders-table tr.active td { background: #D6F0EF; }
         .orders-table a { color: #0A9696; text-decoration: none; font-weight: 600; }
         .orders-table a:hover { text-decoration: underline; }
-        .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 20px; }
-        .pagination a, .pagination span { padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-        .pagination a { background: #fff; color: #0A9696; border: 1px solid #ddd; }
-        .pagination a:hover { background: #D6F0EF; border-color: #0A9696; }
-        .pagination .active { background: #0A9696; color: #fff; border: 1px solid #0A9696; }
-        .pagination .disabled { color: #ccc; pointer-events: none; }
         .results-count { font-size: 12px; color: #888; text-align: center; margin-top: 12px; }
+        .lookup-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #eee; }
+        .lookup-tab { padding: 10px 20px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; text-decoration: none; }
+        .lookup-tab:hover { color: #0A9696; }
+        .lookup-tab.active { color: #0A9696; border-bottom-color: #0A9696; }
         @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
     </style>
 </head>
@@ -40,28 +38,63 @@ include __DIR__ . '/_header.php';
     <div class="section">
         <h2>&#128203; Order History</h2>
 
-        <?php if (!$email): ?>
-        <form method="GET" action="/order/history" class="lookup-form">
-            <p class="subtitle">Enter your email address to view your order history.</p>
+        <?php if (!$email && !$search): ?>
+        <div class="lookup-tabs">
+            <a href="/order/history" class="lookup-tab active">By Email</a>
+            <a href="/order/history?search=1" class="lookup-tab">By Invoice Number</a>
+        </div>
+        <form method="GET" action="/order/history" class="lookup-form" style="max-width:500px;margin:0 auto;padding:20px 20px 40px;">
+            <p class="subtitle">Enter your email address to view all your orders.</p>
             <label for="email">Email Address</label>
             <input type="email" name="email" id="email" placeholder="your@email.com" required>
             <button type="submit" class="submit-btn">Look Up Orders</button>
         </form>
+
+        <?php elseif ($search === '1' && !$email): ?>
+        <div class="lookup-tabs">
+            <a href="/order/history" class="lookup-tab">By Email</a>
+            <a href="/order/history?search=1" class="lookup-tab active">By Invoice Number</a>
+        </div>
+        <form method="GET" action="/order/history" class="lookup-form" style="max-width:500px;margin:0 auto;padding:20px 20px 40px;">
+            <input type="hidden" name="search" value="1">
+            <p class="subtitle">Enter your invoice number to find a specific order.</p>
+            <label for="invoice">Invoice Number</label>
+            <input type="text" name="q" id="invoice" placeholder="e.g. OMN-SSL26-001" required>
+            <button type="submit" class="submit-btn">Find Order</button>
+        </form>
+
         <?php else: ?>
 
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+            <div>
+                <?php if ($email): ?>
+                <span style="font-size:13px;color:#666;">Showing orders for <strong><?php echo htmlspecialchars($email); ?></strong></span>
+                <?php elseif ($search && $search !== '1'): ?>
+                <span style="font-size:13px;color:#666;">Search results for <strong><?php echo htmlspecialchars($search); ?></strong></span>
+                <?php endif; ?>
+            </div>
+            <div style="display:flex;gap:8px;">
+                <a href="/order/history" class="clear-btn">Search by Email</a>
+                <a href="/order/history?search=1" class="clear-btn">Search by Invoice</a>
+            </div>
+        </div>
+
+        <?php if ($email): ?>
         <form method="GET" action="/order/history" class="filter-bar">
             <input type="hidden" name="email" value="<?php echo htmlspecialchars($email); ?>">
-            <input type="text" name="search" class="search-input" placeholder="Search order ID, company, contact..." value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit" class="filter-btn">Search</button>
-            <?php if ($search): ?>
+            <input type="text" name="search" class="search-input" placeholder="Filter by invoice ID, company, contact..." value="<?php echo htmlspecialchars($search === '1' ? '' : $search); ?>">
+            <button type="submit" class="filter-btn">Filter</button>
+            <?php if ($search && $search !== '1'): ?>
             <a href="/order/history?email=<?php echo urlencode($email); ?>" class="clear-btn">Clear</a>
             <?php endif; ?>
         </form>
+        <?php endif; ?>
 
         <?php if (empty($orders)): ?>
         <div class="empty-state">
             <p style="font-size:48px;margin-bottom:12px;">&#128269;</p>
-            <p>No orders found for <?php echo htmlspecialchars($email); ?><?php echo $search ? ' matching your search' : ''; ?></p>
+            <p>No orders found<?php echo $email ? ' for ' . htmlspecialchars($email) : ''; ?><?php echo $search && $search !== '1' ? ' matching your search' : ''; ?></p>
+            <p style="margin-top:12px;"><a href="/order/history">Try another search</a></p>
         </div>
         <?php else: ?>
         <div style="overflow-x:auto;">
@@ -83,7 +116,7 @@ include __DIR__ . '/_header.php';
             <?php foreach ($orders as $entry): ?>
             <?php $ho = $entry['order']; ?>
             <tr class="<?php echo ($selected_order && $selected_order['id'] === $ho['id']) ? 'active' : ''; ?>">
-                <td><a href="/order/history?email=<?php echo urlencode($email); ?>&order=<?php echo urlencode($ho['id']); ?><?php echo $search ? '&search=' . urlencode($search) : ''; ?>"><?php echo htmlspecialchars($ho['custom_order_id'] ?? $ho['id']); ?></a></td>
+                <td><a href="/order/history?email=<?php echo urlencode($email ?: $ho['email'] ?? ''); ?>&order=<?php echo urlencode($ho['id']); ?>"><?php echo htmlspecialchars($ho['custom_order_id'] ?? $ho['id']); ?></a></td>
                 <td><?php echo substr($ho['created_at'] ?? '', 0, 10); ?></td>
                 <td><?php echo htmlspecialchars($ho['company_name'] ?? ''); ?></td>
                 <td><?php echo htmlspecialchars($ho['contact_name'] ?? ''); ?></td>
@@ -94,7 +127,7 @@ include __DIR__ . '/_header.php';
                 <td style="white-space:nowrap;">
                     <a href="/order/<?php echo urlencode($ho['id']); ?>/invoice" class="action-btn action-btn-outline" target="_blank">Invoice</a>
                     <?php if (in_array($ho['status'] ?? '', ['Approved', 'Invoiced'], true)): ?>
-                    <a href="/order/<?php echo urlencode($ho['id']); ?>/pay" class="action-btn" style="margin-left:6px;">Pay Now</a>
+                    <a href="/order/<?php echo urlencode($ho['id']); ?>/pay" class="action-btn action-btn-outline" style="margin-left:6px;">Pay Now</a>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -160,7 +193,7 @@ include __DIR__ . '/_header.php';
         <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
             <a href="/order/<?php echo urlencode($so['id']); ?>/invoice" class="action-btn action-btn-outline" target="_blank">&#128424; Download Invoice PDF</a>
             <?php if (in_array($so['status'] ?? '', ['Approved', 'Invoiced'], true)): ?>
-            <a href="/order/<?php echo urlencode($so['id']); ?>/pay" class="action-btn">&#128179; Make Payment</a>
+            <a href="/order/<?php echo urlencode($so['id']); ?>/pay" class="action-btn action-btn-outline">&#128179; Make Payment</a>
             <?php endif; ?>
             <a href="/order/payment-reference?email=<?php echo urlencode($so['email'] ?? ''); ?>" class="action-btn action-btn-outline">&#128179; Submit Payment Ref</a>
         </div>

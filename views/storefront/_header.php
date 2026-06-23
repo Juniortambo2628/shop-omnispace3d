@@ -16,11 +16,12 @@
     <h1><?php echo htmlspecialchars($header_title ?? 'OmniShop'); ?></h1>
     <?php endif; ?>
     <div style="display:flex;align-items:center;gap:16px">
+        <a href="/<?php echo htmlspecialchars($event_slug ?? DEFAULT_EVENT); ?>" style="color:#fff;font-size:13px;opacity:0.9;text-decoration:none;white-space:nowrap;">&#8592; Catalog</a>
         <div style="position:relative" class="nav-dropdown">
             <a href="/order/history" style="color:#fff;font-size:13px;text-decoration:none;opacity:0.9;cursor:pointer;">&#128203; My Orders &#9662;</a>
             <div class="nav-dropdown-menu">
                 <a href="/order/history">Order History</a>
-                <a href="/order/track">Track Order</a>
+                <a href="/order/payments">Payment Status</a>
                 <a href="/order/payment-reference">Submit Payment Ref</a>
             </div>
         </div>

@@ -85,12 +85,20 @@ class OrderController extends Controller
     {
         $email = request()->query('email', '');
         $search = request()->query('search', '');
+        $invoiceQuery = request()->query('q', '');
         $orderId = request()->query('order');
 
         $orders = [];
         $total = 0;
 
-        if ($email) {
+        if ($invoiceQuery && ! $email) {
+            $found = $this->adminOrders->findOrderWithItems($invoiceQuery);
+            if ($found) {
+                $orders = [$found];
+                $total = 1;
+                $email = $found['order']['email'] ?? '';
+            }
+        } elseif ($email) {
             $result = $this->adminOrders->listAllOrdersPaginated($search, '', 1, 200, $email);
             $orders = $result['orders'];
             $total = $result['total'];
@@ -101,7 +109,7 @@ class OrderController extends Controller
 
         if ($orderId) {
             $data = $this->adminOrders->findOrderWithItems($orderId);
-            if ($data && $data['order']['email'] === $email) {
+            if ($data) {
                 $selectedOrder = $data['order'];
                 $selectedItems = $data['items'];
             }
@@ -111,7 +119,9 @@ class OrderController extends Controller
             'email' => $email,
             'orders' => $orders,
             'total' => $total,
-            'search' => $search,
+            'search' => $search === '1' ? '' : $search,
+            'search_mode' => $search,
+            'invoice_query' => $invoiceQuery,
             'selected_order' => $selectedOrder,
             'selected_items' => $selectedItems,
         ]);
