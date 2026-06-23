@@ -41,5 +41,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->resolving(Command::class, function (Command $command, $app) {
             $command->setLaravel($app);
         });
+
+        global $CONFIG;
+        try {
+            $settingsService = new SettingsService();
+            foreach ($settingsService->loadFromDatabase() as $key => $value) {
+                $CONFIG[$key] = $value;
+            }
+        } catch (\Exception $e) {
+            // Settings table might not exist yet
+        }
     }
 }
