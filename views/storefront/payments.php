@@ -20,7 +20,7 @@
         @media (max-width: 768px) { .stats { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body>
+<body class="storefront-portal">
 <?php
 $header_title = 'My Payments';
 include __DIR__ . '/_header.php';
@@ -28,15 +28,13 @@ include __DIR__ . '/_header.php';
 
 <?php if (empty($email)): ?>
 <div class="container">
-    <div class="lookup-form section">
-        <h1>&#128179; My Payments</h1>
-        <p class="subtitle">Enter your email address to view your payment history and status.</p>
-        <form method="GET" action="/order/payments">
-            <label>Email Address <span style="color:#ef4444;">*</span></label>
-            <input type="email" name="email" required placeholder="Enter the email used for your order">
-            <button type="submit" class="submit-btn">View Payments</button>
-        </form>
-    </div>
+    <?php 
+    $lookup_title = '&#128179; My Payments';
+    $lookup_action = '/order/payments';
+    $lookup_subtitle_suffix = 'payment history and status';
+    $lookup_btn_text = 'View Payments';
+    include __DIR__ . '/_lookup_form.php';
+    ?>
 </div>
 
 <?php else: ?>

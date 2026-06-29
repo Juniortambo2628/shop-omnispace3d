@@ -16,7 +16,7 @@
         .success-box p { color: #065F46; font-size: 13px; }
     </style>
 </head>
-<body>
+<body class="storefront-portal">
 <?php
 $header_title = 'Submit Payment Reference';
 include __DIR__ . '/_header.php';
@@ -80,15 +80,13 @@ include __DIR__ . '/_header.php';
     </div>
 
     <?php else: ?>
-    <div class="section">
-        <h2>&#128179; Submit Payment Reference</h2>
-        <p class="subtitle">After making a payment, enter your transaction reference here so our team can verify and process your order.</p>
-        <form method="GET" action="/order/payment-reference">
-            <label>Email Address <span style="color:#ef4444;">*</span></label>
-            <input type="email" name="email" required placeholder="Enter the email used for your order">
-            <button type="submit" class="submit-btn">Find My Orders</button>
-        </form>
-    </div>
+        <?php 
+        $lookup_title = '&#128179; Submit Payment Reference';
+        $lookup_action = '/order/payment-reference';
+        $lookup_subtitle_suffix = 'orders to submit reference for';
+        $lookup_btn_text = 'Find My Orders';
+        include __DIR__ . '/_lookup_form.php';
+        ?>
     <?php endif; ?>
 </div>
 

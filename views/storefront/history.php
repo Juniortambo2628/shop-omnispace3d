@@ -28,42 +28,23 @@
         @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
     </style>
 </head>
-<body>
+<body class="storefront-portal">
 <?php
 $header_title = 'Order History';
 include __DIR__ . '/_header.php';
 ?>
 
 <div class="container">
+    <?php if (!$email): ?>
+        <?php 
+        $lookup_title = '&#128203; Order History';
+        $lookup_action = '/order/history';
+        $lookup_subtitle_suffix = 'orders';
+        $lookup_btn_text = 'Look Up Orders';
+        include __DIR__ . '/_lookup_form.php';
+        ?>
+    <?php else: ?>
     <div class="section">
-        <h2>&#128203; Order History</h2>
-
-        <?php if (!$email && !$search): ?>
-        <div class="lookup-tabs">
-            <a href="/order/history" class="lookup-tab active">By Email</a>
-            <a href="/order/history?search=1" class="lookup-tab">By Invoice Number</a>
-        </div>
-        <form method="GET" action="/order/history" class="lookup-form" style="max-width:500px;margin:0 auto;padding:20px 20px 40px;">
-            <p class="subtitle">Enter your email address to view all your orders.</p>
-            <label for="email">Email Address</label>
-            <input type="email" name="email" id="email" placeholder="your@email.com" required>
-            <button type="submit" class="submit-btn">Look Up Orders</button>
-        </form>
-
-        <?php elseif ($search === '1' && !$email): ?>
-        <div class="lookup-tabs">
-            <a href="/order/history" class="lookup-tab">By Email</a>
-            <a href="/order/history?search=1" class="lookup-tab active">By Invoice Number</a>
-        </div>
-        <form method="GET" action="/order/history" class="lookup-form" style="max-width:500px;margin:0 auto;padding:20px 20px 40px;">
-            <input type="hidden" name="search" value="1">
-            <p class="subtitle">Enter your invoice number to find a specific order.</p>
-            <label for="invoice">Invoice Number</label>
-            <input type="text" name="q" id="invoice" placeholder="e.g. OMN-SSL26-001" required>
-            <button type="submit" class="submit-btn">Find Order</button>
-        </form>
-
-        <?php else: ?>
 
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
             <div>

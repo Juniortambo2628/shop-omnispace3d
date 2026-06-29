@@ -41,11 +41,11 @@
         .sidebar { width: 260px; flex-shrink: 0; }
         .sidebar-inner { position: sticky; top: 80px; background: #fff; border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); overflow: hidden; display: flex; flex-direction: column; max-height: calc(100vh - 100px); animation: catalog-sidebar-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both; }
         .sidebar-title { padding: 16px 18px 12px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6E6E6E; border-bottom: 1px solid #eee; flex-shrink: 0; }
-        .cat-list { list-style: none; overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: #0A9696 #f0f0f0; }
+        .cat-list { list-style: none; overflow-y: auto; overflow-x: hidden; flex: 1; scrollbar-width: thin; scrollbar-color: #0A9696 #f0f0f0; margin: 0; padding: 0; }
         .cat-list::-webkit-scrollbar { width: 5px; }
         .cat-list::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 0 0 10px 0; }
         .cat-list::-webkit-scrollbar-thumb { background: #0A9696; border-radius: 10px; }
-        .cat-item { padding: 11px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 13px; border-left: 3px solid transparent; transition: all 0.15s; }
+        .cat-item { padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 12px; border-left: 3px solid transparent; transition: all 0.15s; white-space: normal; word-break: break-word; }
         .cat-item:hover { background: #f0fafa; }
         .cat-item.active { background: #D6F0EF; border-left-color: #0A9696; font-weight: 600; color: #0A9696; transform: translateX(2px); }
         .cat-item.scroll-active { background: #D6F0EF; border-left-color: #0A9696; font-weight: 600; color: #0A9696; transform: translateX(2px); }
@@ -237,6 +237,7 @@ ob_start(); ?>
     </button>
 <?php 
 $header_right = ob_get_clean();
+$is_catalog_page = true;
 include __DIR__ . '/storefront/_header.php'; 
 ?>
 

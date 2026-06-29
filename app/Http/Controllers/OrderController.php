@@ -131,6 +131,15 @@ class OrderController extends Controller
     {
         $email = request()->query('email', '');
         $filter = request()->query('filter', '');
+        $search = request()->query('search', '');
+        $invoiceQuery = request()->query('q', '');
+
+        if ($invoiceQuery && ! $email) {
+            $found = $this->adminOrders->findOrderWithItems($invoiceQuery);
+            if ($found) {
+                $email = $found['order']['email'] ?? '';
+            }
+        }
 
         $payments = $email ? $this->adminOrders->getClientOrderHistory($email) : [];
 
@@ -160,18 +169,29 @@ class OrderController extends Controller
             'payments' => $payments,
             'filter' => $filter,
             'stats' => $stats,
+            'search_mode' => $search,
         ]);
     }
 
     public function paymentReferenceForm(): never
     {
         $email = request()->query('email', '');
+        $search = request()->query('search', '');
+        $invoiceQuery = request()->query('q', '');
+
+        if ($invoiceQuery && ! $email) {
+            $found = $this->adminOrders->findOrderWithItems($invoiceQuery);
+            if ($found) {
+                $email = $found['order']['email'] ?? '';
+            }
+        }
+
         $orders = [];
 
         if ($email) {
             try {
                 $orders = $this->adminOrders->getClientOrderHistory($email);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 Log::error('paymentReferenceForm failed', [
                     'email' => $email,
                     'error' => $e->getMessage(),
@@ -185,6 +205,7 @@ class OrderController extends Controller
             'success' => false,
             'submitted_ref' => '',
             'submitted_order_id' => '',
+            'search_mode' => $search,
         ]);
     }
 

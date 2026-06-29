@@ -16,7 +16,7 @@
         @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .summary-card { position: static; } }
     </style>
 </head>
-<body>
+<body class="storefront-portal">
 <?php
 $header_title = 'Track Your Order';
 $header_right = '<a href="/' . htmlspecialchars($event_slug) . '">&#8592; Back to Catalog</a>';

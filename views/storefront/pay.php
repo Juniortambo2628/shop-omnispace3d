@@ -35,7 +35,7 @@
         @media (max-width: 768px) { .pay-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body>
+<body class="storefront-portal">
 <?php
 $header_title = 'Make Payment';
 include __DIR__ . '/_header.php';
