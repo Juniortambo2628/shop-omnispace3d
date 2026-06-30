@@ -5,8 +5,8 @@
         .container { max-width: 600px; }
         .section h2 { margin-bottom: 6px; }
         .section .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.6; }
-        .order-card { background: #f9fffe; border: 1px solid #D6F0EF; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-        .order-card .order-id { font-family: monospace; font-weight: 700; color: #0A9696; font-size: 15px; }
+        .order-card { background: #f9fffe; border: 1px solid var(--brand-teal-pale); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .order-card .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 15px; }
         .order-card .order-meta { font-size: 12px; color: #888; margin-top: 4px; }
         .order-card .order-total { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
         .help-text { font-size: 12px; color: #888; margin-top: -12px; margin-bottom: 18px; }
@@ -50,7 +50,7 @@ include __DIR__ . '/_header.php';
             <div class="order-meta"><?php echo htmlspecialchars($o['company_name'] ?? ''); ?> &bull; Booth <?php echo htmlspecialchars($o['booth_number'] ?? '—'); ?> &bull; <?php echo substr($o['created_at'] ?? '', 0, 10); ?></div>
             <div class="order-total">$<?php echo number_format($o['total'] ?? 0, 2); ?></div>
             <?php if (!empty($o['client_payment_reference'])): ?>
-            <div style="font-size:12px;color:#0A9696;margin-top:4px;">Ref submitted: <?php echo htmlspecialchars($o['client_payment_reference']); ?> (<?php echo htmlspecialchars(ucfirst($o['payment_verification_status'] ?? 'pending')); ?>)</div>
+            <div style="font-size:12px;color:var(--brand-teal);margin-top:4px;">Ref submitted: <?php echo htmlspecialchars($o['client_payment_reference']); ?> (<?php echo htmlspecialchars(ucfirst($o['payment_verification_status'] ?? 'pending')); ?>)</div>
             <?php endif; ?>
         </div>
         <?php endforeach; ?>
@@ -75,7 +75,7 @@ include __DIR__ . '/_header.php';
         <div class="empty-state">
             <p style="font-size:48px;margin-bottom:12px;">&#128269;</p>
             <p>No orders found for <strong><?php echo htmlspecialchars($email); ?></strong></p>
-            <p style="margin-top:12px;"><a href="/order/payment-reference" style="color:#0A9696;font-weight:600;">Try another email</a></p>
+            <p style="margin-top:12px;"><a href="/order/payment-reference" style="color:var(--brand-teal);font-weight:600;">Try another email</a></p>
         </div>
     </div>
 
@@ -102,5 +102,6 @@ function selectOrder(orderId, displayId) {
 
 <?php include __DIR__ . '/_footer.php'; ?>
 <?php include __DIR__ . '/_toast.php'; ?>
+<script src="/static/js/storefront.js"></script>
 </body>
 </html>
