@@ -19,8 +19,8 @@
         <?php if (empty($is_catalog_page)): ?>
         <a href="/<?php echo htmlspecialchars($event_slug ?? DEFAULT_EVENT); ?>" style="color:#fff;font-size:13px;opacity:0.9;text-decoration:none;white-space:nowrap;">&#8592; Catalog</a>
         <?php endif; ?>
-        <div style="position:relative" class="nav-dropdown">
-            <a href="/order/history" style="color:#fff;font-size:13px;text-decoration:none;opacity:0.9;cursor:pointer;">&#128203; My Orders &#9662;</a>
+        <div class="nav-dropdown">
+            <a href="/order/history" class="nav-dropdown-trigger">&#128203; My Orders &#9662;</a>
             <div class="nav-dropdown-menu">
                 <a href="/order/history">Order History</a>
                 <a href="/order/payments">Payment Status</a>
@@ -32,10 +32,3 @@
         <?php endif; ?>
     </div>
 </header>
-<style>
-.nav-dropdown{position:relative;padding-bottom:8px}
-.nav-dropdown-menu{display:none;position:absolute;top:100%;right:0;background:#fff;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:180px;z-index:100;padding:6px 0;margin-top:-2px}
-.nav-dropdown:hover .nav-dropdown-menu{display:block}
-.nav-dropdown-menu a{display:block;padding:10px 16px;font-size:13px;color:#333;text-decoration:none;transition:background 0.15s}
-.nav-dropdown-menu a:hover{background:#D6F0EF;color:#0A9696}
-</style>

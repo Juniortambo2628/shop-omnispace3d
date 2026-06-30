@@ -1,0 +1,45 @@
+/* ── Base Reset & Typography ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-family);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body.storefront-portal { display: flex; flex-direction: column; min-height: 100vh; }
+body.storefront-portal .container { flex: 1; width: 100%; }
+body.storefront-portal .footer { margin-top: auto; }
+a { color: var(--brand-teal); text-decoration: none; }
+a:hover { color: var(--brand-teal-dark); }
+img { max-width: 100%; height: auto; }
+
+/* ── Form Controls ── */
+label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
+input, select, textarea {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); font-size: 14px; font-family: inherit;
+  margin-bottom: 16px; transition: border 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--brand-teal);
+  box-shadow: 0 0 0 3px rgba(10,150,150,0.1);
+}
+textarea { resize: vertical; min-height: 80px; }
+
+/* ── Tables ── */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--brand-teal); color: #fff; padding: 10px 14px;
+  text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px;
+  letter-spacing: 0.5px;
+}
+tbody td { padding: 12px 14px; border-bottom: 1px solid var(--color-border-light); }
+tbody tr:hover td { background: var(--brand-teal-light); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .header { padding: 10px 14px; }
+  .header h1 { font-size: 16px; }
+}

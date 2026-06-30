@@ -6,12 +6,12 @@
         .order-summary .detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
         .order-summary .detail-row .label { color: #888; }
         .order-summary .detail-row .value { font-weight: 600; }
-        .pay-total { font-size: 24px; font-weight: 700; color: #0A9696; text-align: right; margin-top: 12px; padding-top: 12px; border-top: 2px solid #0A9696; }
-        .method-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; background: #D6F0EF; color: #0A9696; margin-bottom: 16px; }
-        .instruction-card { background: #f9fffe; border: 1px solid #D6F0EF; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
-        .instruction-card h3 { font-size: 15px; font-weight: 700; color: #0A9696; margin-bottom: 12px; }
+        .pay-total { font-size: 24px; font-weight: 700; color: var(--brand-teal); text-align: right; margin-top: 12px; padding-top: 12px; border-top: 2px solid var(--brand-teal); }
+        .method-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; background: var(--brand-teal-pale); color: var(--brand-teal); margin-bottom: 16px; }
+        .instruction-card { background: #f9fffe; border: 1px solid var(--brand-teal-pale); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+        .instruction-card h3 { font-size: 15px; font-weight: 700; color: var(--brand-teal); margin-bottom: 12px; }
         .instruction-card .step { display: flex; gap: 12px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; }
-        .instruction-card .step-num { flex: 0 0 28px; height: 28px; background: #0A9696; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+        .instruction-card .step-num { flex: 0 0 28px; height: 28px; background: var(--brand-teal); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
         .bank-box { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-top: 12px; font-size: 13px; line-height: 1.8; }
         .bank-box .field-label { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
         .bank-box .field-value { font-weight: 600; color: #1a1a1a; }
@@ -30,7 +30,7 @@
         .success-banner h3 { color: #065F46; font-size: 15px; margin-bottom: 4px; }
         .success-banner p { color: #065F46; font-size: 13px; }
         .error-banner { background: #FEE2E2; border: 1px solid #EF4444; border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 16px; font-size: 13px; color: #991B1B; }
-        .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; color: #0A9696; font-size: 14px; font-weight: 500; text-decoration: none; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; color: var(--brand-teal); font-size: 14px; font-weight: 500; text-decoration: none; }
         .back-link:hover { text-decoration: underline; }
         @media (max-width: 768px) { .pay-layout { grid-template-columns: 1fr; } }
     </style>
@@ -151,7 +151,7 @@ $queryParams = $_GET ?? [];
             <?php endif; ?>
 
             <?php if (!empty($payment_note)): ?>
-            <div class="section" style="background:#f9fffe;border:1px solid #D6F0EF;">
+            <div class="section" style="background:#f9fffe;border:1px solid var(--brand-teal-pale);">
                 <p style="font-size:13px;color:#555;line-height:1.6;margin:0;">&#128161; <?php echo htmlspecialchars($payment_note); ?></p>
             </div>
             <?php endif; ?>
@@ -205,6 +205,7 @@ $queryParams = $_GET ?? [];
 
 <?php include __DIR__ . '/_footer.php'; ?>
 <?php include __DIR__ . '/_toast.php'; ?>
+<script src="/static/js/storefront.js"></script>
 <script>
 <?php if (!empty($queryParams['submitted'])): ?>
 showToast('Payment reference submitted successfully!');

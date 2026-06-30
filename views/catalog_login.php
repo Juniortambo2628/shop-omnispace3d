@@ -2,7 +2,7 @@
 <?php include __DIR__ . '/storefront/_head.php'; ?>
     <style>
         body {
-            background: linear-gradient(135deg, #0A9696 0%, #066666 100%);
+            background: linear-gradient(135deg, var(--brand-teal) 0%, #066666 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -110,7 +110,7 @@
         }
         .input-wrap input:focus {
             outline: none;
-            border-color: #0A9696;
+            border-color: var(--brand-teal);
             box-shadow: 0 0 0 3px rgba(10,150,150,0.12);
         }
         .input-wrap .icon {
@@ -132,7 +132,7 @@
             cursor: pointer;
             user-select: none;
         }
-        .toggle-pw:hover { color: #0A9696; }
+        .toggle-pw:hover { color: var(--brand-teal); }
 
         .error-box {
             background: #fef2f2;
@@ -150,7 +150,7 @@
         .btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #0A9696, #088080);
+            background: linear-gradient(135deg, var(--brand-teal), var(--brand-teal-dark));
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -172,7 +172,7 @@
             line-height: 1.5;
         }
         .help-text a {
-            color: #0A9696;
+            color: var(--brand-teal);
             text-decoration: none;
         }
         .help-text a:hover { text-decoration: underline; }

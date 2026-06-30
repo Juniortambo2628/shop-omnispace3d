@@ -7,16 +7,16 @@
         .stat { background: #fff; border-radius: 10px; padding: 18px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
         .stat-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .stat-val { font-size: 22px; font-weight: 700; margin-top: 6px; }
-        .stat-val.teal { color: #0A9696; }
+        .stat-val.teal { color: var(--brand-teal); }
         .stat-val.amber { color: #F59E0B; }
         .stat-val.green { color: #10B981; }
         .payments-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .payments-table th { background: #0A9696; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .payments-table th { background: var(--brand-teal); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         .payments-table td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; }
         .payments-table tr:hover td { background: #f9fffe; }
         .filter-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
         .filter-tab { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #ddd; background: #fff; color: #666; transition: all 0.2s; text-decoration: none; }
-        .filter-tab.active { background: #0A9696; color: #fff; border-color: #0A9696; }
+        .filter-tab.active { background: var(--brand-teal); color: #fff; border-color: var(--brand-teal); }
         @media (max-width: 768px) { .stats { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -90,7 +90,7 @@ include __DIR__ . '/_header.php';
             <?php foreach ($payments as $entry): ?>
             <?php $po = $entry['order']; ?>
             <tr>
-                <td style="font-weight:600;color:#0A9696;"><?php echo htmlspecialchars($po['custom_order_id'] ?? $po['id']); ?></td>
+                <td style="font-weight:600;color:var(--brand-teal);"><?php echo htmlspecialchars($po['custom_order_id'] ?? $po['id']); ?></td>
                 <td><?php echo substr($po['created_at'] ?? '', 0, 10); ?></td>
                 <td><?php echo htmlspecialchars($po['company_name'] ?? ''); ?></td>
                 <td><?php echo htmlspecialchars($po['booth_number'] ?? '—'); ?></td>
@@ -112,5 +112,6 @@ include __DIR__ . '/_header.php';
 
 <?php include __DIR__ . '/_footer.php'; ?>
 <?php include __DIR__ . '/_toast.php'; ?>
+<script src="/static/js/storefront.js"></script>
 </body>
 </html>
