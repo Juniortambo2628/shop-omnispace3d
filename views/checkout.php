@@ -3,7 +3,6 @@
     <style>
         .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
         .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .summary-card { position: sticky; top: 20px; }
         .si { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
         .si-name { flex: 1; }
         .si-color { font-size: 11px; color: #888; }
@@ -11,12 +10,8 @@
         .si-price { font-weight: 600; color: var(--brand-teal); min-width: 70px; text-align: right; }
         .sum-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
         .sum-line.total { font-size: 18px; font-weight: 700; color: #222; border-top: 2px solid var(--brand-teal); padding-top: 12px; margin-top: 8px; }
-        .submit-btn { width: 100%; padding: 16px; background: var(--brand-teal); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; font-family: inherit; margin-top: 16px; transition: background 0.2s; }
-        .submit-btn:hover { background: var(--brand-teal-dark); }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .submit-btn { width: 100%; padding: 16px; font-size: 16px; margin-top: 16px; }
         .pay-note { background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 6px; padding: 12px; font-size: 12px; color: #92400e; margin-top: 12px; line-height: 1.5; }
-        .back-link { display: inline-block; margin-bottom: 20px; color: var(--brand-teal); font-size: 14px; font-weight: 500; text-decoration: none; }
-        .back-link:hover { text-decoration: underline; }
         .error-msg { background: #FEE2E2; color: #991B1B; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; display: none; }
         .loading { display: none; text-align: center; padding: 12px; color: var(--brand-teal); font-size: 14px; }
         .empty-msg { text-align: center; padding: 60px 20px; color: #999; }
@@ -24,11 +19,7 @@
         .pay-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; }
         .pay-option:hover { border-color: var(--brand-teal); }
         .pay-option input { width: auto; margin: 0; }
-        label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
         .req { color: #ef4444; }
-        input, textarea { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 16px; transition: border 0.2s; }
-        input:focus, textarea:focus { outline: none; border-color: var(--brand-teal); box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
-        textarea { resize: vertical; min-height: 80px; }
         .autofill-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--brand-teal-pale); color: var(--brand-teal); border: 1px solid var(--brand-teal); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit; margin-bottom: 16px; transition: all 0.2s; }
         .autofill-btn:hover { background: var(--brand-teal); color: #fff; }
         .autofill-btn.hidden { display: none; }

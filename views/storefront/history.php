@@ -21,10 +21,6 @@
         .orders-table a { color: var(--brand-teal); text-decoration: none; font-weight: 600; }
         .orders-table a:hover { text-decoration: underline; }
         .results-count { font-size: 12px; color: #888; text-align: center; margin-top: 12px; }
-        .lookup-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #eee; }
-        .lookup-tab { padding: 10px 20px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; text-decoration: none; }
-        .lookup-tab:hover { color: var(--brand-teal); }
-        .lookup-tab.active { color: var(--brand-teal); border-bottom-color: var(--brand-teal); }
         @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
     </style>
 </head>
