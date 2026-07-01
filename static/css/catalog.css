@@ -42,13 +42,14 @@
 .cat-list::-webkit-scrollbar { width: 5px; }
 .cat-list::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 0 0 10px 0; }
 .cat-list::-webkit-scrollbar-thumb { background: var(--brand-teal); border-radius: 10px; }
-.cat-item { padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 12px; border-left: 3px solid transparent; transition: all 0.15s; white-space: normal; word-break: break-word; }
+.cat-item { padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 12px; border-left: 3px solid transparent; transition: all 0.15s; min-width: 0; gap: 8px; }
+.cat-item > span:first-child { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .cat-item:hover { background: #f0fafa; }
 .cat-item.active { background: var(--brand-teal-pale); border-left-color: var(--brand-teal); font-weight: 600; color: var(--brand-teal); transform: translateX(2px); }
 .cat-item.scroll-active { background: var(--brand-teal-pale); border-left-color: var(--brand-teal); font-weight: 600; color: var(--brand-teal); transform: translateX(2px); }
 .cat-item.scroll-active .cat-count { background: var(--brand-teal); color: #fff; }
 .cat-icon { margin-right: 8px; }
-.cat-count { background: #eee; border-radius: 10px; padding: 2px 8px; font-size: 11px; color: #888; font-weight: 600; }
+.cat-count { background: #eee; border-radius: 10px; padding: 2px 8px; font-size: 11px; color: #888; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 .cat-item.active .cat-count { background: var(--brand-teal); color: #fff; }
 
 .main { flex: 1; min-width: 0; }
