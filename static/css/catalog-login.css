@@ -1,5 +1,5 @@
 /* ── Catalog Login Styles ── */
-.catalog-login body {
+body.catalog-login {
   background: linear-gradient(135deg, var(--brand-teal) 0%, #066666 100%);
   min-height: 100vh; display: flex; flex-direction: column;
   align-items: center; justify-content: center; padding: 20px;
