@@ -1,37 +1,10 @@
-<?php $page_title = 'Checkout - OmniShop'; ?>
-<?php include __DIR__ . '/storefront/_head.php'; ?>
-    <style>
-        .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .si { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
-        .si-name { flex: 1; }
-        .si-color { font-size: 11px; color: #888; }
-        .si-qty { color: #888; margin: 0 12px; }
-        .si-price { font-weight: 600; color: var(--brand-teal); min-width: 70px; text-align: right; }
-        .sum-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
-        .sum-line.total { font-size: 18px; font-weight: 700; color: #222; border-top: 2px solid var(--brand-teal); padding-top: 12px; margin-top: 8px; }
-        .submit-btn { width: 100%; padding: 16px; font-size: 16px; margin-top: 16px; }
-        .pay-note { background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 6px; padding: 12px; font-size: 12px; color: #92400e; margin-top: 12px; line-height: 1.5; }
-        .error-msg { background: #FEE2E2; color: #991B1B; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; display: none; }
-        .loading { display: none; text-align: center; padding: 12px; color: var(--brand-teal); font-size: 14px; }
-        .empty-msg { text-align: center; padding: 60px 20px; color: #999; }
-        .empty-msg a { color: var(--brand-teal); font-weight: 600; text-decoration: none; }
-        .pay-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; }
-        .pay-option:hover { border-color: var(--brand-teal); }
-        .pay-option input { width: auto; margin: 0; }
-        .req { color: #ef4444; }
-        .autofill-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--brand-teal-pale); color: var(--brand-teal); border: 1px solid var(--brand-teal); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit; margin-bottom: 16px; transition: all 0.2s; }
-        .autofill-btn:hover { background: var(--brand-teal); color: #fff; }
-        .autofill-btn.hidden { display: none; }
-        .autofill-success { background: #D1FAE5; color: #065F46; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 12px; display: none; }
-        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .summary-card { position: static; } .row { grid-template-columns: 1fr; } }
-    </style>
-</head>
-<body>
-<?php 
+<?php
+$page_title = 'Checkout - OmniShop';
+$body_class = '';
 $header_title = 'Checkout';
 $header_right = '<a href="/' . htmlspecialchars($event_slug) . '">&#8592; Back to Catalog</a>';
-include __DIR__ . '/storefront/_header.php'; 
+
+ob_start();
 ?>
 
 <div class="container" id="mainContainer">
@@ -84,10 +57,6 @@ include __DIR__ . '/storefront/_header.php';
         </div>
     </div>
 </div>
-
-</div>
-<?php include __DIR__ . '/storefront/_footer.php'; ?>
-<?php include __DIR__ . '/storefront/_toast.php'; ?>
 
 <script>
 var EVENT_SLUG = "<?php echo htmlspecialchars($event_slug); ?>";
@@ -197,8 +166,35 @@ function submitOrder() {
     xhr.onerror = function() { errEl.textContent = 'Network error.'; errEl.style.display = 'block'; document.getElementById('submitBtn').disabled = false; document.getElementById('submitBtn').style.display = 'block'; document.getElementById('loadingMsg').style.display = 'none'; };
     xhr.send(JSON.stringify(body));
 }
-
-// esc moved to _toast.php
 </script>
-</body>
-</html>
+<?php
+$page_content = ob_get_clean();
+
+$page_css = '<style>
+    .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .si { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+    .si-name { flex: 1; }
+    .si-color { font-size: 11px; color: #888; }
+    .si-qty { color: #888; margin: 0 12px; }
+    .si-price { font-weight: 600; color: var(--brand-teal); min-width: 70px; text-align: right; }
+    .sum-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+    .sum-line.total { font-size: 18px; font-weight: 700; color: #222; border-top: 2px solid var(--brand-teal); padding-top: 12px; margin-top: 8px; }
+    .submit-btn { width: 100%; padding: 16px; font-size: 16px; margin-top: 16px; }
+    .pay-note { background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 6px; padding: 12px; font-size: 12px; color: #92400e; margin-top: 12px; line-height: 1.5; }
+    .error-msg { background: #FEE2E2; color: #991B1B; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .loading { display: none; text-align: center; padding: 12px; color: var(--brand-teal); font-size: 14px; }
+    .empty-msg { text-align: center; padding: 60px 20px; color: #999; }
+    .empty-msg a { color: var(--brand-teal); font-weight: 600; text-decoration: none; }
+    .pay-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; }
+    .pay-option:hover { border-color: var(--brand-teal); }
+    .pay-option input { width: auto; margin: 0; }
+    .req { color: #ef4444; }
+    .autofill-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--brand-teal-pale); color: var(--brand-teal); border: 1px solid var(--brand-teal); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: inherit; margin-bottom: 16px; transition: all 0.2s; }
+    .autofill-btn:hover { background: var(--brand-teal); color: #fff; }
+    .autofill-btn.hidden { display: none; }
+    .autofill-success { background: #D1FAE5; color: #065F46; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 12px; display: none; }
+    @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .summary-card { position: static; } .row { grid-template-columns: 1fr; } }
+</style>';
+
+include __DIR__ . '/storefront/_layout.php';

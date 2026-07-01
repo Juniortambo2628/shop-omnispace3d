@@ -1,11 +1,12 @@
-<?php $page_title = htmlspecialchars($event['short_name']) . ' — Catalog Access'; ?>
-<?php include __DIR__ . '/storefront/_head.php'; ?>
-    <link rel="stylesheet" href="/static/css/catalog-login.css">
-</head>
-<body class="catalog-login">
+<?php
+$page_title = htmlspecialchars($event['short_name']) . ' — Catalog Access';
+$body_class = 'catalog-login';
+$show_header = false;
+
+ob_start();
+?>
 
 <div class="card">
-    <!-- Event branding -->
     <div class="card-top">
         <div class="logo-row">
             <img class="logo-omnispace" src="/static/images/omnispace-logo.jpg" alt="OmniSpace 3D Events">
@@ -15,7 +16,6 @@
         <div class="event-dates"><?php echo htmlspecialchars($event["dates"]); ?> &nbsp;·&nbsp; <?php echo htmlspecialchars(explode(',', $event["venue"])[0]); ?></div>
     </div>
 
-    <!-- Login form -->
     <div class="card-body">
         <div class="lock-icon">🔒</div>
         <h2>Catalog Access</h2>
@@ -46,13 +46,15 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/storefront/_footer.php'; ?>
-
 <script>
 function togglePw() {
     var inp = document.getElementById('password');
     inp.type = inp.type === 'password' ? 'text' : 'password';
 }
 </script>
-</body>
-</html>
+<?php
+$page_content = ob_get_clean();
+
+$page_css = '<link rel="stylesheet" href="/static/css/catalog-login.css">';
+
+include __DIR__ . '/storefront/_layout.php';

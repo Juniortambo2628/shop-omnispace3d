@@ -1,23 +1,21 @@
-<?php $page_title = htmlspecialchars($event["name"]) . ' - OmniShop'; ?>
-<?php include __DIR__ . '/storefront/_head.php'; ?>
-    <link rel="stylesheet" href="/static/css/catalog.css">
-</head>
-<body>
-
-<?php 
+<?php
+$page_title = htmlspecialchars($event["name"]) . ' - OmniShop';
+$body_class = '';
 $header_event_logo = $event['logo'];
-$header_center = [
-    'title' => 'Event Services Catalog',
-    'subtitle' => $event["name"] . ' — ' . $event["dates"]
-];
+$is_catalog_page = true;
+
 ob_start(); ?>
     <button class="cart-btn" id="openCart">
         &#128722; Cart <span class="cart-badge" id="cartBadge">0</span>
     </button>
-<?php 
+<?php
 $header_right = ob_get_clean();
-$is_catalog_page = true;
-include __DIR__ . '/storefront/_header.php'; 
+$header_center = [
+    'title' => 'Event Services Catalog',
+    'subtitle' => $event["name"] . ' — ' . $event["dates"]
+];
+
+ob_start();
 ?>
 
 <div class="event-hero">
@@ -668,5 +666,9 @@ function setupUI() {
     });
 }
 </script>
-</body>
-</html>
+<?php
+$page_content = ob_get_clean();
+
+$page_css = '<link rel="stylesheet" href="/static/css/catalog.css">';
+
+include __DIR__ . '/storefront/_layout.php';

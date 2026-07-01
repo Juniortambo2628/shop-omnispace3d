@@ -1,33 +1,8 @@
-<?php $page_title = 'Order History - OmniShop'; ?>
-<?php include __DIR__ . '/_head.php'; ?>
-    <link rel="stylesheet" href="/static/css/components.css">
-    <style>
-        .action-btn { padding: 6px 12px; font-size: 11px; }
-        .order-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-        .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; }
-        .search-input:focus { outline: none; border-color: var(--brand-teal); box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
-        .filter-select { padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; cursor: pointer; }
-        .filter-select:focus { outline: none; border-color: var(--brand-teal); }
-        .filter-btn { padding: 10px 18px; background: var(--brand-teal); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.2s; }
-        .filter-btn:hover { background: var(--brand-teal-dark); }
-        .clear-btn { padding: 10px 14px; background: #fff; color: #888; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; text-decoration: none; }
-        .clear-btn:hover { background: #f5f5f5; }
-        .orders-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .orders-table th { background: var(--brand-teal); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        .orders-table td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; }
-        .orders-table tr:hover td { background: #f9fffe; }
-        .orders-table tr.active td { background: var(--brand-teal-pale); }
-        .orders-table a { color: var(--brand-teal); text-decoration: none; font-weight: 600; }
-        .orders-table a:hover { text-decoration: underline; }
-        .results-count { font-size: 12px; color: #888; text-align: center; margin-top: 12px; }
-        @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
-    </style>
-</head>
-<body class="storefront-portal">
 <?php
+$page_title = 'Order History - OmniShop';
 $header_title = 'Order History';
-include __DIR__ . '/_header.php';
+
+ob_start();
 ?>
 
 <div class="container">
@@ -178,8 +153,31 @@ include __DIR__ . '/_header.php';
     <?php endif; ?>
 </div>
 
-<?php include __DIR__ . '/_footer.php'; ?>
-<?php include __DIR__ . '/_toast.php'; ?>
 <script src="/static/js/storefront.js"></script>
-</body>
-</html>
+<?php
+$page_content = ob_get_clean();
+
+$page_css = '<style>
+    .action-btn { padding: 6px 12px; font-size: 11px; }
+    .order-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; }
+    .search-input:focus { outline: none; border-color: var(--brand-teal); box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
+    .filter-select { padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; cursor: pointer; }
+    .filter-select:focus { outline: none; border-color: var(--brand-teal); }
+    .filter-btn { padding: 10px 18px; background: var(--brand-teal); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.2s; }
+    .filter-btn:hover { background: var(--brand-teal-dark); }
+    .clear-btn { padding: 10px 14px; background: #fff; color: #888; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; text-decoration: none; }
+    .clear-btn:hover { background: #f5f5f5; }
+    .orders-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .orders-table th { background: var(--brand-teal); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    .orders-table td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; }
+    .orders-table tr:hover td { background: #f9fffe; }
+    .orders-table tr.active td { background: var(--brand-teal-pale); }
+    .orders-table a { color: var(--brand-teal); text-decoration: none; font-weight: 600; }
+    .orders-table a:hover { text-decoration: underline; }
+    .results-count { font-size: 12px; color: #888; text-align: center; margin-top: 12px; }
+    @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
+</style>';
+
+include __DIR__ . '/_layout.php';
