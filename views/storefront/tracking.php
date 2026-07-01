@@ -1,26 +1,9 @@
-<?php $page_title = 'Track Order - OmniShop'; ?>
-<?php include __DIR__ . '/_head.php'; ?>
-    <link rel="stylesheet" href="/static/css/components.css">
-    <style>
-        .container { display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
-        .section h2 { display: flex; align-items: center; gap: 8px; }
-        .action-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
-        .order-history-item { padding: 14px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
-        .order-history-item:hover { border-color: var(--brand-teal); background: #f9fffe; }
-        .order-history-item.active { border-color: var(--brand-teal); background: var(--brand-teal-pale); }
-        .order-history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 13px; }
-        .custom-order-id { font-family: monospace; font-size: 11px; color: #888; }
-        .order-history-meta { font-size: 12px; color: #888; }
-        .order-history-total { font-size: 14px; font-weight: 700; color: #1a1a1a; }
-        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .summary-card { position: static; } }
-    </style>
-</head>
-<body class="storefront-portal">
 <?php
+$page_title = 'Track Order - OmniShop';
 $header_title = 'Track Your Order';
 $header_right = '<a href="/' . htmlspecialchars($event_slug) . '">&#8592; Back to Catalog</a>';
-include __DIR__ . '/_header.php';
+
+ob_start();
 ?>
 
 <?php if (empty($email)): ?>
@@ -121,8 +104,23 @@ include __DIR__ . '/_header.php';
 </div>
 <?php endif; ?>
 
-<?php include __DIR__ . '/_footer.php'; ?>
-<?php include __DIR__ . '/_toast.php'; ?>
 <script src="/static/js/storefront.js"></script>
-</body>
-</html>
+<?php
+$page_content = ob_get_clean();
+
+$page_css = '<style>
+    .container { display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
+    .section h2 { display: flex; align-items: center; gap: 8px; }
+    .action-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    .order-history-item { padding: 14px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+    .order-history-item:hover { border-color: var(--brand-teal); background: #f9fffe; }
+    .order-history-item.active { border-color: var(--brand-teal); background: var(--brand-teal-pale); }
+    .order-history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 13px; }
+    .custom-order-id { font-family: monospace; font-size: 11px; color: #888; }
+    .order-history-meta { font-size: 12px; color: #888; }
+    .order-history-total { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+    @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .summary-card { position: static; } }
+</style>';
+
+include __DIR__ . '/_layout.php';

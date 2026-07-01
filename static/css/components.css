@@ -38,10 +38,7 @@
 .section { background: #fff; border-radius: 10px; box-shadow: var(--shadow-md); padding: 28px; margin-bottom: 24px; }
 .section h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #222; padding-bottom: 12px; border-bottom: 2px solid var(--brand-teal-pale); }
 
-/* ── Form Primitives ── */
-label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; }
-input, select { width: 100%; padding: 12px 14px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 14px; font-family: inherit; margin-bottom: 16px; transition: border 0.2s; }
-input:focus, select:focus { outline: none; border-color: var(--brand-teal); box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
+/* ── Submit Button ── */
 .submit-btn { width: 100%; padding: 14px; background: var(--brand-teal); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; font-family: inherit; transition: background 0.2s; }
 .submit-btn:hover { background: var(--brand-teal-dark); }
 .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
@@ -116,6 +113,12 @@ input:focus, select:focus { outline: none; border-color: var(--brand-teal); box-
 
 /* ── Summary Card (sticky sidebar) ── */
 .summary-card { position: sticky; top: 20px; }
+
+/* ── Lookup Tabs ── */
+.lookup-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #eee; }
+.lookup-tab { padding: 10px 20px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; text-decoration: none; }
+.lookup-tab:hover { color: var(--brand-teal); }
+.lookup-tab.active { color: var(--brand-teal); border-bottom-color: var(--brand-teal); }
 
 /* ── Skeleton Loading ── */
 .skeleton {

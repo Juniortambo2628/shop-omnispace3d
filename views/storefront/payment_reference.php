@@ -1,25 +1,8 @@
-<?php $page_title = 'Submit Payment Reference - OmniShop'; ?>
-<?php include __DIR__ . '/_head.php'; ?>
-    <link rel="stylesheet" href="/static/css/components.css">
-    <style>
-        .container { max-width: 600px; }
-        .section h2 { margin-bottom: 6px; }
-        .section .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.6; }
-        .order-card { background: #f9fffe; border: 1px solid var(--brand-teal-pale); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-        .order-card .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 15px; }
-        .order-card .order-meta { font-size: 12px; color: #888; margin-top: 4px; }
-        .order-card .order-total { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
-        .help-text { font-size: 12px; color: #888; margin-top: -12px; margin-bottom: 18px; }
-        .divider { border: none; border-top: 1px solid #eee; margin: 20px 0; }
-        .success-box { background: #D1FAE5; border: 1px solid #10B981; border-radius: 8px; padding: 20px; text-align: center; }
-        .success-box h3 { color: #065F46; font-size: 16px; margin-bottom: 8px; }
-        .success-box p { color: #065F46; font-size: 13px; }
-    </style>
-</head>
-<body class="storefront-portal">
 <?php
+$page_title = 'Submit Payment Reference - OmniShop';
 $header_title = 'Submit Payment Reference';
-include __DIR__ . '/_header.php';
+
+ob_start();
 ?>
 
 <div class="container">
@@ -100,8 +83,23 @@ function selectOrder(orderId, displayId) {
 }
 </script>
 
-<?php include __DIR__ . '/_footer.php'; ?>
-<?php include __DIR__ . '/_toast.php'; ?>
 <script src="/static/js/storefront.js"></script>
-</body>
-</html>
+<?php
+$page_content = ob_get_clean();
+
+$page_css = '<style>
+    .container { max-width: 600px; }
+    .section h2 { margin-bottom: 6px; }
+    .section .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.6; }
+    .order-card { background: #f9fffe; border: 1px solid var(--brand-teal-pale); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .order-card .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 15px; }
+    .order-card .order-meta { font-size: 12px; color: #888; margin-top: 4px; }
+    .order-card .order-total { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
+    .help-text { font-size: 12px; color: #888; margin-top: -12px; margin-bottom: 18px; }
+    .divider { border: none; border-top: 1px solid #eee; margin: 20px 0; }
+    .success-box { background: #D1FAE5; border: 1px solid #10B981; border-radius: 8px; padding: 20px; text-align: center; }
+    .success-box h3 { color: #065F46; font-size: 16px; margin-bottom: 8px; }
+    .success-box p { color: #065F46; font-size: 13px; }
+</style>';
+
+include __DIR__ . '/_layout.php';
