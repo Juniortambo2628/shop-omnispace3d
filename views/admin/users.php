@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="/static/css/users.css">
 
 <div class="container">
   <?php include __DIR__ . '/_header.php'; ?>

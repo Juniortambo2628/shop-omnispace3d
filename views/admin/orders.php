@@ -1,6 +1,4 @@
 <?php $active_page = 'orders'; ?>
-<link rel="stylesheet" href="/static/css/components.css">
-<link rel="stylesheet" href="/static/css/orders.css">
 
 <div class="container">
   <?php include __DIR__ . '/_header.php'; ?>

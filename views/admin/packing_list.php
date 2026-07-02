@@ -1,5 +1,4 @@
 <?php global $CONFIG; ?>
-<link rel="stylesheet" href="/static/css/packing.css">
 
 <div class="container">
   <div class="no-print">

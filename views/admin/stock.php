@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="/static/css/stock.css">
 
 <div class="container" x-data="{ saved: <?php echo !empty($saved) ? 'true' : 'false'; ?> }">
     <?php include __DIR__ . '/_header.php'; ?>

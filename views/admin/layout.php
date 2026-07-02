@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="/static/css/base.css">
     <link rel="stylesheet" href="/static/css/admin.css">
     <link rel="stylesheet" href="/static/css/admin-shared.css">
+    <link rel="stylesheet" href="/static/css/orders.css">
+    <link rel="stylesheet" href="/static/css/stock.css">
+    <link rel="stylesheet" href="/static/css/images.css">
+    <link rel="stylesheet" href="/static/css/packing.css">
+    <link rel="stylesheet" href="/static/css/settings.css">
+    <link rel="stylesheet" href="/static/css/users.css">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

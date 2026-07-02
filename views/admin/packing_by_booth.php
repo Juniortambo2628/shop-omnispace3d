@@ -1,5 +1,4 @@
 <?php global $CONFIG; ?>
-<link rel="stylesheet" href="/static/css/packing.css">
 
 <div class="container" data-packing-storage-key="packing-stand-<?php echo htmlspecialchars($event_slug ?? 'default'); ?>">
   <div class="no-print">

@@ -1,5 +1,4 @@
 <?php $active_page = 'images'; ?>
-<link rel="stylesheet" href="/static/css/images.css">
 
 <div class="container">
   <?php include __DIR__ . '/_header.php'; ?>
