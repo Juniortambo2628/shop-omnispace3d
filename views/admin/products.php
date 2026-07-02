@@ -1,11 +1,8 @@
 <?php $active_page = 'products'; ?>
 <style>
 /* ── PRODUCTS SPECIFIC STYLES ── */
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-.badge-db{background:#dbeafe;color:#1d4ed8}
-.badge-catalog{background:#f3f4f6;color:#6b7280}
 .colors-list{display:flex;gap:4px;flex-wrap:wrap}
-.color-pill{background:#e0f7f7;color:#065f46;font-size:11px;padding:2px 7px;border-radius:10px}
+.color-pill{background:var(--brand-teal-pale);color:#065f46;font-size:11px;padding:2px 7px;border-radius:var(--radius-lg)}
 .actions{display:flex;gap:6px;align-items:center}
 </style>
 

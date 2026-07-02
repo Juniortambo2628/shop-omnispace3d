@@ -1,27 +1,3 @@
-<style>
-    .card{background:#fff;border-radius:12px;box-shadow:0 1px 6px rgba(0,0,0,.06);padding:32px;margin-bottom:24px}
-    .card h2{font-size:16px;font-weight:700;margin-bottom:8px;color:#222;display:flex;align-items:center;gap:10px}
-    .card .desc{font-size:13px;color:#777;margin-bottom:24px;line-height:1.6}
-    .field-group{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
-    .field{display:flex;flex-direction:column;gap:6px}
-    .field label{font-size:12px;font-weight:700;color:#555}
-    .field input,.field textarea,.field select{transition:all .2s;padding:10px 12px;border:1px solid #ddd;border-radius:6px;font-size:14px;font-family:inherit}
-    .field input:focus,.field textarea:focus{outline:none;border-color:#0A9696;box-shadow:0 0 0 3px rgba(10,150,150,.1)}
-    .field textarea{resize:vertical;min-height:90px;line-height:1.5}
-    .field .hint{font-size:11px;color:#999;margin-top:2px;line-height:1.4}
-    .separator{border:none;border-top:1px solid #f0f0f0;margin:24px 0}
-    .full-width{grid-column:1/-1}
-    .warning-box{font-size:11px;line-height:1.6;color:#0A9696;background:#D6F0EF;border:1px solid #0A9696;border-radius:8px;padding:14px 16px;max-height:200px;overflow-y:auto;white-space:pre-wrap;margin-top:8px}
-    .disclaimer-box{font-size:11px;line-height:1.6;color:#555;background:#f9fafb;border:1px solid #eee;border-radius:8px;padding:14px 16px;max-height:320px;overflow-y:auto;white-space:pre-wrap;margin-top:8px}
-    .rt-editor-wrap{border:1px solid #ddd;border-radius:6px;overflow:hidden;margin-top:6px}
-    .rt-toolbar{background:#f9fafb;border-bottom:1px solid #ddd;padding:6px 8px;display:flex;gap:4px;flex-wrap:wrap}
-    .rt-toolbar button{background:#fff;border:1px solid #ddd;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:12px;font-weight:600;color:#555;transition:all .15s}
-    .rt-toolbar button:hover{background:#D6F0EF;border-color:#0A9696;color:#0A9696}
-    .rt-toolbar button.active{background:#0A9696;color:#fff;border-color:#0A9696}
-    .rt-content{min-height:150px;padding:12px 14px;font-size:14px;line-height:1.6;font-family:inherit;outline:none;background:#fff}
-    .rt-content:focus{box-shadow:0 0 0 3px rgba(10,150,150,.1)}
-    @media(max-width:700px){.field-group{grid-template-columns:1fr}}
-</style>
 
 <div class="container">
   <?php include __DIR__ . '/_header.php'; ?>
@@ -37,24 +13,24 @@
   <?php endif; ?>
 
   <!-- ── EMAIL SETTINGS ───────────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>📧 Email Settings (Gmail)</h2>
-    <p class="desc">
+    <p class="section-desc">
       OmniShop sends automatic order confirmations and payment notices by email. You need a Gmail account and a <strong>Gmail App Password</strong>.<br>
-      <small>How to get an App Password: Go to <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:#0A9696">myaccount.google.com/apppasswords</a> → Create a new App Password → copy the 16-character code and paste it below.</small>
+      <small>How to get an App Password: Go to <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:var(--brand-teal)">myaccount.google.com/apppasswords</a> → Create a new App Password → copy the 16-character code and paste it below.</small>
     </p>
 
     <form action="/admin/settings" method="POST">
       <input type="hidden" name="action" value="email">
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>Gmail Address (the "From" address)</label>
           <input type="email" name="gmail_address"
                  value="<?php echo htmlspecialchars($settings['gmail_address'] ?? ''); ?>"
                  placeholder="orders@omnispace3d.com">
           <span class="hint">Emails to clients will appear to come from this address</span>
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>Gmail App Password</label>
           <input type="password" name="gmail_app_password"
                  value="<?php echo htmlspecialchars($settings['gmail_app_password'] ?? ''); ?>"
@@ -63,15 +39,15 @@
           <span class="hint">This is a special password from Google — not your regular Gmail password</span>
         </div>
       </div>
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>Admin Notification Email</label>
           <input type="email" name="admin_notification_email"
                  value="<?php echo htmlspecialchars($settings['admin_notification_email'] ?? ''); ?>"
                  placeholder="solarandstoragelive@omnispace3d.com">
           <span class="hint">New order alerts are sent to this address</span>
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>SMTP Host</label>
           <input type="text" name="smtp_host"
                  value="<?php echo htmlspecialchars($settings['smtp_host'] ?? 'smtp.gmail.com'); ?>"
@@ -94,72 +70,72 @@
   </div>
 
   <!-- ── COMPANY DETAILS ──────────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>🏢 Company Details (for Tax Invoices)</h2>
-    <p class="desc">
+    <p class="section-desc">
       These details appear on the tax invoices that are attached to order confirmation emails. Fill in your full legal company name, PIN, and address as they should appear on invoices.
     </p>
 
     <form action="/admin/settings" method="POST">
       <input type="hidden" name="action" value="company">
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>Company Name</label>
           <input type="text" name="company_name"
                  value="<?php echo htmlspecialchars($settings['company_name'] ?? 'OmniSpace 3D Events Ltd'); ?>">
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>PIN / Tax Registration Number</label>
           <input type="text" name="company_pin"
                  value="<?php echo htmlspecialchars($settings['company_pin'] ?? ''); ?>"
                  placeholder="e.g. P051234567A">
         </div>
       </div>
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>VAT Registration Number [If different from PIN]</label>
           <input type="text" name="company_vat_no"
                  value="<?php echo htmlspecialchars($settings['company_vat_no'] ?? ''); ?>"
                  placeholder="Optional">
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>Phone</label>
           <input type="text" name="company_phone"
                  value="<?php echo htmlspecialchars($settings['company_phone'] ?? '+254 204 489 504'); ?>">
         </div>
       </div>
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>WhatsApp Number [shown on invoices]</label>
           <input type="text" name="company_whatsapp"
                  value="<?php echo htmlspecialchars($settings['company_whatsapp'] ?? '+254 731 001 723'); ?>">
           <span class="hint">Displayed as WhatsApp on the invoice header</span>
         </div>
       </div>
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>Company Email (on invoices)</label>
           <input type="email" name="company_email"
                  value="<?php echo htmlspecialchars($settings['company_email'] ?? 'solarandstorage@omnispace3d.com'); ?>">
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>Website</label>
           <input type="text" name="company_website"
                  value="<?php echo htmlspecialchars($settings['company_website'] ?? 'www.omnispace3d.com'); ?>">
         </div>
       </div>
       
-      <div class="field" style="margin-bottom:20px">
+      <div class="profile-field" style="margin-bottom:20px">
         <label>Company Address (as shown on invoices)</label>
         <textarea name="company_address" placeholder="e.g. P.O. Box 12345, Nairobi, Kenya"><?php echo htmlspecialchars($settings['company_address'] ?? ''); ?></textarea>
       </div>
 
-      <div class="field" style="margin-bottom:20px">
+      <div class="profile-field" style="margin-bottom:20px">
         <label>Invoice Payment Note (shown at bottom of each invoice)</label>
         <textarea name="invoice_payment_note" placeholder="e.g. Please make payment within 14 days quoting your Invoice Number..."><?php echo htmlspecialchars($settings['invoice_payment_note'] ?? ''); ?></textarea>
       </div>
 
-      <div class="field">
+      <div class="profile-field">
         <label>Terms & Conditions (printed on each invoice — one clause per line)</label>
         <textarea name="invoice_terms" placeholder="1. All prices are exclusive of VAT unless stated otherwise.&#10;2. Payment is due within 14 days of invoice date."><?php echo htmlspecialchars($settings['invoice_terms'] ?? ''); ?></textarea>
         <span class="hint">Each line becomes a numbered clause on the invoice. Leave blank to use the default T&C.</span>
@@ -172,26 +148,26 @@
   </div>
 
   <!-- ── PAYMENT SETTINGS ─────────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>💳 Payment Settings</h2>
-    <p class="desc">Configure payment methods, bank transfer details, and payment portal links. These appear on invoices and order notification emails.</p>
+    <p class="section-desc">Configure payment methods, bank transfer details, and payment portal links. These appear on invoices and order notification emails.</p>
 
     <form action="/admin/settings" method="POST">
       <input type="hidden" name="action" value="payment">
-      <div class="field-group">
+      <div class="profile-field-group">
         <div class="field full-width">
           <label>Bank Transfer Details</label>
           <textarea name="bank_transfer_details" rows="6" placeholder="Account Name, Bank, Branch, Account Number, SWIFT Code..."><?php echo htmlspecialchars($settings['bank_transfer_details'] ?? ''); ?></textarea>
           <span class="hint">Displayed on invoices and payment instruction emails. One detail per line recommended.</span>
         </div>
       </div>
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>PayPal Payment Link</label>
           <input type="url" name="paypal_payment_link" value="<?php echo htmlspecialchars($settings['paypal_payment_link'] ?? ''); ?>" placeholder="https://paypal.me/yourbusiness">
           <span class="hint">Full PayPal.me or hosted payment page URL</span>
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>Payment Portal URL</label>
           <input type="url" name="payment_portal_url" value="<?php echo htmlspecialchars($settings['payment_portal_url'] ?? ''); ?>" placeholder="https://payments.omnispace3d.com">
           <span class="hint">External payment portal base URL sent in availability confirmation emails</span>
@@ -204,9 +180,9 @@
   </div>
 
   <!-- ── INVOICE DISCLAIMER ───────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>📄 Invoice Disclaimer Text</h2>
-    <p class="desc">Full disclaimer text appended to the bottom of every invoice PDF. Use small compact formatting to prevent layout overflow.</p>
+    <p class="section-desc">Full disclaimer text appended to the bottom of every invoice PDF. Use small compact formatting to prevent layout overflow.</p>
 
     <form action="/admin/settings" method="POST">
       <input type="hidden" name="action" value="disclaimer">
@@ -225,9 +201,9 @@
   </div>
 
   <!-- ── BANK CHARGE WARNING ──────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>⚠️ Bank Charge Warning Text</h2>
-    <p class="desc">Highlighted callout text shown on invoices regarding bank charges and payment requirements.</p>
+    <p class="section-desc">Highlighted callout text shown on invoices regarding bank charges and payment requirements.</p>
 
     <form action="/admin/settings" method="POST">
       <input type="hidden" name="action" value="warning">
@@ -246,9 +222,9 @@
   </div>
 
   <!-- ── EMAIL TEMPLATES ──────────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>📧 Email Templates</h2>
-    <p class="desc">
+    <p class="section-desc">
       Customize the automated email templates sent to clients at each order stage. Available variables:<br>
       <code>{contact_name}</code>, <code>{order_id}</code>, <code>{booth_number}</code>, <code>{company_email}</code>, <code>{company_phone}</code>,<br>
       <code>{paypal_link}</code>, <code>{payment_portal_url}</code>, <code>{items_table}</code>, <code>{totals_block}</code>
@@ -319,18 +295,18 @@
   </div>
 
   <!-- ── SIGNATORY LABELS ─────────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>✍️ Invoice Signatory Labels</h2>
-    <p class="desc">Configure the column titles for the dual-signature section at the bottom of invoices.</p>
+    <p class="section-desc">Configure the column titles for the dual-signature section at the bottom of invoices.</p>
 
     <form action="/admin/settings" method="POST">
       <input type="hidden" name="action" value="signatory">
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>Left Column Title (Customer)</label>
           <input type="text" name="invoice_signatory_left_title" value="<?php echo htmlspecialchars($settings['invoice_signatory_left_title'] ?? 'Customer Approval'); ?>">
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>Right Column Title (Omnispace)</label>
           <input type="text" name="invoice_signatory_right_title" value="<?php echo htmlspecialchars($settings['invoice_signatory_right_title'] ?? 'Omnispace Verification'); ?>">
         </div>
@@ -342,19 +318,19 @@
   </div>
 
   <!-- ── CATALOG PASSWORDS ────────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>🔒 Catalog Access Password</h2>
-    <p class="desc">Visitors must enter this password to view the exhibitor catalog. Share it with your exhibitors when you send out event communications. Leave blank to make the catalog publicly accessible.</p>
+    <p class="section-desc">Visitors must enter this password to view the exhibitor catalog. Share it with your exhibitors when you send out event communications. Leave blank to make the catalog publicly accessible.</p>
     <form method="POST" action="/admin/settings">
       <input type="hidden" name="action" value="passwords">
-      <div class="field-group">
-        <div class="field">
+      <div class="profile-field-group">
+        <div class="profile-field">
           <label>Exhibitor Password</label>
           <input type="text" name="catalog_password_solarandstorage"
                  value="<?php echo htmlspecialchars($settings['catalog_password_solarandstorage'] ?? 'ssl2026'); ?>">
-          <span class="hint">Share with all exhibitors. Current: <strong style="color:#0A9696"><?php echo htmlspecialchars($settings['catalog_password_solarandstorage'] ?? 'ssl2026'); ?></strong></span>
+          <span class="hint">Share with all exhibitors. Current: <strong style="color:var(--brand-teal)"><?php echo htmlspecialchars($settings['catalog_password_solarandstorage'] ?? 'ssl2026'); ?></strong></span>
         </div>
-        <div class="field">
+        <div class="profile-field">
           <label>Demo / Visitor Password</label>
           <input type="text" name="catalog_password_demo"
                  value="<?php echo htmlspecialchars($settings['catalog_password_demo'] ?? ''); ?>"
@@ -370,35 +346,19 @@
   </div>
 
   <!-- ── INVOICE PREVIEW ─────────────────────────────────────────── -->
-  <div class="card">
+  <div class="form-card">
     <h2>📄 Invoice PDF Preview</h2>
-    <p class="desc">Preview how invoices will look with the current settings. This generates a sample invoice PDF using your configured company details, disclaimer, bank warning, and signatory labels.</p>
+    <p class="section-desc">Preview how invoices will look with the current settings. This generates a sample invoice PDF using your configured company details, disclaimer, bank warning, and signatory labels.</p>
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
       <a href="/admin/invoice-preview" target="_blank" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
         Open Invoice Preview (PDF)
       </a>
       <span style="font-size:12px;color:#888;">Opens in a new tab. Save settings first to see the latest changes.</span>
     </div>
-    <div style="margin-top:16px;border:1px solid #eee;border-radius:8px;overflow:hidden;background:#f9fafb;">
+    <div style="margin-top:16px;border:1px solid #eee;border-radius:var(--radius-md);overflow:hidden;background:#f9fafb;">
       <iframe src="/admin/invoice-preview" style="width:100%;height:700px;border:none;" title="Invoice Preview"></iframe>
     </div>
   </div>
 </div>
 
-<script>
-function rtCmd(cmd, btn) {
-    document.execCommand(cmd, false, null);
-    btn.classList.toggle('active');
-}
-function rtInsertVar(btn) {
-    var v = btn.getAttribute('data-var');
-    var editor = btn.closest('.rt-editor-wrap').querySelector('.rt-content');
-    editor.focus();
-    document.execCommand('insertText', false, v);
-}
-function syncRtEditors() {
-    document.getElementById('tpl_new_order').value = document.getElementById('editor_new_order').innerHTML;
-    document.getElementById('tpl_availability').value = document.getElementById('editor_availability').innerHTML;
-    document.getElementById('tpl_payment').value = document.getElementById('editor_payment').innerHTML;
-}
-</script>
+<script src="/static/js/settings.js"></script>

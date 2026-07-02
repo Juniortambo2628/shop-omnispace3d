@@ -1,16 +1,3 @@
-<style>
-    .info-box{background:#D6F0EF;border:1px solid #19AFAC;border-radius:8px;padding:14px 18px;font-size:13px;color:#0A9696;margin-bottom:24px;line-height:1.6}
-    .bar-wrap{width:120px;height:10px;background:#eee;border-radius:5px;overflow:hidden;display:inline-block;vertical-align:middle}
-    .bar{height:100%;border-radius:5px;transition:width .3s}
-    .bar-ok{background:#0A9696}
-    .bar-warn{background:#F59E0B}
-    .bar-crit{background:#dc2626}
-    .pct{font-size:11px;font-weight:600;margin-left:6px;vertical-align:middle}
-    .limit-input{width:80px;padding:5px 8px;border:1px solid #ddd;border-radius:5px;font-size:13px;text-align:center;font-family:inherit}
-    .limit-input:focus{outline:none;border-color:#0A9696}
-    .ordered-num{font-weight:700;color:#0A9696}
-    .no-limit{color:#bbb;font-size:12px}
-</style>
 
 <div class="container" x-data="{ saved: <?php echo !empty($saved) ? 'true' : 'false'; ?> }">
     <?php include __DIR__ . '/_header.php'; ?>

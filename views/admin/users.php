@@ -1,24 +1,3 @@
-<style>
-    .two-col{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
-    .card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.07);padding:28px}
-    h2{font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:20px}
-    table{width:100%;border-collapse:collapse}
-    thead{background:#f9fafb}
-    th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #e5e7eb}
-    td{padding:12px 14px;font-size:13px;border-bottom:1px solid #f3f4f6;vertical-align:middle}
-    .badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600}
-    .badge-super{background:#dcfce7;color:#166534}
-    .badge-editor{background:#dbeafe;color:#1d4ed8}
-    .badge-order{background:#f3f4f6;color:#6b7280}
-    .form-group{margin-bottom:14px}
-    label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
-    input,select{width:100%}
-    input:focus,select:focus{outline:none;border-color:#0A9696;box-shadow:0 0 0 3px rgba(10,150,150,.1)}
-    .hint{font-size:11px;color:#9ca3af;margin-top:3px}
-    .role-info{background:#f0fdfd;border-radius:8px;padding:16px;margin-top:20px}
-    .role-info h3{font-size:13px;font-weight:700;color:#0A9696;margin-bottom:10px}
-    .role-row{margin-bottom:8px;font-size:12px;color:#555}
-</style>
 
 <div class="container">
   <?php include __DIR__ . '/_header.php'; ?>
@@ -76,7 +55,7 @@
               <?php if ((int) $u['id'] !== (int) ($current_user_id ?? 0)): ?>
               <form method="POST" action="/admin/users/<?php echo (int) $u['id']; ?>/toggle-active" style="display:inline;margin-left:6px"
                     onsubmit="return confirm('<?php echo $u['active'] ? 'Deactivate' : 'Activate'; ?> this user?');">
-                <button type="submit" class="btn btn-sm" style="background:<?php echo $u['active'] ? '#fee2e2' : '#dcfce7'; ?>;color:<?php echo $u['active'] ? '#991b1b' : '#166534'; ?>">
+                <button type="submit" class="btn btn-sm" style="background:<?php echo $u['active'] ? '#fee2e2' : '#dcfce7'; ?>;color:<?php echo $u['active'] ? 'var(--color-error-dark)' : '#166534'; ?>">
                   <?php echo $u['active'] ? 'Deactivate' : 'Activate'; ?>
                 </button>
               </form>

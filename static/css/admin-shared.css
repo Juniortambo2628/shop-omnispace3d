@@ -800,3 +800,40 @@ tbody tr:hover .prod-thumb__img {
         transform: none !important;
     }
 }
+
+/* ── Badges (status indicators) ── */
+#admin-content .badge {
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-block;
+}
+#admin-content .badge-Pending { background: var(--badge-pending-bg); color: var(--badge-pending-text); }
+#admin-content .badge-Approved { background: var(--badge-approved-bg); color: var(--badge-approved-text); }
+#admin-content .badge-Invoiced { background: var(--badge-invoiced-bg); color: var(--badge-invoiced-text); }
+#admin-content .badge-Fulfilled { background: var(--badge-fulfilled-bg); color: var(--badge-fulfilled-text); }
+#admin-content .badge-Cancelled { background: var(--badge-cancelled-bg); color: var(--badge-cancelled-text); }
+#admin-content .badge-unverified { background: var(--badge-unverified-bg); color: var(--badge-unverified-text); }
+#admin-content .badge-pending { background: var(--badge-pending-bg); color: var(--badge-pending-text); }
+#admin-content .badge-verified { background: var(--badge-approved-bg); color: var(--badge-approved-text); }
+#admin-content .badge-rejected { background: var(--badge-cancelled-bg); color: var(--badge-cancelled-text); }
+#admin-content .badge-super { background: #EDE9FE; color: #5B21B6; }
+#admin-content .badge-editor { background: var(--badge-pending-bg); color: var(--badge-pending-text); }
+#admin-content .badge-order { background: var(--badge-invoiced-bg); color: var(--badge-invoiced-text); }
+#admin-content .badge-db { background: var(--badge-approved-bg); color: var(--badge-approved-text); }
+#admin-content .badge-catalog { background: var(--badge-unverified-bg); color: var(--badge-unverified-text); }
+
+/* ── Stock bar (dashboard) ── */
+.stock-bar-wrap { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+.stock-bar { height: 100%; border-radius: 4px; }
+.bar-ok { background: var(--brand-teal); }
+.bar-warn { background: var(--color-warning); }
+.bar-crit { background: #dc2626; }
+.stock-pct { flex: 0 0 45px; text-align: right; font-weight: 700; }
+.stock-nums { flex: 0 0 70px; text-align: right; color: #999; }
+
+/* ── Order ID ── */
+.order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 13px; }

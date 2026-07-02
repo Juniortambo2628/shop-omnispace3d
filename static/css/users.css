@@ -1,0 +1,11 @@
+    .two-col{display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start}
+    .card{background:#fff;border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);padding:28px}
+    h2{font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:20px}
+    table{width:100%;border-collapse:collapse}
+    thead{background:#f9fafb}
+    th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #e5e7eb}
+    td{padding:12px 14px;font-size:13px;border-bottom:1px solid #f3f4f6;vertical-align:middle}
+    .form-group{margin-bottom:14px}
+.role-info{background:var(--brand-teal-light);border-radius:var(--radius-md);padding:16px;margin-top:20px}
+.role-info h3{font-size:13px;font-weight:700;color:var(--brand-teal);margin-bottom:10px}
+    .role-row{margin-bottom:8px;font-size:12px;color:#555}
