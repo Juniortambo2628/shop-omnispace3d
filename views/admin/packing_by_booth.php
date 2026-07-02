@@ -1,25 +1,5 @@
 <?php global $CONFIG; ?>
-<style>
-    .packing-header{display:none}
-    .booth-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:25px;margin-bottom:40px;page-break-inside:avoid;border:1px solid #eee}
-    .booth-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0A9696;padding-bottom:15px;margin-bottom:20px}
-    .booth-num{font-size:32px;font-weight:800;color:#0A9696;line-height:1}
-    .booth-num small{display:block;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-    .booth-client{text-align:right}
-    .booth-client h3{font-size:18px;margin-bottom:4px;color:#1a1a1a}
-    .booth-client p{font-size:12px;color:#666;margin:0}
-    
-    .company-branding{display:flex;align-items:center;gap:20px;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid #eee}
-    .logo-img{height:50px}
-    .company-info{font-size:11px;color:#666;line-height:1.4}
-    
-    @media print{
-        .topbar, .nav, .no-print{display:none !important}
-        .container{max-width:100%;margin:0;padding:0}
-        .booth-card{box-shadow:none;margin-bottom:60px}
-        .packing-header{display:block}
-    }
-</style>
+<link rel="stylesheet" href="/static/css/packing.css">
 
 <div class="container" data-packing-storage-key="packing-stand-<?php echo htmlspecialchars($event_slug ?? 'default'); ?>">
   <div class="no-print">
@@ -76,14 +56,14 @@
             <td><span class="prod-code"><?php echo htmlspecialchars($it['product_code']); ?></span></td>
             <td class="prod-name-cell"><?php echo htmlspecialchars($it['product_name']); ?></td>
             <td><?php echo htmlspecialchars($it['color_name'] ?? '—'); ?></td>
-            <td style="text-align:center;font-weight:800;font-size:18px;color:#0A9696"><?php echo (int)$it['quantity']; ?></td>
+            <td style="text-align:center;font-weight:800;font-size:18px;color:var(--brand-teal)"><?php echo (int)$it['quantity']; ?></td>
           </tr>
           <?php endforeach; ?>
         </tbody>
       </table>
       
       <?php if (!empty($o['special_instructions'])): ?>
-      <div style="margin-top:20px;padding:15px;background:#fefce8;border:1px solid #fef08a;border-radius:6px;font-size:12px">
+      <div style="margin-top:20px;padding:15px;background:#fefce8;border:1px solid #fef08a;border-radius:var(--radius-sm);font-size:12px">
         <strong>Special Instructions:</strong><br>
         <?php echo nl2br(htmlspecialchars($o['special_instructions'])); ?>
       </div>

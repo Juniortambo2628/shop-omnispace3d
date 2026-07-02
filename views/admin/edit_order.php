@@ -21,7 +21,7 @@
   <div style="margin-bottom:16px">
     <span class="order-id">Internal ID: <?php echo htmlspecialchars($o['id'] ?? ''); ?></span>
     <?php if (!empty($o['custom_order_id'])): ?>
-    <span class="order-id" style="margin-left:10px;background:#D6F0EF;color:#0A9696">Display ID: <?php echo htmlspecialchars($o['custom_order_id']); ?></span>
+    <span class="order-id" style="margin-left:10px;background:var(--brand-teal-pale);color:var(--brand-teal)">Display ID: <?php echo htmlspecialchars($o['custom_order_id']); ?></span>
     <?php endif; ?>
   </div>
 

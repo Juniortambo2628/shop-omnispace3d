@@ -101,20 +101,4 @@
   </div>
 </div>
 
-<script>
-function addColor() {
-  var div = document.createElement('div');
-  div.className = 'color-row';
-  div.innerHTML = '<input type="text" name="color_name[]" placeholder="e.g. White">'
-                + '<button type="button" class="remove-color" onclick="removeColor(this)">×</button>';
-  document.getElementById('colors-container').appendChild(div);
-}
-function removeColor(btn) {
-  var rows = document.querySelectorAll('.color-row');
-  if (rows.length > 1) btn.parentElement.remove();
-}
-function togglePrice(cb) {
-  document.getElementById('price-section').style.display = cb.checked ? 'none' : '';
-  document.getElementById('price').required = !cb.checked;
-}
-</script>
+<script src="/static/js/product-colors.js"></script>

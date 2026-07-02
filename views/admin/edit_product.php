@@ -4,27 +4,27 @@
     .color-row input{flex:1}
     .color-row--extra{display:none}
     .colors-expanded .color-row--extra{display:flex}
-    .color-preview{width:50px;height:50px;border:1px solid #ddd;border-radius:4px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;flex-shrink:0}
+    .color-preview{width:50px;height:50px;border:1px solid #ddd;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;flex-shrink:0}
     .color-preview img{width:100%;height:100%;object-fit:contain;display:block}
-    .remove-color{background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
-    #add-color-btn,#toggle-colors-btn{background:#f0fdfd;color:#0A9696;border:1.5px dashed #0A9696;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px}
+    .remove-color{background:none;border:none;color:var(--color-error);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
+    #add-color-btn,#toggle-colors-btn{background:var(--brand-teal-light);color:var(--brand-teal);border:1.5px dashed var(--brand-teal);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px}
     #toggle-colors-btn{border-style:solid;margin-left:8px}
     .poa-toggle{display:flex;align-items:center;gap:8px;margin-bottom:16px}
-    .stock-card{margin-top:8px;padding:20px;border:1px solid #eef0f2;border-radius:10px;background:#f8fafc}
-    .stock-card h3{font-size:14px;font-weight:700;color:#0A9696;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .stock-card{margin-top:8px;padding:20px;border:1px solid #eef0f2;border-radius:var(--radius-lg);background:#f8fafc}
+    .stock-card h3{font-size:14px;font-weight:700;color:var(--brand-teal);margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .stock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:end}
-    .stock-stat{background:#fff;border:1px solid #eef0f2;border-radius:8px;padding:14px}
+    .stock-stat{background:#fff;border:1px solid #eef0f2;border-radius:var(--radius-md);padding:14px}
     .stock-stat__label{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
-    .stock-stat__value{font-size:22px;font-weight:700;color:#0A9696}
-    .stock-bar-wrap{width:100%;height:10px;background:#eee;border-radius:5px;overflow:hidden;margin-top:8px}
-    .stock-bar{height:100%;border-radius:5px}
-    .stock-bar--ok{background:#0A9696}
-    .stock-bar--warn{background:#F59E0B}
-    .stock-bar--crit{background:#dc2626}
-    .main-image-preview{width:80px;height:80px;border:1px solid #ddd;border-radius:6px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+    .stock-stat__value{font-size:22px;font-weight:700;color:var(--brand-teal)}
+.stock-bar-wrap{width:100%;height:10px;background:#eee;border-radius:var(--radius-sm);overflow:hidden;margin-top:8px}
+.stock-bar{height:100%;border-radius:var(--radius-sm)}
+.stock-bar--ok{background:var(--brand-teal)}
+.stock-bar--warn{background:var(--color-warning)}
+.stock-bar--crit{background:var(--color-error)}
+    .main-image-preview{width:80px;height:80px;border:1px solid #ddd;border-radius:var(--radius-sm);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
     .main-image-preview img{width:100%;height:100%;object-fit:contain}
     .main-image-preview--empty{border-style:dashed;background:#f9f9f9;color:#bbb;font-size:11px;text-align:center;padding:6px}
-    .upload-hint{background:#f0fdfd;border:1px solid #b8e4e3;border-radius:8px;padding:10px 14px;font-size:12px;color:#0A9696;margin-bottom:16px;line-height:1.5}
+    .upload-hint{background:var(--brand-teal-light);border:1px solid #b8e4e3;border-radius:var(--radius-md);padding:10px 14px;font-size:12px;color:var(--brand-teal);margin-bottom:16px;line-height:1.5}
     @media(max-width:700px){.stock-grid{grid-template-columns:1fr}}
 </style>
 
@@ -259,6 +259,7 @@
   <?php endif; ?>
 </div>
 
+<script src="/static/js/product-colors.js"></script>
 <script>
 var colorRowIndex = <?php echo (int) $colorCount; ?>;
 var productPlaceholderImage = <?php echo json_encode($placeholder_image ?? '/static/images/omnispace-logo.jpg'); ?>;
@@ -280,13 +281,6 @@ function addColor() {
     document.getElementById('colors-container').classList.add('colors-expanded');
     toggleBtn.style.display = 'none';
   }
-}
-function removeColor(btn) {
-  var rows = document.querySelectorAll('.color-row');
-  if (rows.length > 1) btn.parentElement.remove();
-}
-function togglePrice(cb) {
-  document.getElementById('price-section').style.display = cb.checked ? 'none' : '';
 }
 function toggleColorRows(btn) {
   document.getElementById('colors-container').classList.add('colors-expanded');
