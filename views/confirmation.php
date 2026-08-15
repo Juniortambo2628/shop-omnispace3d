@@ -78,7 +78,7 @@ $page_css = '<style>
     @keyframes pop { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     .order-ref { text-align: center; font-size: 14px; color: #666; margin-bottom: 8px; }
     .order-ref strong { font-size: 22px; color: var(--brand-teal); display: block; margin-top: 4px; }
-    .email-note { background: #D6F0EF; border-radius: 8px; padding: 16px; text-align: center; font-size: 13px; color: var(--brand-teal); margin: 24px 0; }
+    .email-note { background: var(--brand-teal-pale); border-radius: 8px; padding: 16px; text-align: center; font-size: 13px; color: var(--brand-teal); margin: 24px 0; }
     .contact-box { background: #f9f9f9; border-radius: 8px; padding: 16px; text-align: center; font-size: 13px; color: #666; }
     .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
 </style>';

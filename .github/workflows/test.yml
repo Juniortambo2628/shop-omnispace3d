@@ -1,0 +1,68 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, json, bcmath, gd, dom
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-8.3-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-8.3-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run branding consistency tests
+        run: vendor/bin/phpunit --testsuite Unit --stop-on-failure
+
+      - name: Run application structure tests
+        run: vendor/bin/phpunit --testsuite Feature --stop-on-failure
+
+      - name: Verify CSS tokens match branding
+        run: |
+          echo "Checking CSS tokens consistency..."
+          php -r "
+            require 'vendor/autoload.php';
+            require 'core/Branding.php';
+            \$css = file_get_contents('static/css/tokens.css');
+            \$errors = [];
+            if (strpos(\$css, Branding::TEAL) === false) \$errors[] = 'Missing brand teal in CSS';
+            if (strpos(\$css, Branding::LT_TEAL) === false) \$errors[] = 'Missing light teal in CSS';
+            if (strpos(\$css, Branding::PALE) === false) \$errors[] = 'Missing pale teal in CSS';
+            if (strpos(\$css, Branding::CHARCOAL) === false) \$errors[] = 'Missing charcoal in CSS';
+            if (strpos(\$css, Branding::GREY) === false) \$errors[] = 'Missing grey in CSS';
+            if (strpos(\$css, 'Arial') === false) \$errors[] = 'Missing Arial font in CSS';
+            if (strpos(\$css, 'Montserrat') !== false) \$errors[] = 'Montserrat should not be in CSS';
+            if (!empty(\$errors)) { echo implode(PHP_EOL, \$errors) . PHP_EOL; exit(1); }
+            echo 'All branding checks passed!' . PHP_EOL;
+          "
+
+      - name: Verify no hardcoded secrets
+        run: |
+          echo "Checking for committed secrets..."
+          if grep -r "Silversky#10" --include="*.php" --include="*.json" --include="*.yml" .; then
+            echo "ERROR: Hardcoded password found in codebase!"
+            exit 1
+          fi
+          echo "No hardcoded secrets found."

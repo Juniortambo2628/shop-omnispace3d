@@ -28,12 +28,12 @@ class Invoice {
     }
 
     private static function buildHtml($order, $items, $event, $config) {
-        $teal = "#0A9696";
-        $pale = "#f1f8f8";
-        $grey = "#666666";
-        $dark = "#1a1a1a";
-        $lightGrey = "#999999";
-        $borderGrey = "#e0e0e0";
+        $teal = Branding::TEAL;
+        $pale = Branding::TABLE_ALT;
+        $grey = Branding::GREY;
+        $dark = Branding::DARK;
+        $lightGrey = Branding::LIGHT_GREY;
+        $borderGrey = Branding::BORDER_GREY;
 
         $order_id = $order['custom_order_id'] ?? $order['id'];
         $date = date('d M Y', strtotime($order['created_at']));
@@ -57,7 +57,7 @@ class Invoice {
         $event_venue     = $event['venue'] ?? '';
         $vat_rate        = $config['vat_rate'] ?? 16;
 
-        $logo_src = self::logoDataUri();
+        $logo_src = Branding::logoDataUri();
 
         $items_rows = "";
         foreach ($items as $item) {
@@ -94,9 +94,9 @@ class Invoice {
             $firstLine = array_shift($lines);
             $restLines = implode("\n", $lines);
 
-            $bank_warning_html = "<div style='margin-top:12px; border:2px solid #0A9696; border-radius:3px; padding:8px 10px; background:#D6F0EF; page-break-inside: avoid;'>
-                <div style='font-size:9px; font-weight:700; color:#0A9696; margin-bottom:4px;'>IMPORTANT: " . htmlspecialchars($firstLine) . "</div>
-                <div style='font-size:7.5px; color:#333333; line-height:1.35;'>" . htmlspecialchars($restLines) . "</div>
+            $bank_warning_html = "<div style='margin-top:12px; border:2px solid " . Branding::TEAL . "; border-radius:3px; padding:8px 10px; background:" . Branding::PALE . "; page-break-inside: avoid;'>
+                <div style='font-size:9px; font-weight:700; color:" . Branding::TEAL . "; margin-bottom:4px;'>IMPORTANT: " . htmlspecialchars($firstLine) . "</div>
+                <div style='font-size:7.5px; color:" . Branding::CHARCOAL . "; line-height:1.35;'>" . htmlspecialchars($restLines) . "</div>
             </div>";
         }
 
@@ -115,7 +115,7 @@ class Invoice {
     <meta charset='UTF-8'>
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 9px; color: {$dark}; line-height: 1.35; margin: 0; padding: 0; }
+        body { font-family: " . Branding::BODY_FONT . "; font-size: 9px; color: {$dark}; line-height: 1.35; margin: 0; padding: 0; }
         .page { padding: 30px 35px; }
         .header { margin-bottom: 24px; }
         .header-table { width: 100%; border-collapse: collapse; }
@@ -341,29 +341,4 @@ class Invoice {
 </html>";
     }
 
-    private static function logoDataUri(): string
-    {
-        $candidates = [
-            STATIC_PATH . '/images/omnispace-logo.jpg',
-            STATIC_PATH . '/images/omnispace-invoice-logo.jpg',
-        ];
-
-        foreach ($candidates as $path) {
-            if (! is_readable($path)) {
-                continue;
-            }
-
-            $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-            $mime = match ($ext) {
-                'png' => 'image/png',
-                'webp' => 'image/webp',
-                'gif' => 'image/gif',
-                default => 'image/jpeg',
-            };
-
-            return 'data:' . $mime . ';base64,' . base64_encode((string) file_get_contents($path));
-        }
-
-        return '';
-    }
 }

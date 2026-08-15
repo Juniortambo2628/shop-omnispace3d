@@ -6,7 +6,6 @@
     <title><?php echo $title ?? 'OmniShop Admin'; ?></title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/png" href="/static/images/square-logos/Omnispace3D-Teal-bg.png">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/tokens.css">
     <link rel="stylesheet" href="/static/css/base.css">
     <link rel="stylesheet" href="/static/css/admin.css">

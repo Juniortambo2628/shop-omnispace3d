@@ -4,11 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class Mailer {
-    private static $TEAL = "#0A9696";
-    private static $LT_TEAL = "#19AFAC";
-    private static $PALE = "#D6F0EF";
-    private static $CHARCOAL = "#333333";
-    private static $GREY = "#6E6E6E";
+    // Colors are sourced from Branding class (single source of truth)
 
     public static function send($to, $subject, $body, $attachments = [], $cc = null, $embeddedImages = []) {
         $mail = new PHPMailer(true);
@@ -54,27 +50,15 @@ class Mailer {
 
     public static function logoPath(): ?string
     {
-        $candidates = [
-            STATIC_PATH . '/images/omnispace-logo-white.png',
-            STATIC_PATH . '/images/omnispace-logo.jpg',
-            STATIC_PATH . '/images/omnispace-logo.png',
-        ];
-
-        foreach ($candidates as $path) {
-            if (is_readable($path)) {
-                return $path;
-            }
-        }
-
-        return null;
+        return Branding::emailLogoPath();
     }
 
     public static function buildBaseHtml($title, $body_html, $event_name = "Solar and Storage Live Kenya 2026") {
-        $teal = self::$TEAL;
-        $lt_teal = self::$LT_TEAL;
-        $pale = self::$PALE;
-        $charcoal = self::$CHARCOAL;
-        $grey = self::$GREY;
+        $teal = Branding::TEAL;
+        $lt_teal = Branding::LT_TEAL;
+        $pale = Branding::PALE;
+        $charcoal = Branding::CHARCOAL;
+        $grey = Branding::GREY;
 
         global $CONFIG;
         $c_name = $CONFIG['company_name'] ?? "OmniSpace 3D Events Ltd";
@@ -132,8 +116,8 @@ class Mailer {
     }
 
     public static function buildItemsTable($items) {
-        $teal = self::$TEAL;
-        $pale = self::$PALE;
+        $teal = Branding::TEAL;
+        $pale = Branding::PALE;
         $rows = "";
         foreach ($items as $idx => $item) {
             $bg = ($idx % 2 == 0) ? $pale : "#ffffff";
@@ -165,9 +149,9 @@ class Mailer {
     }
 
     public static function buildTotalsBlock($order) {
-        $teal = self::$TEAL;
-        $pale = self::$PALE;
-        $grey = self::$GREY;
+        $teal = Branding::TEAL;
+        $pale = Branding::PALE;
+        $grey = Branding::GREY;
         return "
         <table width='100%' cellpadding='0' cellspacing='0'
                style='font-size:14px;margin-top:8px;'>

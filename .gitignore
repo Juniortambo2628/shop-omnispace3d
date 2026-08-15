@@ -4,7 +4,11 @@
 .env.production
 .env.*.local
 
-# PHP / Composer
+# SSH keys for GitHub Actions deployment
+github-actions-omnispace
+github-actions-omnispace.pub
+
+# PHP Composer
 /vendor/
 composer.phar
 
@@ -58,3 +62,5 @@ omnishop.db
 # Test / temp
 test_image_opt.php
 .phpunit.result.cache
+.phpunit.cache/
+coverage/
