@@ -319,5 +319,5 @@ jobs:
           echo "Deployment completed successfully!"
 
       - name: Cleanup SSH
-        if: always
+        if: ${{ always() }}
         run: rm -rf ~/.ssh/deploy_key
