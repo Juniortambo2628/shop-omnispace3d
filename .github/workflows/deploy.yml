@@ -5,7 +5,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Ensure only one deployment runs at a time
 concurrency:
   group: production-deploy
   cancel-in-progress: false
@@ -44,305 +43,128 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          
-          # Write private key (printf preserves exact content)
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          
-          # Add host to known_hosts
           ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts 2>/dev/null
-          
-          # Verify SSH key format
-          echo "Key first line: $(head -1 ~/.ssh/deploy_key)"
-          echo "Key last line: $(tail -1 ~/.ssh/deploy_key)"
-          ssh-keygen -l -f ~/.ssh/deploy_key 2>&1 || true
-          
-          # Test connection
-          echo "Testing SSH connection to $SSH_USER@$SSH_HOST:$SSH_PORT"
           ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no -p $SSH_PORT -i ~/.ssh/deploy_key $SSH_USER@$SSH_HOST "echo SSH_OK" || {
-            echo ""
-            echo "=== SSH Connection Failed ==="
-            echo "Please verify:"
-            echo "1. SSH_PRIVATE_KEY contains the full key (including BEGIN/END lines)"
-            echo "2. Public key is added to server: ~/.ssh/authorized_keys"
-            echo "3. SSH port is correct (currently: $SSH_PORT)"
+            echo "SSH connection failed. Verify secrets are correct."
             exit 1
           }
 
-      - name: Prepare deployment archive
+      - name: Upload archives to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
         run: |
-          # Create a clean archive of backend files (excluding dev/test files)
+          echo "Creating archives..."
           tar czf /tmp/backend.tar.gz \
-            --exclude='.git' \
-            --exclude='.env' \
-            --exclude='.env.*' \
-            --exclude='vendor' \
-            --exclude='public' \
-            --exclude='artisan.bat' \
-            --exclude='test*.php' \
-            --exclude='inspect_image.php' \
-            --exclude='*.md' \
-            --exclude='*.docx' \
-            --exclude='*.bat' \
-            --exclude='node_modules' \
-            --exclude='.github' \
-            --exclude='tests' \
-            --exclude='phpunit.xml' \
-            --exclude='coverage' \
-            --exclude='.phpunit.cache' \
-            .
+            --exclude='.git' --exclude='.env' --exclude='.env.*' \
+            --exclude='vendor' --exclude='public' --exclude='artisan.bat' \
+            --exclude='test*.php' --exclude='inspect_image.php' \
+            --exclude='*.md' --exclude='*.docx' --exclude='*.bat' \
+            --exclude='node_modules' --exclude='.github' --exclude='tests' \
+            --exclude='phpunit.xml' --exclude='coverage' --exclude='.phpunit.cache' \
+            --exclude='github-actions-omnispace*' .
 
-          # Create archive of public files
-          tar czf /tmp/public.tar.gz \
-            -C public .
+          tar czf /tmp/public.tar.gz -C public .
+          tar czf /tmp/static.tar.gz --exclude='images/products/*' static/
 
-          # Create archive of static files (excluding user uploads)
-          tar czf /tmp/static.tar.gz \
-            --exclude='images/products/*' \
-            static/
+          echo "Uploading archives..."
+          scp -P $SSH_PORT -i ~/.ssh/deploy_key /tmp/backend.tar.gz ${SSH_USER}@${SSH_HOST}:/tmp/backend.tar.gz
+          scp -P $SSH_PORT -i ~/.ssh/deploy_key /tmp/public.tar.gz ${SSH_USER}@${SSH_HOST}:/tmp/public.tar.gz
+          scp -P $SSH_PORT -i ~/.ssh/deploy_key /tmp/static.tar.gz ${SSH_USER}@${SSH_HOST}:/tmp/static.tar.gz
+          echo "All archives uploaded."
 
-          echo "Archives created:"
-          ls -lh /tmp/backend.tar.gz /tmp/public.tar.gz /tmp/static.tar.gz
-
-      - name: Deploy backend files
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-          APP_DIR: /home2/omnispac/solar-and-storage-core
-        run: |
-          echo "Deploying backend to ${APP_DIR}..."
-          
-          # Upload archive
-          scp -P $SSH_PORT -i ~/.ssh/deploy_key /tmp/backend.tar.gz \
-            ${SSH_USER}@${SSH_HOST}:/tmp/backend.tar.gz
-          
-          # Extract on server
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'DEPLOY_BACKEND'
-            set -e
-            APP_DIR="/home2/omnispac/solar-and-storage-core"
-            
-            # Backup .env if it exists
-            if [ -f "${APP_DIR}/.env" ]; then
-              cp "${APP_DIR}/.env" "${APP_DIR}/.env.backup.$(date +%Y%m%d%H%M%S)"
-            fi
-            
-            # Create directory if it doesn't exist
-            mkdir -p "${APP_DIR}"
-            
-            # Extract new files (preserves .env)
-            cd "${APP_DIR}"
-            tar xzf /tmp/backend.tar.gz
-            
-            # Clean up
-            rm -f /tmp/backend.tar.gz
-            
-            echo "Backend files deployed successfully"
-          DEPLOY_BACKEND
-
-      - name: Deploy public files
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-          PUBLIC_DIR: /home2/omnispac/public_html/shop
-        run: |
-          echo "Deploying public files to ${PUBLIC_DIR}..."
-          
-          # Upload archive
-          scp -P $SSH_PORT -i ~/.ssh/deploy_key /tmp/public.tar.gz \
-            ${SSH_USER}@${SSH_HOST}:/tmp/public.tar.gz
-          
-          # Extract on server
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'DEPLOY_PUBLIC'
-            set -e
-            PUBLIC_DIR="/home2/omnispac/public_html/shop"
-            
-            mkdir -p "${PUBLIC_DIR}"
-            cd "${PUBLIC_DIR}"
-            tar xzf /tmp/public.tar.gz
-            
-            rm -f /tmp/public.tar.gz
-            
-            echo "Public files deployed successfully"
-          DEPLOY_PUBLIC
-
-      - name: Deploy static files
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-          PUBLIC_DIR: /home2/omnispac/public_html/shop
-        run: |
-          echo "Deploying static files to ${PUBLIC_DIR}/static..."
-          
-          # Upload archive
-          scp -P $SSH_PORT -i ~/.ssh/deploy_key /tmp/static.tar.gz \
-            ${SSH_USER}@${SSH_HOST}:/tmp/static.tar.gz
-          
-          # Extract on server (preserves product images)
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'DEPLOY_STATIC'
-            set -e
-            PUBLIC_DIR="/home2/omnispac/public_html/shop"
-            
-            mkdir -p "${PUBLIC_DIR}/static"
-            cd "${PUBLIC_DIR}"
-            tar xzf /tmp/static.tar.gz --overwrite
-            
-            rm -f /tmp/static.tar.gz
-            
-            echo "Static files deployed successfully"
-          DEPLOY_STATIC
-
-      - name: Install dependencies on server
+      - name: Deploy and configure server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
         run: |
-          echo "Installing composer dependencies on server..."
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'INSTALL_DEPS'
-            set -e
-            cd /home2/omnispac/solar-and-storage-core
-            
-            # Run composer install
-            composer install --no-dev --optimize-autoloader --no-interaction --no-progress
-            
-            echo "Dependencies installed successfully"
-          INSTALL_DEPS
+          ssh -o ConnectTimeout=30 -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'DEPLOY_ALL'
+          set -e
 
-      - name: Run migrations
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-        run: |
-          echo "Running database migrations..."
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'RUN_MIGRATIONS'
-            set -e
-            cd /home2/omnispac/solar-and-storage-core
-            
-            php artisan migrate --force
-            
-            echo "Migrations completed successfully"
-          RUN_MIGRATIONS
+          APP_DIR="/home2/omnispac/solar-and-storage-core"
+          PUBLIC_DIR="/home2/omnispac/public_html/shop"
 
-      - name: Set permissions
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-        run: |
-          echo "Setting file permissions..."
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'SET_PERMS'
-            set -e
-            cd /home2/omnispac/solar-and-storage-core
-            
-            # Set directory permissions
-            chmod -R 775 storage bootstrap/cache 2>/dev/null || true
-            
-            # Ensure log file exists and is writable
-            touch storage/logs/laravel.log
-            chmod 664 storage/logs/laravel.log
-            
-            # Set public directory permissions
-            chmod -R 775 /home2/omnispac/public_html/shop/static 2>/dev/null || true
-            
-            echo "Permissions set successfully"
-          SET_PERMS
+          # --- Backup .env ---
+          if [ -f "${APP_DIR}/.env" ]; then
+            cp "${APP_DIR}/.env" "${APP_DIR}/.env.backup.$(date +%Y%m%d%H%M%S)"
+            echo "Backed up .env"
+          fi
 
-      - name: Symlink verification
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-        run: |
-          echo "Verifying symlinks and file structure..."
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'VERIFY'
-            set -e
-            cd /home2/omnispac/solar-and-storage-core
-            
-            # Verify key files exist
-            echo "=== Backend Structure ==="
-            ls -la artisan
-            ls -la config.php
-            ls -la core/Branding.php
-            ls -la core/Invoice.php
-            ls -la core/Mailer.php
-            ls -la vendor/autoload.php
-            
-            echo ""
-            echo "=== Public Structure ==="
-            ls -la /home2/omnispac/public_html/shop/index.php
-            ls -la /home2/omnispac/public_html/shop/.htaccess
-            ls -la /home2/omnispac/public_html/shop/static/css/tokens.css
-            ls -la /home2/omnispac/public_html/shop/static/images/omnispace-logo.jpg
-            ls -la /home2/omnispac/public_html/shop/static/images/omnispace-logo-white.png
-            
-            # Verify .env exists
-            if [ -f .env ]; then
-              echo ""
-              echo "=== .env exists ==="
-              # Show only non-sensitive config
-              grep -E "^(APP_NAME|APP_ENV|APP_URL|DB_HOST|CACHE_STORE)" .env || true
-            else
-              echo ""
-              echo "WARNING: .env file not found!"
-            fi
-            
-            echo ""
-            echo "Verification complete"
-          VERIFY
+          # --- Extract backend ---
+          mkdir -p "${APP_DIR}"
+          cd "${APP_DIR}"
+          tar xzf /tmp/backend.tar.gz
+          rm -f /tmp/backend.tar.gz
+          echo "Backend extracted"
 
-      - name: Post-deploy cleanup
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
-        run: |
-          echo "Running post-deploy cleanup..."
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'CLEANUP'
-            set -e
-            cd /home2/omnispac/solar-and-storage-core
-            
-            # Clear caches
-            php artisan cache:clear 2>/dev/null || true
-            php artisan config:clear 2>/dev/null || true
-            php artisan view:clear 2>/dev/null || true
-            
-            # Optimize for production
-            php artisan config:cache 2>/dev/null || true
-            php artisan route:cache 2>/dev/null || true
-            
-            # Clean up old backups (keep last 5)
-            ls -t .env.backup.* 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
-            
-            echo "Post-deploy cleanup complete"
-          CLEANUP
+          # --- Extract public ---
+          mkdir -p "${PUBLIC_DIR}"
+          cd "${PUBLIC_DIR}"
+          tar xzf /tmp/public.tar.gz
+          rm -f /tmp/public.tar.gz
+          echo "Public files extracted"
+
+          # --- Extract static ---
+          mkdir -p "${PUBLIC_DIR}/static"
+          cd "${PUBLIC_DIR}"
+          tar xzf /tmp/static.tar.gz --overwrite
+          rm -f /tmp/static.tar.gz
+          echo "Static files extracted"
+
+          # --- Install dependencies ---
+          cd "${APP_DIR}"
+          composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+          echo "Composer dependencies installed"
+
+          # --- Run migrations ---
+          php artisan migrate --force
+          echo "Migrations complete"
+
+          # --- Set permissions ---
+          chmod -R 775 storage bootstrap/cache 2>/dev/null || true
+          touch storage/logs/laravel.log
+          chmod 664 storage/logs/laravel.log
+          chmod -R 775 "${PUBLIC_DIR}/static" 2>/dev/null || true
+          echo "Permissions set"
+
+          # --- Verify structure ---
+          echo ""
+          echo "=== Verification ==="
+          ls -la artisan
+          ls -la config.php
+          ls -la core/Branding.php
+          ls -la vendor/autoload.php
+          ls -la "${PUBLIC_DIR}/index.php"
+          ls -la "${PUBLIC_DIR}/static/css/tokens.css"
+          ls -la "${PUBLIC_DIR}/static/images/omnispace-logo.jpg"
+          [ -f .env ] && echo ".env: OK" || echo "WARNING: .env missing"
+
+          # --- Clear and rebuild caches ---
+          php artisan cache:clear 2>/dev/null || true
+          php artisan config:clear 2>/dev/null || true
+          php artisan view:clear 2>/dev/null || true
+          php artisan config:cache 2>/dev/null || true
+          php artisan route:cache 2>/dev/null || true
+
+          # --- Cleanup old backups ---
+          ls -t .env.backup.* 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
+
+          echo ""
+          echo "=== Deployment Complete ==="
+          echo "Backend files: $(find ${APP_DIR} -type f | wc -l)"
+          echo "Public files: $(find ${PUBLIC_DIR} -type f | wc -l)"
+          DEPLOY_ALL
 
       - name: Deployment confirmation
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
         run: |
           echo "=== Deployment Summary ==="
           echo "Commit: ${{ github.sha }}"
           echo "Branch: ${{ github.ref_name }}"
           echo "Deployed at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
-          echo ""
-          echo "=== File Counts ==="
-          ssh -p $SSH_PORT -i ~/.ssh/deploy_key ${SSH_USER}@${SSH_HOST} << 'SUMMARY'
-            echo "Backend files:"
-            find /home2/omnispac/solar-and-storage-core -type f | wc -l
-            
-            echo "Public files:"
-            find /home2/omnispac/public_html/shop -type f | wc -l
-            
-            echo "Static assets:"
-            find /home2/omnispac/public_html/shop/static -type f | wc -l
-          SUMMARY
-          echo ""
           echo "Deployment completed successfully!"
 
       - name: Cleanup SSH
