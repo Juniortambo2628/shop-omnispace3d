@@ -27,7 +27,7 @@ ob_start();
             <div class="section">
                 <span class="method-badge"><?php echo htmlspecialchars($order['payment_method'] ?? 'Bank Transfer'); ?></span>
                 <h2 style="margin-bottom:4px;"><?php echo htmlspecialchars($order['custom_order_id'] ?? $order['id']); ?></h2>
-                <p style="font-size:13px;color:#888;margin-bottom:16px;"><?php echo htmlspecialchars($order['company_name'] ?? ''); ?> &bull; Booth <?php echo htmlspecialchars($order['booth_number'] ?? ''); ?></p>
+                <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:16px;"><?php echo htmlspecialchars($order['company_name'] ?? ''); ?> &bull; Booth <?php echo htmlspecialchars($order['booth_number'] ?? ''); ?></p>
 
                 <div class="order-summary">
                     <div class="detail-row"><span class="label">Contact</span><span class="value"><?php echo htmlspecialchars($order['contact_name'] ?? ''); ?></span></div>
@@ -67,7 +67,7 @@ ob_start();
                         <?php if (count($parts) === 2): ?>
                         <div style="margin-bottom:6px;"><span class="field-label"><?php echo htmlspecialchars(trim($parts[0])); ?></span><br><span class="field-value"><?php echo htmlspecialchars(trim($parts[1])); ?></span></div>
                         <?php else: ?>
-                        <div style="margin-bottom:6px;font-weight:600;color:#1a1a1a;"><?php echo htmlspecialchars(trim($line)); ?></div>
+                        <div style="margin-bottom:6px;font-weight:600;color:var(--color-text);"><?php echo htmlspecialchars(trim($line)); ?></div>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
@@ -115,7 +115,7 @@ ob_start();
 
             <?php if (!empty($payment_note)): ?>
             <div class="section" style="background:#f9fffe;border:1px solid var(--brand-teal-pale);">
-                <p style="font-size:13px;color:#555;line-height:1.6;margin:0;">&#128161; <?php echo htmlspecialchars($payment_note); ?></p>
+                <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin:0;">&#128161; <?php echo htmlspecialchars($payment_note); ?></p>
             </div>
             <?php endif; ?>
 
@@ -155,7 +155,7 @@ ob_start();
             </div>
 
             <?php if (!empty($contactEmail) || !empty($contactPhone)): ?>
-            <div style="margin-top:16px;text-align:center;font-size:12px;color:#888;">
+            <div style="margin-top:16px;text-align:center;font-size:12px;color:var(--color-text-muted);">
                 Need help? Contact us at
                 <?php if (!empty($contactEmail)): ?><a href="mailto:<?php echo htmlspecialchars($contactEmail); ?>"><?php echo htmlspecialchars($contactEmail); ?></a><?php endif; ?>
                 <?php if (!empty($contactEmail) && !empty($contactPhone)): ?> &bull; <?php endif; ?>
@@ -180,8 +180,8 @@ $page_content = ob_get_clean();
 
 $page_css = '<style>
     .pay-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
-    .order-summary .detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
-    .order-summary .detail-row .label { color: #888; }
+    .order-summary .detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid var(--color-divider); }
+    .order-summary .detail-row .label { color: var(--color-text-muted); }
     .order-summary .detail-row .value { font-weight: 600; }
     .pay-total { font-size: 24px; font-weight: 700; color: var(--brand-teal); text-align: right; margin-top: 12px; padding-top: 12px; border-top: 2px solid var(--brand-teal); }
     .method-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; background: var(--brand-teal-pale); color: var(--brand-teal); margin-bottom: 16px; }
@@ -189,20 +189,20 @@ $page_css = '<style>
     .instruction-card h3 { font-size: 15px; font-weight: 700; color: var(--brand-teal); margin-bottom: 12px; }
     .instruction-card .step { display: flex; gap: 12px; margin-bottom: 12px; font-size: 13px; line-height: 1.6; }
     .instruction-card .step-num { flex: 0 0 28px; height: 28px; background: var(--brand-teal); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
-    .bank-box { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-top: 12px; font-size: 13px; line-height: 1.8; }
-    .bank-box .field-label { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
-    .bank-box .field-value { font-weight: 600; color: #1a1a1a; }
+    .bank-box { background: #fff; border: 1px solid var(--color-border); border-radius: 8px; padding: 16px; margin-top: 12px; font-size: 13px; line-height: 1.8; }
+    .bank-box .field-label { font-size: 11px; color: var(--color-text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    .bank-box .field-value { font-weight: 600; color: var(--color-text); }
     .warning-box { background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #92400E; font-weight: 600; margin-top: 12px; }
     .ref-section { margin-top: 12px; }
-    .ref-section h3 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
-    .ref-section p { font-size: 13px; color: #666; margin-bottom: 16px; line-height: 1.6; }
+    .ref-section h3 { font-size: 15px; font-weight: 700; color: var(--color-text); margin-bottom: 8px; }
+    .ref-section p { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 16px; line-height: 1.6; }
     .ref-status { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; }
     .ref-status.submitted { background: #FEF3C7; color: #92400E; border: 1px solid #F59E0B; }
     .ref-status.verified { background: #D1FAE5; color: #065F46; border: 1px solid #10B981; }
     .ref-status.rejected { background: #FEE2E2; color: #991B1B; border: 1px solid #EF4444; }
     .ref-form input[type="text"] { margin-bottom: 12px; }
     .ref-form .submit-btn { margin-top: 4px; }
-    .help-text { font-size: 12px; color: #888; margin-top: -10px; margin-bottom: 18px; }
+    .help-text { font-size: 12px; color: var(--color-text-muted); margin-top: -10px; margin-bottom: 18px; }
     .success-banner { background: #D1FAE5; border: 1px solid #10B981; border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 16px; }
     .success-banner h3 { color: #065F46; font-size: 15px; margin-bottom: 4px; }
     .success-banner p { color: #065F46; font-size: 13px; }

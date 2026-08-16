@@ -61,7 +61,7 @@
     </form>
 
     <hr class="separator">
-    <p style="font-size:12px;color:#666;margin-bottom:12px">
+    <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:12px">
       Once saved, click below to test your Gmail connection:
     </p>
     <form action="/admin/test-email" method="POST" style="display:inline">
@@ -338,7 +338,7 @@
           <span class="hint">For prospects & clients only — separate from exhibitor password. Leave blank to disable.</span>
         </div>
       </div>
-      <p style="font-size:11px;color:#888;margin-top:15px">Catalog URL: <code>/solarandstorage</code> · Both passwords grant the same view-only access to the catalog.</p>
+      <p style="font-size:11px;color:var(--color-text-muted);margin-top:15px">Catalog URL: <code>/solarandstorage</code> · Both passwords grant the same view-only access to the catalog.</p>
       <div style="margin-top:20px">
         <button type="submit" class="btn btn-primary">Save Passwords</button>
       </div>
@@ -353,9 +353,9 @@
       <a href="/admin/invoice-preview" target="_blank" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
         Open Invoice Preview (PDF)
       </a>
-      <span style="font-size:12px;color:#888;">Opens in a new tab. Save settings first to see the latest changes.</span>
+      <span style="font-size:12px;color:var(--color-text-muted);">Opens in a new tab. Save settings first to see the latest changes.</span>
     </div>
-    <div style="margin-top:16px;border:1px solid #eee;border-radius:var(--radius-md);overflow:hidden;background:#f9fafb;">
+    <div style="margin-top:16px;border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;background:var(--color-bg);">
       <iframe src="/admin/invoice-preview" style="width:100%;height:700px;border:none;" title="Invoice Preview"></iframe>
     </div>
   </div>

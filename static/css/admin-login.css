@@ -1,5 +1,5 @@
         body {
-            background: linear-gradient(135deg, var(--brand-teal) 0%, #066 100%);
+            background: linear-gradient(135deg, var(--brand-teal) 0%, var(--brand-teal-dark) 100%);
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
         }
         .card { background: #fff; border-radius: var(--radius-2xl); box-shadow: 0 20px 60px rgba(0,0,0,0.2); padding: 48px 40px; width: 400px; max-width: 90vw; text-align: center; }

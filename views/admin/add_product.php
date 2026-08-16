@@ -1,7 +1,7 @@
 <style>
     .color-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
     .color-row input{flex:1}
-    .remove-color{background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
+    .remove-color{background:none;border:none;color:var(--color-error);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
     #add-color-btn{background:var(--brand-teal-light);color:var(--brand-teal);border:1.5px dashed var(--brand-teal);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px}
     .poa-toggle{display:flex;align-items:center;gap:8px;margin-bottom:16px}
     .poa-toggle input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand-teal)}
@@ -64,7 +64,7 @@
 
       <div class="poa-toggle">
         <input type="checkbox" id="is_poa" name="is_poa" value="1" onchange="togglePrice(this)">
-        <label for="is_poa" style="text-transform:none;letter-spacing:0;font-size:13px;color:#333;margin:0">Price on Application (POA) — hide price from customers</label>
+        <label for="is_poa" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--color-text);margin:0">Price on Application (POA) — hide price from customers</label>
       </div>
 
       <div id="price-section" class="form-row">

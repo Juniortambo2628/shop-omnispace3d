@@ -20,9 +20,9 @@ ob_start();
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
             <div>
                 <?php if ($email): ?>
-                <span style="font-size:13px;color:#666;">Showing orders for <strong><?php echo htmlspecialchars($email); ?></strong></span>
+                <span style="font-size:13px;color:var(--color-text-secondary);">Showing orders for <strong><?php echo htmlspecialchars($email); ?></strong></span>
                 <?php elseif ($search && $search !== '1'): ?>
-                <span style="font-size:13px;color:#666;">Search results for <strong><?php echo htmlspecialchars($search); ?></strong></span>
+                <span style="font-size:13px;color:var(--color-text-secondary);">Search results for <strong><?php echo htmlspecialchars($search); ?></strong></span>
                 <?php endif; ?>
             </div>
             <div style="display:flex;gap:8px;">
@@ -161,22 +161,22 @@ $page_css = '<style>
     .action-btn { padding: 6px 12px; font-size: 11px; }
     .order-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
-    .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; }
+    .search-input { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 13px; font-family: inherit; }
     .search-input:focus { outline: none; border-color: var(--brand-teal); box-shadow: 0 0 0 3px rgba(10,150,150,0.1); }
-    .filter-select { padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; cursor: pointer; }
+    .filter-select { padding: 10px 14px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 13px; font-family: inherit; background: #fff; cursor: pointer; }
     .filter-select:focus { outline: none; border-color: var(--brand-teal); }
     .filter-btn { padding: 10px 18px; background: var(--brand-teal); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background 0.2s; }
     .filter-btn:hover { background: var(--brand-teal-dark); }
-    .clear-btn { padding: 10px 14px; background: #fff; color: #888; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; text-decoration: none; }
-    .clear-btn:hover { background: #f5f5f5; }
+    .clear-btn { padding: 10px 14px; background: #fff; color: var(--color-text-muted); border: 1px solid var(--color-border); border-radius: 6px; font-size: 13px; font-family: inherit; cursor: pointer; text-decoration: none; }
+    .clear-btn:hover { background: var(--color-divider); }
     .orders-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .orders-table th { background: var(--brand-teal); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-    .orders-table td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; }
+    .orders-table td { padding: 12px 14px; border-bottom: 1px solid var(--color-border-light); }
     .orders-table tr:hover td { background: #f9fffe; }
     .orders-table tr.active td { background: var(--brand-teal-pale); }
     .orders-table a { color: var(--brand-teal); text-decoration: none; font-weight: 600; }
     .orders-table a:hover { text-decoration: underline; }
-    .results-count { font-size: 12px; color: #888; text-align: center; margin-top: 12px; }
+    .results-count { font-size: 12px; color: var(--color-text-muted); text-align: center; margin-top: 12px; }
     @media (max-width: 768px) { .order-detail { grid-template-columns: 1fr; } .filter-bar { flex-direction: column; } .search-input { min-width: 100%; } }
 </style>';
 

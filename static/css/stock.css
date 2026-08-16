@@ -1,5 +1,5 @@
     .info-box{background:var(--brand-teal-pale);border:1px solid var(--brand-teal-accent);border-radius:var(--radius-md);padding:14px 18px;font-size:13px;color:var(--brand-teal);margin-bottom:24px;line-height:1.6}
-.bar-wrap{width:120px;height:10px;background:#eee;border-radius:var(--radius-sm);overflow:hidden;display:inline-block;vertical-align:middle}
+.bar-wrap{width:120px;height:10px;background:var(--color-border);border-radius:var(--radius-sm);overflow:hidden;display:inline-block;vertical-align:middle}
 .bar{height:100%;border-radius:var(--radius-sm);transition:width .3s}
 .bar-ok{background:var(--brand-teal)}
 .bar-warn{background:var(--color-warning)}
@@ -8,4 +8,4 @@
 .limit-input{width:80px;padding:5px 8px;border:1px solid #ddd;border-radius:var(--radius-sm);font-size:13px;text-align:center;font-family:inherit}
 .limit-input:focus{outline:none;border-color:var(--brand-teal)}
 .ordered-num{font-weight:700;color:var(--brand-teal)}
-    .no-limit{color:#bbb;font-size:12px}
+    .no-limit{color:var(--color-text-muted);font-size:12px}

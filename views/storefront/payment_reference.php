@@ -90,13 +90,13 @@ $page_content = ob_get_clean();
 $page_css = '<style>
     .container { max-width: 600px; }
     .section h2 { margin-bottom: 6px; }
-    .section .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; line-height: 1.6; }
+    .section .subtitle { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 20px; line-height: 1.6; }
     .order-card { background: #f9fffe; border: 1px solid var(--brand-teal-pale); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
     .order-card .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 15px; }
-    .order-card .order-meta { font-size: 12px; color: #888; margin-top: 4px; }
-    .order-card .order-total { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-top: 6px; }
-    .help-text { font-size: 12px; color: #888; margin-top: -12px; margin-bottom: 18px; }
-    .divider { border: none; border-top: 1px solid #eee; margin: 20px 0; }
+    .order-card .order-meta { font-size: 12px; color: var(--color-text-muted); margin-top: 4px; }
+    .order-card .order-total { font-size: 16px; font-weight: 700; color: var(--color-text); margin-top: 6px; }
+    .help-text { font-size: 12px; color: var(--color-text-muted); margin-top: -12px; margin-bottom: 18px; }
+    .divider { border: none; border-top: 1px solid var(--color-border); margin: 20px 0; }
     .success-box { background: #D1FAE5; border: 1px solid #10B981; border-radius: 8px; padding: 20px; text-align: center; }
     .success-box h3 { color: #065F46; font-size: 16px; margin-bottom: 8px; }
     .success-box p { color: #065F46; font-size: 13px; }

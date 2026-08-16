@@ -37,7 +37,7 @@
           <select name="color_id" id="color_id">
             <option value="default">Default (all colours)</option>
           </select>
-          <p style="font-size:10px;color:#aaa;margin-top:5px">Choose a colour for a colour-specific photo</p>
+          <p style="font-size:10px;color:var(--color-text-muted);margin-top:5px">Choose a colour for a colour-specific photo</p>
         </div>
 
         <div class="form-group">
@@ -46,7 +46,7 @@
             <input type="file" name="image" id="file-input" accept="image/jpeg,image/png,image/webp" required onchange="AdminImages.updateFileName(this)">
             <span id="file-label">📁 Choose image file</span>
           </div>
-          <p id="file-name" style="font-size:11px;color:#888;margin-top:5px">No file chosen</p>
+          <p id="file-name" style="font-size:11px;color:var(--color-text-muted);margin-top:5px">No file chosen</p>
         </div>
       </div>
       
@@ -73,7 +73,7 @@
     </div>
   </div>
 
-  <div style="font-size:13px;color:#888;margin-bottom:15px" id="showing-count">
+  <div style="font-size:13px;color:var(--color-text-muted);margin-bottom:15px" id="showing-count">
     Loading products…
   </div>
 

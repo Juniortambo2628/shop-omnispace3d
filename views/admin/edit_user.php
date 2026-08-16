@@ -2,7 +2,7 @@
 <style>
     .checkbox-row{display:flex;align-items:center;gap:8px}
     .checkbox-row input{width:auto}
-    .checkbox-row label{margin:0;text-transform:none;font-size:13px;font-weight:600;color:#374151}
+    .checkbox-row label{margin:0;text-transform:none;font-size:13px;font-weight:600;color:var(--color-text)}
 </style>
 
 <div class="container" style="max-width:800px">

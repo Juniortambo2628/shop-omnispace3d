@@ -16,7 +16,7 @@
            class="pagination-btn"
            hx-get="?<?php echo http_build_query(array_merge($_GET, ['page' => 1])); ?>"
            hx-target="#admin-content" hx-push-url="true">1</a>
-        <?php if ($start > 2): ?><span style="color:#ccc">...</span><?php endif; ?>
+        <?php if ($start > 2): ?><span style="color:var(--color-border)">...</span><?php endif; ?>
     <?php endif; ?>
 
     <?php for ($i = $start; $i <= $end; $i++): ?>
@@ -27,7 +27,7 @@
     <?php endfor; ?>
 
     <?php if ($end < $pagination['total']): ?>
-        <?php if ($end < $pagination['total'] - 1): ?><span style="color:#ccc">...</span><?php endif; ?>
+        <?php if ($end < $pagination['total'] - 1): ?><span style="color:var(--color-border)">...</span><?php endif; ?>
         <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $pagination['total']])); ?>" 
            class="pagination-btn"
            hx-get="?<?php echo http_build_query(array_merge($_GET, ['page' => $pagination['total']])); ?>"

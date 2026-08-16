@@ -4,26 +4,26 @@
     .color-row input{flex:1}
     .color-row--extra{display:none}
     .colors-expanded .color-row--extra{display:flex}
-    .color-preview{width:50px;height:50px;border:1px solid #ddd;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;flex-shrink:0}
+    .color-preview{width:50px;height:50px;border:1px solid var(--color-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;flex-shrink:0}
     .color-preview img{width:100%;height:100%;object-fit:contain;display:block}
     .remove-color{background:none;border:none;color:var(--color-error);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
     #add-color-btn,#toggle-colors-btn{background:var(--brand-teal-light);color:var(--brand-teal);border:1.5px dashed var(--brand-teal);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:4px}
     #toggle-colors-btn{border-style:solid;margin-left:8px}
     .poa-toggle{display:flex;align-items:center;gap:8px;margin-bottom:16px}
-    .stock-card{margin-top:8px;padding:20px;border:1px solid #eef0f2;border-radius:var(--radius-lg);background:#f8fafc}
+    .stock-card{margin-top:8px;padding:20px;border:1px solid var(--color-border-light);border-radius:var(--radius-lg);background:#f8fafc}
     .stock-card h3{font-size:14px;font-weight:700;color:var(--brand-teal);margin-bottom:14px;display:flex;align-items:center;gap:8px}
     .stock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:end}
-    .stock-stat{background:#fff;border:1px solid #eef0f2;border-radius:var(--radius-md);padding:14px}
-    .stock-stat__label{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+    .stock-stat{background:#fff;border:1px solid var(--color-border-light);border-radius:var(--radius-md);padding:14px}
+    .stock-stat__label{font-size:11px;font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
     .stock-stat__value{font-size:22px;font-weight:700;color:var(--brand-teal)}
-.stock-bar-wrap{width:100%;height:10px;background:#eee;border-radius:var(--radius-sm);overflow:hidden;margin-top:8px}
+.stock-bar-wrap{width:100%;height:10px;background:var(--color-border);border-radius:var(--radius-sm);overflow:hidden;margin-top:8px}
 .stock-bar{height:100%;border-radius:var(--radius-sm)}
 .stock-bar--ok{background:var(--brand-teal)}
 .stock-bar--warn{background:var(--color-warning)}
 .stock-bar--crit{background:var(--color-error)}
-    .main-image-preview{width:80px;height:80px;border:1px solid #ddd;border-radius:var(--radius-sm);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+    .main-image-preview{width:80px;height:80px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
     .main-image-preview img{width:100%;height:100%;object-fit:contain}
-    .main-image-preview--empty{border-style:dashed;background:#f9f9f9;color:#bbb;font-size:11px;text-align:center;padding:6px}
+    .main-image-preview--empty{border-style:dashed;background:var(--color-surface);color:var(--color-text-muted);font-size:11px;text-align:center;padding:6px}
     .upload-hint{background:var(--brand-teal-light);border:1px solid #b8e4e3;border-radius:var(--radius-md);padding:10px 14px;font-size:12px;color:var(--brand-teal);margin-bottom:16px;line-height:1.5}
     @media(max-width:700px){.stock-grid{grid-template-columns:1fr}}
 </style>
@@ -181,7 +181,7 @@
         <div class="stock-grid">
           <div class="stock-stat">
             <div class="stock-stat__label">Category</div>
-            <div style="font-size:14px;font-weight:600;color:#333"><?php echo htmlspecialchars($category_name ?? ($prod['category_id'] ?? '')); ?></div>
+            <div style="font-size:14px;font-weight:600;color:var(--color-text)"><?php echo htmlspecialchars($category_name ?? ($prod['category_id'] ?? '')); ?></div>
           </div>
           <div class="stock-stat">
             <div class="stock-stat__label">Ordered (<?php echo htmlspecialchars($event_slug); ?>)</div>
@@ -197,7 +197,7 @@
         </div>
         <?php if ($stockPct !== null): ?>
         <div style="margin-top:16px">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--color-text-secondary);margin-bottom:6px">
             <span>Utilisation</span>
             <strong><?php echo (int) $stockPct; ?>%</strong>
           </div>
@@ -212,10 +212,10 @@
       </div>
 
       <?php if ($is_super_admin): ?>
-      <div class="poa-toggle" style="margin-top:24px;padding-top:20px;border-top:1px solid #f0f0f0">
+      <div class="poa-toggle" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--color-border-light)">
         <input type="checkbox" id="is_poa" name="is_poa" value="1"
                <?php if (!empty($prod['is_poa'])) echo 'checked'; ?> onchange="togglePrice(this)">
-        <label for="is_poa" style="text-transform:none;letter-spacing:0;font-size:13px;color:#333;margin:0">Price on Application (POA)</label>
+        <label for="is_poa" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--color-text);margin:0">Price on Application (POA)</label>
       </div>
 
       <div id="price-section" class="form-row" <?php if (!empty($prod['is_poa'])) echo 'style="display:none"'; ?>>
@@ -250,7 +250,7 @@
               text: 'Are you sure you want to delete <?php echo addslashes(htmlspecialchars($prod['name'] ?? '')); ?>? This cannot be undone.',
               icon: 'warning',
               showCancelButton: true,
-              confirmButtonColor: '#dc2626',
+              confirmButtonColor: 'var(--color-error)',
               confirmButtonText: 'Yes, delete it!'
           }).then((result) => { if (result.isConfirmed) this.submit(); })">
       <button type="submit" class="btn btn-danger">Delete Product</button>

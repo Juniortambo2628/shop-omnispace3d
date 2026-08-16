@@ -29,19 +29,19 @@
 .nav-dropdown-menu a:hover { background: var(--brand-teal-pale); color: var(--brand-teal); }
 
 /* ── Footer ── */
-.footer { background: #1a1a2e; color: #fff; text-align: center; padding: 32px 20px; margin-top: 40px; }
+.footer { background: var(--color-text); color: #fff; text-align: center; padding: 32px 20px; margin-top: 40px; }
 .footer img { height: 32px; margin-bottom: 12px; opacity: 0.9; }
 .footer p { font-size: 12px; opacity: 0.7; margin: 4px 0; }
 .footer .tagline { font-style: italic; margin-top: 12px; opacity: 0.5; font-size: 11px; }
 
 /* ── Section Card ── */
 .section { background: #fff; border-radius: 10px; box-shadow: var(--shadow-md); padding: 28px; margin-bottom: 24px; }
-.section h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #222; padding-bottom: 12px; border-bottom: 2px solid var(--brand-teal-pale); }
+.section h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--color-text); padding-bottom: 12px; border-bottom: 2px solid var(--brand-teal-pale); }
 
 /* ── Submit Button ── */
 .submit-btn { width: 100%; padding: 14px; background: var(--brand-teal); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 700; font-family: inherit; transition: background 0.2s; }
 .submit-btn:hover { background: var(--brand-teal-dark); }
-.submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+.submit-btn:disabled { background: var(--color-border); cursor: not-allowed; }
 
 /* ── Badges ── */
 .badge { padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; }
@@ -88,7 +88,7 @@
 .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 13px; }
 
 /* ── Detail / Item / Sum rows ── */
-.detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+.detail-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 13px; border-bottom: 1px solid var(--color-divider); }
 .detail-row .label { color: #888; }
 .item-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 13px; border-bottom: 1px solid var(--color-border-light); }
 .item-name { flex: 1; font-weight: 500; }
@@ -109,13 +109,13 @@
 /* ── Lookup Form ── */
 .lookup-form { max-width: 500px; margin: 0 auto; padding: 40px 20px; }
 .lookup-form h1 { font-size: 24px; font-weight: 700; color: #1a1a1a; text-align: center; margin-bottom: 8px; }
-.lookup-form .subtitle { font-size: 14px; color: #666; text-align: center; margin-bottom: 24px; }
+.lookup-form .subtitle { font-size: 14px; color: var(--color-text-secondary); text-align: center; margin-bottom: 24px; }
 
 /* ── Summary Card (sticky sidebar) ── */
 .summary-card { position: sticky; top: 20px; }
 
 /* ── Lookup Tabs ── */
-.lookup-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid #eee; }
+.lookup-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--color-border); }
 .lookup-tab { padding: 10px 20px; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; text-decoration: none; }
 .lookup-tab:hover { color: var(--brand-teal); }
 .lookup-tab.active { color: var(--brand-teal); border-bottom-color: var(--brand-teal); }

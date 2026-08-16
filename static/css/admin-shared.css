@@ -83,7 +83,7 @@
     font-size: 13px;
     font-family: inherit;
     background: #fff;
-    color: #333;
+    color: var(--color-text);
     transition: border-color 0.2s, box-shadow 0.2s;
     min-height: 40px;
     box-sizing: border-box;
@@ -123,8 +123,8 @@
 #admin-content input:disabled,
 #admin-content select:disabled,
 #admin-content textarea:disabled {
-    background: #f5f7fa;
-    color: #666;
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
     cursor: not-allowed;
 }
 
@@ -157,17 +157,17 @@
 }
 
 #admin-content .form-card--danger {
-    border: 1px solid #fecaca;
+    border: 1px solid var(--color-error-bg);
 }
 
 #admin-content .form-card--danger h3 {
-    color: #dc2626;
+    color: var(--color-error);
 }
 
 #admin-content .form-card h3 {
     font-size: 16px;
     font-weight: 700;
-    color: #222;
+    color: var(--color-text);
     margin-bottom: 8px;
     display: flex;
     align-items: center;
@@ -176,7 +176,7 @@
 
 #admin-content .form-card .section-desc {
     font-size: 13px;
-    color: #777;
+    color: var(--color-text-secondary);
     margin-bottom: 20px;
     line-height: 1.5;
 }
@@ -202,7 +202,7 @@
     display: block;
     font-size: 12px;
     font-weight: 600;
-    color: #555;
+    color: var(--color-text-secondary);
     margin-bottom: 5px;
     text-transform: uppercase;
     letter-spacing: 0.4px;
@@ -210,7 +210,7 @@
 
 #admin-content .hint {
     font-size: 11px;
-    color: #9ca3af;
+    color: var(--color-text-muted);
     margin-top: 4px;
 }
 
@@ -228,12 +228,12 @@
     gap: 12px;
     margin-top: 24px;
     padding-top: 20px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--color-border-light);
 }
 
 #admin-content .readonly-field {
-    background: #f9fafb;
-    color: #6b7280;
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
 }
 
 @media (max-width: 700px) {
@@ -246,10 +246,10 @@
 .prod-code {
     font-family: monospace;
     font-size: 12px;
-    background: #f3f4f6;
+    background: var(--brand-teal-light);
     padding: 2px 6px;
     border-radius: 4px;
-    color: #374151;
+    color: var(--color-text);
 }
 
 .prod-name-cell {
@@ -257,7 +257,7 @@
 }
 
 .prod-category-cell {
-    color: #555;
+    color: var(--color-text-secondary);
     font-size: 12px;
 }
 
@@ -282,7 +282,7 @@
 .pack-check__box {
     width: 22px;
     height: 22px;
-    border: 2px solid #ccc;
+    border: 2px solid var(--color-border);
     border-radius: 4px;
     display: inline-flex;
     align-items: center;
@@ -328,8 +328,8 @@
     width: 44px;
     height: 44px;
     border-radius: 8px;
-    border: 1px solid #eef0f2;
-    background: #f8fafc;
+    border: 1px solid var(--color-border-light);
+    background: var(--color-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -338,7 +338,7 @@
 }
 
 .prod-thumb--has-img.skeleton {
-    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    background: linear-gradient(110deg, var(--color-border-light) 8%, #f5f5f5 18%, var(--color-border-light) 33%);
     background-size: 200% 100%;
     animation: admin-shimmer 1.5s linear infinite;
 }
@@ -369,7 +369,7 @@ tbody tr:hover .prod-thumb__img {
     gap: 8px;
     margin-top: 32px;
     padding-top: 24px;
-    border-top: 1px solid #eef0f2;
+    border-top: 1px solid var(--color-border-light);
 }
 
 .pagination-btn {
@@ -381,7 +381,7 @@ tbody tr:hover .prod-thumb__img {
     border-radius: 8px;
     border: 1px solid #ddd;
     background: #fff;
-    color: #555;
+    color: var(--color-text-secondary);
     text-decoration: none;
     font-size: 13px;
     font-weight: 600;
@@ -391,7 +391,7 @@ tbody tr:hover .prod-thumb__img {
 .pagination-btn:hover {
     border-color: var(--brand-teal);
     color: var(--brand-teal);
-    background: #f0fdfd;
+    background: var(--brand-teal-light);
 }
 
 .pagination-btn.active {
@@ -408,7 +408,7 @@ tbody tr:hover .prod-thumb__img {
 
 .pagination-info {
     font-size: 13px;
-    color: #888;
+    color: var(--color-text-muted);
     margin-right: 12px;
 }
 
@@ -478,7 +478,7 @@ tbody tr:hover .prod-thumb__img {
 
 .profile-menu__header {
     padding: 14px 16px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--color-border-light);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -491,21 +491,21 @@ tbody tr:hover .prod-thumb__img {
     min-height: 36px;
     font-size: 12px;
     background: var(--brand-teal-pale);
-    border-color: #b8e4e3;
+    border-color: var(--brand-teal-pale);
     color: var(--brand-teal);
 }
 
 .profile-menu__name {
     font-size: 13px;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text);
     line-height: 1.3;
     word-break: break-word;
 }
 
 .profile-menu__role {
     font-size: 11px;
-    color: #888;
+    color: var(--color-text-muted);
     margin-top: 2px;
 }
 
@@ -526,13 +526,13 @@ tbody tr:hover .prod-thumb__img {
 }
 
 .profile-menu__link--danger {
-    color: #dc2626 !important;
-    border-top: 1px solid #f0f0f0;
+    color: var(--color-error) !important;
+    border-top: 1px solid var(--color-border-light);
 }
 
 .profile-menu__link--danger:hover {
     background: #fef2f2;
-    color: #dc2626 !important;
+    color: var(--color-error) !important;
 }
 
 /* Profile page + shared admin hero */
@@ -554,7 +554,7 @@ tbody tr:hover .prod-thumb__img {
     align-items: center;
     justify-content: center;
     background: #fff;
-    border: 2px solid #b8e4e3;
+    border: 2px solid var(--brand-teal-pale);
     overflow: hidden;
 }
 
@@ -590,7 +590,7 @@ tbody tr:hover .prod-thumb__img {
 
 .admin-hero__meta {
     font-size: 13px;
-    color: #888;
+    color: var(--color-text-muted);
 }
 
 .admin-hero__badge {
@@ -600,9 +600,9 @@ tbody tr:hover .prod-thumb__img {
     border-radius: 999px;
     font-size: 11px;
     font-weight: 600;
-    background: #eefafa;
+    background: var(--brand-teal-pale);
     color: var(--brand-teal);
-    border: 1px solid #b8e4e3;
+    border: 1px solid var(--brand-teal-pale);
 }
 
 .profile-hero__avatar {
@@ -617,7 +617,7 @@ tbody tr:hover .prod-thumb__img {
     font-size: 22px;
     font-weight: 700;
     background: var(--brand-teal-pale);
-    border: 2px solid #b8e4e3;
+    border: 2px solid var(--brand-teal-pale);
     color: var(--brand-teal);
 }
 
@@ -630,7 +630,7 @@ tbody tr:hover .prod-thumb__img {
 
 .profile-hero__meta {
     font-size: 13px;
-    color: #888;
+    color: var(--color-text-muted);
 }
 
 .profile-role-badge {
@@ -640,9 +640,9 @@ tbody tr:hover .prod-thumb__img {
     border-radius: 999px;
     font-size: 11px;
     font-weight: 600;
-    background: #eefafa;
+    background: var(--brand-teal-pale);
     color: var(--brand-teal);
-    border: 1px solid #b8e4e3;
+    border: 1px solid var(--brand-teal-pale);
 }
 
 .profile-card {
@@ -657,7 +657,7 @@ tbody tr:hover .prod-thumb__img {
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: #222;
+    color: var(--color-text);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -665,7 +665,7 @@ tbody tr:hover .prod-thumb__img {
 
 .profile-card .desc {
     font-size: 13px;
-    color: #777;
+    color: var(--color-text-secondary);
     margin-bottom: 24px;
     line-height: 1.6;
 }
@@ -686,7 +686,7 @@ tbody tr:hover .prod-thumb__img {
 .profile-field label {
     font-size: 12px;
     font-weight: 700;
-    color: #555;
+    color: var(--color-text-secondary);
 }
 
 .profile-field input:focus {
@@ -696,14 +696,14 @@ tbody tr:hover .prod-thumb__img {
 }
 
 .profile-field input:disabled {
-    background: #f5f7fa;
-    color: #666;
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
     cursor: not-allowed;
 }
 
 .profile-field .hint {
     font-size: 11px;
-    color: #999;
+    color: var(--color-text-muted);
     margin-top: 2px;
     line-height: 1.4;
 }
@@ -767,7 +767,7 @@ tbody tr:hover .prod-thumb__img {
     grid-column: 1 / -1;
     text-align: center;
     font-size: 12px;
-    color: #aaa;
+    color: var(--color-text-muted);
     padding: 8px 0 16px;
 }
 
@@ -827,13 +827,13 @@ tbody tr:hover .prod-thumb__img {
 #admin-content .badge-catalog { background: var(--badge-unverified-bg); color: var(--badge-unverified-text); }
 
 /* ── Stock bar (dashboard) ── */
-.stock-bar-wrap { flex: 1; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+.stock-bar-wrap { flex: 1; height: 8px; background: var(--color-border); border-radius: 4px; overflow: hidden; }
 .stock-bar { height: 100%; border-radius: 4px; }
 .bar-ok { background: var(--brand-teal); }
 .bar-warn { background: var(--color-warning); }
-.bar-crit { background: #dc2626; }
+.bar-crit { background: var(--color-error); }
 .stock-pct { flex: 0 0 45px; text-align: right; font-weight: 700; }
-.stock-nums { flex: 0 0 70px; text-align: right; color: #999; }
+.stock-nums { flex: 0 0 70px; text-align: right; color: var(--color-text-muted); }
 
 /* ── Order ID ── */
 .order-id { font-family: monospace; font-weight: 700; color: var(--brand-teal); font-size: 13px; }

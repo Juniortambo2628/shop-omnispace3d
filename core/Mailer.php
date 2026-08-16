@@ -76,8 +76,8 @@ class Mailer {
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 </head>
-<body style='margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;'>
-  <table width='100%' cellpadding='0' cellspacing='0' style='background:#f4f4f4;padding:30px 0;'>
+<body style='margin:0;padding:0;background:#f0f0f0;font-family:Arial,sans-serif;'>
+  <table width='100%' cellpadding='0' cellspacing='0' style='background:#f0f0f0;padding:30px 0;'>
     <tr><td align='center'>
       <table width='620' cellpadding='0' cellspacing='0'
              style='background:#ffffff;border-radius:8px;overflow:hidden;max-width:620px;width:100%;'>
@@ -102,7 +102,7 @@ class Mailer {
         </tr>
         <!-- FOOTER -->
         <tr>
-          <td style='background:#f9f9f9;padding:18px 32px;border-top:1px solid #eeeeee;
+          <td style='background:#f9fffe;padding:18px 32px;border-top:1px solid #f0f0f0;
                      text-align:center;color:{$grey};font-size:12px;'>
             {$c_name} &nbsp;|&nbsp; {$c_web}<br>
             WhatsApp: {$c_wa} &nbsp;|&nbsp; Tel: {$c_ph}

@@ -28,17 +28,17 @@ ob_start();
                 </div>
                 <div class="row">
                     <div><label>Phone Number</label><input type="tel" id="phone" placeholder="+254 7XX XXX XXX"></div>
-                    <div><label>Tax ID / PIN Number <span style="font-size:11px;color:#888;font-weight:400;">(required for tax invoice)</span></label><input type="text" id="taxId" placeholder="e.g. P051234567A"></div>
+                    <div><label>Tax ID / PIN Number <span style="font-size:11px;color:var(--color-text-muted);font-weight:400;">(required for tax invoice)</span></label><input type="text" id="taxId" placeholder="e.g. P051234567A"></div>
                 </div>
                 <label>Postal / Delivery Address</label><textarea id="address" rows="2" placeholder="Physical or postal address for invoice and delivery purposes"></textarea>
                 <label>Special Instructions / Notes</label><textarea id="instructions" placeholder="Any special requirements, delivery notes, or questions..."></textarea>
             </div>
             <div class="section">
                 <h2>&#128179; Payment Method</h2>
-                <p style="font-size:13px;color:#666;margin-bottom:16px;">Select your preferred payment method:</p>
-                <label class="pay-option"><input type="radio" name="payment" value="PayPal" checked><strong>PayPal</strong><span style="font-size:12px;color:#888;">- Pay securely online</span></label>
-                <label class="pay-option"><input type="radio" name="payment" value="Invoice"><strong>Invoice / Bank Transfer</strong><span style="font-size:12px;color:#888;">- We'll send a tax invoice</span></label>
-                <label class="pay-option"><input type="radio" name="payment" value="M-Pesa"><strong>M-Pesa</strong><span style="font-size:12px;color:#888;">- Lipa na M-Pesa (local exhibitors)</span></label>
+                <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:16px;">Select your preferred payment method:</p>
+                <label class="pay-option"><input type="radio" name="payment" value="PayPal" checked><strong>PayPal</strong><span style="font-size:12px;color:var(--color-text-muted);">- Pay securely online</span></label>
+                <label class="pay-option"><input type="radio" name="payment" value="Invoice"><strong>Invoice / Bank Transfer</strong><span style="font-size:12px;color:var(--color-text-muted);">- We'll send a tax invoice</span></label>
+                <label class="pay-option"><input type="radio" name="payment" value="M-Pesa"><strong>M-Pesa</strong><span style="font-size:12px;color:var(--color-text-muted);">- Lipa na M-Pesa (local exhibitors)</span></label>
                 <div class="pay-note"><strong>Note:</strong> All orders are reviewed by our team before processing. For PayPal, you'll receive a payment link. For bank transfer, an invoice with payment details will be sent within 24 hours.</div>
             </div>
         </form>
@@ -173,20 +173,20 @@ $page_content = ob_get_clean();
 $page_css = '<style>
     .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .si { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+    .si { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--color-border-light); font-size: 13px; }
     .si-name { flex: 1; }
-    .si-color { font-size: 11px; color: #888; }
-    .si-qty { color: #888; margin: 0 12px; }
+    .si-color { font-size: 11px; color: var(--color-text-muted); }
+    .si-qty { color: var(--color-text-muted); margin: 0 12px; }
     .si-price { font-weight: 600; color: var(--brand-teal); min-width: 70px; text-align: right; }
     .sum-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
-    .sum-line.total { font-size: 18px; font-weight: 700; color: #222; border-top: 2px solid var(--brand-teal); padding-top: 12px; margin-top: 8px; }
+    .sum-line.total { font-size: 18px; font-weight: 700; color: var(--color-text); border-top: 2px solid var(--brand-teal); padding-top: 12px; margin-top: 8px; }
     .submit-btn { width: 100%; padding: 16px; font-size: 16px; margin-top: 16px; }
     .pay-note { background: #FEF3C7; border: 1px solid #F59E0B; border-radius: 6px; padding: 12px; font-size: 12px; color: #92400e; margin-top: 12px; line-height: 1.5; }
     .error-msg { background: #FEE2E2; color: #991B1B; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; display: none; }
     .loading { display: none; text-align: center; padding: 12px; color: var(--brand-teal); font-size: 14px; }
     .empty-msg { text-align: center; padding: 60px 20px; color: #999; }
     .empty-msg a { color: var(--brand-teal); font-weight: 600; text-decoration: none; }
-    .pay-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px; }
+    .pay-option { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border: 1px solid var(--color-border); border-radius: 8px; margin-bottom: 8px; }
     .pay-option:hover { border-color: var(--brand-teal); }
     .pay-option input { width: auto; margin: 0; }
     .req { color: #ef4444; }

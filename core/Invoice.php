@@ -136,19 +136,19 @@ class Invoice {
         .from-condensed .oneline { white-space: nowrap; }
 
         .items-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-        .items-table th { background: {$teal}; color: #ffffff; padding: 7px 8px; text-align: left; font-size: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .items-table th { background: {$teal}; color: #FFFFFF; padding: 7px 8px; text-align: left; font-size: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .totals-container { margin-top: 12px; width: 100%; }
         .totals-table { width: 240px; float: right; border-collapse: collapse; }
-        .totals-table td { padding: 5px 8px; border-bottom: 1px solid #f5f5f5; font-size: 9px; }
-        .total-row { background: {$teal}; color: #ffffff; }
+        .totals-table td { padding: 5px 8px; border-bottom: 1px solid #f0f0f0; font-size: 9px; }
+        .total-row { background: {$teal}; color: #FFFFFF; }
         .total-row td { border-bottom: none; font-size: 11px; font-weight: 700; }
 
         .payment-box { margin-top: 24px; padding: 12px 14px; background: {$pale}; border-left: 3px solid {$teal}; border-radius: 3px; page-break-inside: avoid; }
         .payment-box h3 { margin: 0 0 6px; font-size: 10px; color: {$teal}; font-weight: 700; }
         .payment-box p, .payment-box div { margin: 0; font-size: 8px; color: {$dark}; line-height: 1.4; }
 
-        .bank-details { margin-top: 16px; padding: 10px 14px; background: #fff; border: 1px solid {$borderGrey}; border-radius: 3px; page-break-inside: avoid; }
+        .bank-details { margin-top: 16px; padding: 10px 14px; background: #FFFFFF; border: 1px solid {$borderGrey}; border-radius: 3px; page-break-inside: avoid; }
         .bank-details h4 { margin: 0 0 6px; font-size: 9px; color: {$teal}; font-weight: 700; text-transform: uppercase; }
 
         .signatory-section { margin-top: 24px; width: 100%; border-collapse: collapse; border-top: 1px solid {$borderGrey}; padding-top: 12px; page-break-inside: avoid; }

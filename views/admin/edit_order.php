@@ -1,10 +1,10 @@
 <?php $active_page = 'orders'; ?>
 <style>
-    h2{font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
-    .order-id{font-family:monospace;font-size:12px;background:#f3f4f6;padding:2px 8px;border-radius:4px;color:#374151;margin-bottom:22px;display:inline-block}
+    h2{font-size:20px;font-weight:700;color:var(--color-text);margin-bottom:6px}
+    .order-id{font-family:monospace;font-size:12px;background:var(--color-border-light);padding:2px 8px;border-radius:4px;color:var(--color-text);margin-bottom:22px;display:inline-block}
     .items-table{width:100%;border-collapse:collapse;margin-top:8px}
-    .items-table th,.items-table td{padding:8px 10px;font-size:12px;border-bottom:1px solid #f3f4f6;text-align:left}
-    .items-table th{font-size:11px;color:#6b7280;text-transform:uppercase}
+    .items-table th,.items-table td{padding:8px 10px;font-size:12px;border-bottom:1px solid var(--color-border-light);text-align:left}
+    .items-table th{font-size:11px;color:var(--color-text-secondary);text-transform:uppercase}
 </style>
 
 <div class="container" style="max-width:900px">

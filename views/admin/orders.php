@@ -47,7 +47,7 @@
     </div>
     <?php endif; ?>
     <?php endforeach; ?>
-    <div style="font-size:11px;color:#bbb;margin-top:8px">
+    <div style="font-size:11px;color:var(--color-text-muted);margin-top:8px">
       Only items with stock limits set are shown.
       <a href="/admin/stock" class="btn btn-outline" style="color:var(--brand-teal)">Set limits →</a>
     </div>
@@ -58,13 +58,13 @@
     <div style="flex:1">
         <?php include __DIR__ . '/_filters.php'; ?>
     </div>
-    <span style="font-size:12px;color:#888;white-space:nowrap"><?php echo count($orders); ?> order(s)</span>
+    <span style="font-size:12px;color:var(--color-text-muted);white-space:nowrap"><?php echo count($orders); ?> order(s)</span>
   </div>
 
   <div class="table-wrap">
     <?php if (empty($orders)): ?>
     <div class="empty">
-      <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#D6F0EF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:15px">
+      <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--brand-teal-pale)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:15px">
         <circle cx="9" cy="21" r="1"></circle>
         <circle cx="20" cy="21" r="1"></circle>
         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -92,22 +92,22 @@
       <?php foreach ($orders as $entry): ?>
       <?php $o = $entry['order']; $oi = $entry['items']; ?>
       <tr onclick="toggleDetail('<?php echo $o['id']; ?>')" style="cursor:pointer">
-        <td style="text-align:center;color:#bbb;font-size:11px" id="arrow_<?php echo $o['id']; ?>">▶</td>
+        <td style="text-align:center;color:var(--color-text-muted);font-size:11px" id="arrow_<?php echo $o['id']; ?>">▶</td>
         <td><span class="order-id"><?php echo htmlspecialchars($o['id']); ?></span></td>
         <td><span class="custom-order-id"><?php echo htmlspecialchars($o['custom_order_id'] ?? '—'); ?></span></td>
         <td>
           <div style="font-weight:600"><?php echo htmlspecialchars($o['company_name'] ?? ''); ?></div>
-          <div style="font-size:11px;color:#888"><?php echo htmlspecialchars($o['contact_name'] ?? ''); ?></div>
+          <div style="font-size:11px;color:var(--color-text-muted)"><?php echo htmlspecialchars($o['contact_name'] ?? ''); ?></div>
         </td>
         <td style="font-weight:600"><?php echo htmlspecialchars($o['booth_number'] ?? '—'); ?></td>
-        <td style="font-size:12px;color:#888;white-space:nowrap">
+        <td style="font-size:12px;color:var(--color-text-muted);white-space:nowrap">
           <?php echo substr($o['created_at'] ?? '', 0, 10); ?>
         </td>
         <td style="font-weight:700">$<?php echo number_format($o['total'] ?? 0, 2); ?></td>
         <td style="font-size:12px">
           <?php echo htmlspecialchars($o['payment_method'] ?? '—'); ?>
           <?php if (!empty($o['payment_reference'])): ?>
-          <div style="font-size:10px;color:#888">Ref: <?php echo htmlspecialchars($o['payment_reference']); ?></div>
+          <div style="font-size:10px;color:var(--color-text-muted)">Ref: <?php echo htmlspecialchars($o['payment_reference']); ?></div>
           <?php endif; ?>
         </td>
         <td onclick="event.stopPropagation()">
@@ -165,7 +165,7 @@
                 </div>
                 <div class="detail-line" style="margin-bottom:10px">
                   Client Payment Ref:<br>
-                  <div style="font-size:12px;color:#333;font-weight:500;padding:5px 9px;background:#f9fafb;border-radius:var(--radius-sm);border:1px solid #eee;min-height:28px">
+                  <div style="font-size:12px;color:var(--color-text);font-weight:500;padding:5px 9px;background:var(--color-bg);border-radius:var(--radius-sm);border:1px solid var(--color-border);min-height:28px">
                     <?php echo htmlspecialchars($o['client_payment_reference'] ?? '— Not submitted —'); ?>
                   </div>
                 </div>
@@ -184,7 +184,7 @@
                     <?php endif; ?>
                   </div>
                   <?php if (!empty($o['payment_verified_at'])): ?>
-                  <div style="font-size:10px;color:#888;margin-top:4px">
+                  <div style="font-size:10px;color:var(--color-text-muted);margin-top:4px">
                     Verified by <?php echo htmlspecialchars($o['payment_verified_by'] ?? '—'); ?> on <?php echo htmlspecialchars($o['payment_verified_at'] ?? ''); ?>
                   </div>
                   <?php endif; ?>
@@ -217,11 +217,11 @@
                 </tr>
                 <?php endforeach; ?>
                 <tr>
-                  <td colspan="5" style="text-align:right;color:#888;padding-top:8px">Subtotal:</td>
+                  <td colspan="5" style="text-align:right;color:var(--color-text-muted);padding-top:8px">Subtotal:</td>
                   <td style="text-align:right;padding-top:8px"><?php echo number_format($o['subtotal'] ?? 0, 2); ?></td>
                 </tr>
                 <tr>
-                  <td colspan="5" style="text-align:right;color:#888">VAT (16%):</td>
+                  <td colspan="5" style="text-align:right;color:var(--color-text-muted)">VAT (16%):</td>
                   <td style="text-align:right"><?php echo number_format($o['vat'] ?? 0, 2); ?></td>
                 </tr>
                 <tr class="total-row">

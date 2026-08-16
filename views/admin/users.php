@@ -33,7 +33,7 @@
           <?php foreach ($users as $u): ?>
           <tr>
             <td style="font-weight:600"><?php echo htmlspecialchars($u['display_name']); ?></td>
-            <td style="color:#555;font-size:12px"><?php echo htmlspecialchars($u['username']); ?></td>
+            <td style="color:var(--color-text-secondary);font-size:12px"><?php echo htmlspecialchars($u['username']); ?></td>
             <td>
               <?php if ($u['role'] == 'super_admin'): ?>
               <span class="badge badge-super">Super Admin</span>
@@ -55,7 +55,7 @@
               <?php if ((int) $u['id'] !== (int) ($current_user_id ?? 0)): ?>
               <form method="POST" action="/admin/users/<?php echo (int) $u['id']; ?>/toggle-active" style="display:inline;margin-left:6px"
                     onsubmit="return confirm('<?php echo $u['active'] ? 'Deactivate' : 'Activate'; ?> this user?');">
-                <button type="submit" class="btn btn-sm" style="background:<?php echo $u['active'] ? '#fee2e2' : '#dcfce7'; ?>;color:<?php echo $u['active'] ? 'var(--color-error-dark)' : '#166534'; ?>">
+                <button type="submit" class="btn btn-sm" style="background:<?php echo $u['active'] ? 'var(--color-error-bg)' : 'var(--color-success-bg)'; ?>;color:<?php echo $u['active'] ? 'var(--color-error-dark)' : 'var(--color-success-text)'; ?>">
                   <?php echo $u['active'] ? 'Deactivate' : 'Activate'; ?>
                 </button>
               </form>
