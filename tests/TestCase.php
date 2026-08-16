@@ -15,5 +15,8 @@ abstract class TestCase extends BaseTestCase
             $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
             $dotenv->safeLoad();
         }
+
+        // Load core classes (non-namespaced, not in Composer autoload)
+        require_once __DIR__ . '/../core/Branding.php';
     }
 }
