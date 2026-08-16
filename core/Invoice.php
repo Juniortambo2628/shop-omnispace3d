@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/Branding.php';
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
