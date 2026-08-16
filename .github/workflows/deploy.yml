@@ -36,38 +36,36 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction --no-dev
 
       - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
           
-          # Write private key using heredoc (preserves multiline keys exactly)
-          cat << 'SSHKEY' > ~/.ssh/deploy_key
-          ${{ secrets.SSH_PRIVATE_KEY }}
-          SSHKEY
+          # Write private key (printf preserves exact content)
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           
           # Add host to known_hosts
-          ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts 2>/dev/null
           
           # Verify SSH key format
-          echo "Verifying SSH key..."
-          head -1 ~/.ssh/deploy_key
-          tail -1 ~/.ssh/deploy_key
-          ssh-keygen -l -f ~/.ssh/deploy_key 2>&1 || echo "Key validation output shown above"
+          echo "Key first line: $(head -1 ~/.ssh/deploy_key)"
+          echo "Key last line: $(tail -1 ~/.ssh/deploy_key)"
+          ssh-keygen -l -f ~/.ssh/deploy_key 2>&1 || true
           
           # Test connection
-          echo "Testing SSH connection..."
-          ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT || 22 }} -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH_OK" || {
+          echo "Testing SSH connection to $SSH_USER@$SSH_HOST:$SSH_PORT"
+          ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no -p $SSH_PORT -i ~/.ssh/deploy_key $SSH_USER@$SSH_HOST "echo SSH_OK" || {
             echo ""
             echo "=== SSH Connection Failed ==="
-            echo "Host: ${{ secrets.SSH_HOST }}"
-            echo "Port: ${{ secrets.SSH_PORT || 22 }}"
-            echo "User: ${{ secrets.SSH_USER }}"
-            echo ""
-            echo "Troubleshooting:"
-            echo "1. Verify SSH_PRIVATE_KEY contains the full private key (including BEGIN/END lines)"
-            echo "2. Verify the public key is in ~/.ssh/authorized_keys on the server"
-            echo "3. Try connecting manually: ssh -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
+            echo "Please verify:"
+            echo "1. SSH_PRIVATE_KEY contains the full key (including BEGIN/END lines)"
+            echo "2. Public key is added to server: ~/.ssh/authorized_keys"
+            echo "3. SSH port is correct (currently: $SSH_PORT)"
             exit 1
           }
 
