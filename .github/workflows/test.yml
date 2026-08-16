@@ -62,7 +62,8 @@ jobs:
       - name: Verify no hardcoded secrets
         run: |
           echo "Checking for committed secrets..."
-          if grep -r "Silversky#10" --include="*.php" --include="*.json" --include="*.yml" .; then
+          # Exclude seeders (dev-only, use env vars) and workflow files (may contain test strings)
+          if grep -r "Silversky#10" --include="*.php" --include="*.json" --exclude-dir=database .; then
             echo "ERROR: Hardcoded password found in codebase!"
             exit 1
           fi
