@@ -38,9 +38,28 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          
+          # Write private key (handle multiline keys properly)
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          
+          # Add host to known_hosts
           ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          
+          # Verify SSH key is valid
+          ssh-keygen -l -f ~/.ssh/deploy_key || echo "Warning: Key validation failed"
+          
+          # Test connection
+          echo "Testing SSH connection to ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PORT || 22 }}"
+          ssh -o ConnectTimeout=10 -o BatchMode=yes -p ${{ secrets.SSH_PORT || 22 }} -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection successful" || {
+            echo "ERROR: SSH connection failed. Check your secrets:"
+            echo "  SSH_HOST: ${{ secrets.SSH_HOST }}"
+            echo "  SSH_PORT: ${{ secrets.SSH_PORT || 22 }}"
+            echo "  SSH_USER: ${{ secrets.SSH_USER }}"
+            echo "  SSH_PRIVATE_KEY: [configured - verify it's the correct private key]"
+            exit 1
+          }
 
       - name: Prepare deployment archive
         run: |
