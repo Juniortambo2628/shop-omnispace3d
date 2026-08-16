@@ -115,13 +115,52 @@ jobs:
           rm -f /tmp/static.tar.gz
           echo "Static files extracted"
 
+          # --- Find composer ---
+          COMPOSER=""
+          for cmd in composer composer.phar /usr/local/bin/composer /opt/cpanel/composer/bin/composer; do
+            if command -v "$cmd" >/dev/null 2>&1 || [ -x "$cmd" ]; then
+              COMPOSER="$cmd"
+              break
+            fi
+          done
+          # Try php -r fallback
+          if [ -z "$COMPOSER" ]; then
+            if [ -f "$HOME/.composer/composer.phar" ]; then
+              COMPOSER="php $HOME/.composer/composer.phar"
+            elif [ -f "$HOME/composer.phar" ]; then
+              COMPOSER="php $HOME/composer.phar"
+            fi
+          fi
+          
+          if [ -z "$COMPOSER" ]; then
+            echo "composer not found, downloading..."
+            cd "${APP_DIR}"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            php composer-setup.php --quiet
+            rm composer-setup.php
+            COMPOSER="php composer.phar"
+          fi
+          
+          echo "Using composer: $COMPOSER"
+
           # --- Install dependencies ---
           cd "${APP_DIR}"
-          composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+          $COMPOSER install --no-dev --optimize-autoloader --no-interaction --no-progress
           echo "Composer dependencies installed"
 
+          # --- Find PHP ---
+          PHP_BIN=""
+          for cmd in php php83 php8.3 /usr/bin/php /usr/local/bin/php; do
+            if command -v "$cmd" >/dev/null 2>&1 || [ -x "$cmd" ]; then
+              PHP_BIN="$cmd"
+              break
+            fi
+          done
+          PHP_BIN="${PHP_BIN:-php}"
+
           # --- Run migrations ---
-          php artisan migrate --force
+          cd "${APP_DIR}"
+          $PHP_BIN artisan migrate --force
           echo "Migrations complete"
 
           # --- Set permissions ---
@@ -144,11 +183,12 @@ jobs:
           [ -f .env ] && echo ".env: OK" || echo "WARNING: .env missing"
 
           # --- Clear and rebuild caches ---
-          php artisan cache:clear 2>/dev/null || true
-          php artisan config:clear 2>/dev/null || true
-          php artisan view:clear 2>/dev/null || true
-          php artisan config:cache 2>/dev/null || true
-          php artisan route:cache 2>/dev/null || true
+          cd "${APP_DIR}"
+          $PHP_BIN artisan cache:clear 2>/dev/null || true
+          $PHP_BIN artisan config:clear 2>/dev/null || true
+          $PHP_BIN artisan view:clear 2>/dev/null || true
+          $PHP_BIN artisan config:cache 2>/dev/null || true
+          $PHP_BIN artisan route:cache 2>/dev/null || true
 
           # --- Cleanup old backups ---
           ls -t .env.backup.* 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
