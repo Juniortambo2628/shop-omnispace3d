@@ -8,6 +8,9 @@
 github-actions-omnispace
 github-actions-omnispace.pub
 
+# Real admin accounts (names and emails); the template is AdminUserSeeder.example.php
+/database/seeders/AdminUserSeeder.php
+
 # PHP Composer
 /vendor/
 composer.phar
