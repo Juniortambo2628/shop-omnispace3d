@@ -6,29 +6,31 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * TEMPLATE. The real seeder holds real people's details, so it is kept out of git:
+ *
+ *   cp database/seeders/AdminUserSeeder.example.php database/seeders/AdminUserSeeder.php
+ *
+ * then put the real accounts in the copy. Careful: running it removes every
+ * admin account that is not in its list.
+ */
 class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
+        // Replace these with the real admin accounts. Keep the real copy out of git.
         $users = [
             [
-                'username' => 'juniortambo2628@gmail.com',
-                'email' => 'juniortambo2628@gmail.com',
-                'display_name' => 'Kevin Tambo',
+                'username' => 'admin@example.com',
+                'email' => 'admin@example.com',
+                'display_name' => 'Site Admin',
                 'password' => env('SEED_ADMIN_PASSWORD', 'ChangeMe#123'),
                 'role' => 'super_admin',
             ],
             [
-                'username' => 'susan.mboya@geminvest.co.ke',
-                'email' => 'susan.mboya@geminvest.co.ke',
-                'display_name' => 'Susan Mboya',
-                'password' => env('SEED_ADMIN_PASSWORD', 'ChangeMe#123'),
-                'role' => 'super_admin',
-            ],
-            [
-                'username' => 'claire.asena@geminvest.co.ke',
-                'email' => 'claire.asena@geminvest.co.ke',
-                'display_name' => 'Claire Asena',
+                'username' => 'editor@example.com',
+                'email' => 'editor@example.com',
+                'display_name' => 'Product Editor',
                 'password' => env('SEED_ADMIN_PASSWORD', 'ChangeMe#123'),
                 'role' => 'product_editor',
             ],
